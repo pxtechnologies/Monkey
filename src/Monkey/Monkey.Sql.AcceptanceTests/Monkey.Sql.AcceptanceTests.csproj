@@ -7,16 +7,48 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Dapper" Version="1.60.6" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
         <PackageReference Include="nunit" Version="3.11.0" />
-        <PackageReference Include="NUnit3TestAdapter" Version="3.11.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
          <PackageReference Include="FluentAssertions" Version="5.6.0" />
+         <PackageReference Include="SimpleInjector" Version="4.5.1" />
+         <PackageReference Include="SimpleInjector.Extensions.ExecutionContextScoping" Version="4.0.0" />
+         <PackageReference Include="SimpleInjector.Packaging" Version="4.5.1" />
          <PackageReference Include="SpecFlow" Version="3.0.188" />
         <PackageReference Include="SpecFlow.Tools.MsBuild.Generation" Version="3.0.188" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Features" />
+      <ProjectReference Include="..\Monkey.Sql.SimpleInjector\Monkey.Sql.SimpleInjector.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Features\Basic\Basic.feature.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Basic.feature</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="appsettings.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <SpecFlowFeatureFiles Update="Basic.feature">
+        <Generator>SpecFlowSingleFileGenerator</Generator>
+      </SpecFlowFeatureFiles>
+      <SpecFlowFeatureFiles Update="Features\Basic\Basic.feature">
+        <Generator>SpecFlowSingleFileGenerator</Generator>
+        <LastGenOutput>Basic.feature.cs</LastGenOutput>
+      </SpecFlowFeatureFiles>
     </ItemGroup>
 
 </Project>
