@@ -18,7 +18,9 @@ namespace Monkey.Sql.Migrations
                 .HasDefaultSchema("dbo")
                 .HasAnnotation("ProductVersion", "2.2.3-servicing-35854")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Relational:Sequence:.HiLo", "'HiLo', '', '1', '100', '', '', 'Int64', 'False'")
+                .HasAnnotation("SqlServer:HiLoSequenceName", "HiLo")
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
             modelBuilder.Entity("Monkey.Sql.Model.ActionParameterBinding", b =>
                 {
@@ -49,7 +51,7 @@ namespace Monkey.Sql.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<long?>("ControllerDescriptorId");
 
@@ -81,7 +83,7 @@ namespace Monkey.Sql.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -98,7 +100,7 @@ namespace Monkey.Sql.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<long>("DeclaringTypeId");
 
@@ -123,7 +125,10 @@ namespace Monkey.Sql.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
+
+                    b.Property<string>("Alias")
+                        .HasMaxLength(32);
 
                     b.Property<bool>("IsDynamic");
 
@@ -170,7 +175,7 @@ namespace Monkey.Sql.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<string>("ConnectionName")
                         .IsRequired()
@@ -208,7 +213,7 @@ namespace Monkey.Sql.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -231,7 +236,7 @@ namespace Monkey.Sql.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -284,6 +289,13 @@ namespace Monkey.Sql.Migrations
                     b.HasBaseType("Monkey.Sql.Model.ObjectType");
 
                     b.HasDiscriminator().HasValue("Response");
+                });
+
+            modelBuilder.Entity("Monkey.Sql.Model.PrimitiveObject", b =>
+                {
+                    b.HasBaseType("Monkey.Sql.Model.ObjectType");
+
+                    b.HasDiscriminator().HasValue("Primitive");
                 });
 
             modelBuilder.Entity("Monkey.Sql.Model.Query", b =>

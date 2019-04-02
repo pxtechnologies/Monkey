@@ -24,6 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Monkey.SimpleInjector\Monkey.SimpleInjector.csproj" />
       <ProjectReference Include="..\Monkey.Sql.SimpleInjector\Monkey.Sql.SimpleInjector.csproj" />
     </ItemGroup>
 

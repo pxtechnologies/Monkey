@@ -108,24 +108,57 @@ this.FeatureBackground();
 #line 21
  testRunner.And("I have mapped \'AddUser\' procedure from \'Test\' database in apidatabase in schema \'" +
                     "dbo\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 22
- testRunner.And("I have mapped parameter \'@name\' of type \'nvarchar\' to property \'Name\' of type \'st" +
-                    "ring\' in object command \'AddUserCommand\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
+                        "SqlParameterName",
+                        "SqlType",
+                        "PropertyName",
+                        "PropertyType"});
+            table2.AddRow(new string[] {
+                        "@id",
+                        "int",
+                        "Id",
+                        "int"});
+            table2.AddRow(new string[] {
+                        "@name",
+                        "nvarchar",
+                        "Name",
+                        "string"});
+            table2.AddRow(new string[] {
+                        "@birthdate",
+                        "datetime",
+                        "BirthDate",
+                        "DateTime"});
+#line 22
+ testRunner.And("I have mapped parameters to command \'AddUserCommand\'", ((string)(null)), table2, "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
                         "SqlColumnName",
                         "SqlColumnType",
-                        "ObjectPath",
-                        "ParentObjectName",
-                        "ObjectType"});
-            table2.AddRow(new string[] {
+                        "PropertyName",
+                        "PropertyType"});
+            table3.AddRow(new string[] {
+                        "Id",
+                        "int",
+                        "Id",
+                        "int"});
+            table3.AddRow(new string[] {
                         "Name",
                         "nvarchar",
                         "Name",
-                        "UserEntity",
                         "string"});
-#line 23
- testRunner.And("I have mapped resultset to object \'UserEntity\':", ((string)(null)), table2, "And ");
+            table3.AddRow(new string[] {
+                        "BirthDate",
+                        "datetime",
+                        "BirthDate",
+                        "DateTime"});
+#line 28
+ testRunner.And("I have mapped resultset \'UserEntity\'", ((string)(null)), table3, "And ");
+#line 34
+ testRunner.When("a commandhandler is generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 35
+ testRunner.And("It is executed with command \'[ \"Id\": 1, \"Name\": \"John\", \"BirthDate\": \"2019-04-01\"" +
+                    " ]\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }

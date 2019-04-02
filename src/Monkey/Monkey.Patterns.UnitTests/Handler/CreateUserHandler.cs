@@ -35,7 +35,7 @@ namespace Monkey.Patterns.UnitTests.Handler
                         {
                             var ix = lz.Value;
                             UserEntity row = new UserEntity();
-
+                            
                             row.Name = rd.GetString(ix[0]); 
                             
                             

@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Monkey.SimpleInjector;
 using Monkey.Sql.SimpleInjector;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
@@ -31,6 +32,7 @@ namespace Monkey.Sql.AcceptanceTests.Configuration
             Assembly[] catalog = new Assembly[]
             {
                 typeof(ApplicationUnderTestsPackage).Assembly,
+                typeof(MonkeyPackage).Assembly,
                 typeof(SqlPackage).Assembly
             };
             _container.RegisterPackages(catalog);

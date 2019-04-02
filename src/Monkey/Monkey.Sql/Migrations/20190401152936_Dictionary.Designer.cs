@@ -10,16 +10,19 @@ using Monkey.Sql.Model;
 namespace Monkey.Sql.Migrations
 {
     [DbContext(typeof(MonkeyDbContext))]
-    [Migration("20190330221244_ProcRename")]
-    partial class ProcRename
+    [Migration("20190401152936_Dictionary")]
+    partial class Dictionary
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("dbo")
                 .HasAnnotation("ProductVersion", "2.2.3-servicing-35854")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Relational:Sequence:.HiLo", "'HiLo', '', '1', '100', '', '', 'Int64', 'False'")
+                .HasAnnotation("SqlServer:HiLoSequenceName", "HiLo")
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
             modelBuilder.Entity("Monkey.Sql.Model.ActionParameterBinding", b =>
                 {
@@ -50,7 +53,7 @@ namespace Monkey.Sql.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<long?>("ControllerDescriptorId");
 
@@ -82,7 +85,7 @@ namespace Monkey.Sql.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -99,7 +102,7 @@ namespace Monkey.Sql.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<long>("DeclaringTypeId");
 
@@ -124,7 +127,10 @@ namespace Monkey.Sql.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
+
+                    b.Property<string>("Alias")
+                        .HasMaxLength(32);
 
                     b.Property<bool>("IsDynamic");
 
@@ -171,7 +177,7 @@ namespace Monkey.Sql.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<string>("ConnectionName")
                         .IsRequired()
@@ -209,17 +215,21 @@ namespace Monkey.Sql.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255);
+
+                    b.Property<long>("ProcedureId");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(255);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProcedureId");
 
                     b.ToTable("ProcedureParameterDescriptors");
                 });
@@ -228,17 +238,21 @@ namespace Monkey.Sql.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255);
+
+                    b.Property<long>("ProcedureId");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(255);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProcedureId");
 
                     b.ToTable("ProcedureResultDescriptors");
                 });
@@ -277,6 +291,13 @@ namespace Monkey.Sql.Migrations
                     b.HasBaseType("Monkey.Sql.Model.ObjectType");
 
                     b.HasDiscriminator().HasValue("Response");
+                });
+
+            modelBuilder.Entity("Monkey.Sql.Model.PrimitiveObject", b =>
+                {
+                    b.HasBaseType("Monkey.Sql.Model.ObjectType");
+
+                    b.HasDiscriminator().HasValue("Primitive");
                 });
 
             modelBuilder.Entity("Monkey.Sql.Model.Query", b =>
@@ -351,6 +372,22 @@ namespace Monkey.Sql.Migrations
                     b.HasOne("Monkey.Sql.Model.ProcedureParameterDescriptor", "Parameter")
                         .WithMany()
                         .HasForeignKey("ParameterId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Monkey.Sql.Model.ProcedureParameterDescriptor", b =>
+                {
+                    b.HasOne("Monkey.Sql.Model.ProcedureDescriptor", "Procedure")
+                        .WithMany()
+                        .HasForeignKey("ProcedureId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Monkey.Sql.Model.ProcedureResultColumn", b =>
+                {
+                    b.HasOne("Monkey.Sql.Model.ProcedureDescriptor", "Procedure")
+                        .WithMany()
+                        .HasForeignKey("ProcedureId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -31,7 +31,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject1", "TestProject
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monkey.Sql.AcceptanceTests", "Monkey.Sql.AcceptanceTests\Monkey.Sql.AcceptanceTests.csproj", "{B368089B-D66C-4B2F-A8E1-C50A049B91FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monkey.Sql.SimpleInjector", "Monkey.Sql.SimpleInjector\Monkey.Sql.SimpleInjector.csproj", "{591A5B3B-51CC-46B0-945C-62FC5F783321}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monkey.Sql.SimpleInjector", "Monkey.Sql.SimpleInjector\Monkey.Sql.SimpleInjector.csproj", "{591A5B3B-51CC-46B0-945C-62FC5F783321}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monkey.Cqrs", "Monkey.Cqrs\Monkey.Cqrs.csproj", "{82AB2518-B248-40F5-8DC5-914F2C3AB9C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monkey.SimpleInjector", "Monkey.SimpleInjector\Monkey.SimpleInjector.csproj", "{80C2EFDB-5EA8-4285-8DA8-73E84C6BA46F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +87,14 @@ Global
 		{591A5B3B-51CC-46B0-945C-62FC5F783321}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{591A5B3B-51CC-46B0-945C-62FC5F783321}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{591A5B3B-51CC-46B0-945C-62FC5F783321}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82AB2518-B248-40F5-8DC5-914F2C3AB9C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82AB2518-B248-40F5-8DC5-914F2C3AB9C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82AB2518-B248-40F5-8DC5-914F2C3AB9C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82AB2518-B248-40F5-8DC5-914F2C3AB9C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80C2EFDB-5EA8-4285-8DA8-73E84C6BA46F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80C2EFDB-5EA8-4285-8DA8-73E84C6BA46F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80C2EFDB-5EA8-4285-8DA8-73E84C6BA46F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80C2EFDB-5EA8-4285-8DA8-73E84C6BA46F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

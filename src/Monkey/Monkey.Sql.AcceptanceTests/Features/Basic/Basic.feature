@@ -19,7 +19,17 @@ Scenario: I can expose stored procedure to WebApi
 	| END                                          |
 
 	And I have mapped 'AddUser' procedure from 'Test' database in apidatabase in schema 'dbo'
-	And I have mapped parameter '@name' of type 'nvarchar' to property 'Name' of type 'string' in object command 'AddUserCommand'
-	And I have mapped resultset to object 'UserEntity':
-	| SqlColumnName | SqlColumnType | ObjectPath | ParentObjectName | ObjectType |
-	| Name          | nvarchar      | Name       | UserEntity       | string     |
+	And I have mapped parameters to command 'AddUserCommand'
+	| SqlParameterName | SqlType  | PropertyName | PropertyType |
+	| @id              | int      | Id           | int          |
+	| @name            | nvarchar | Name         | string       |
+	| @birthdate       | datetime | BirthDate    | DateTime     |
+
+	And I have mapped resultset 'UserEntity'
+	| SqlColumnName | SqlColumnType | PropertyName | PropertyType |
+	| Id            | int           | Id           | int          |
+	| Name          | nvarchar      | Name         | string       |
+	| BirthDate     | datetime      | BirthDate    | DateTime     |
+
+	When a commandhandler is generated
+	And It is executed with command '[ "Id": 1, "Name": "John", "BirthDate": "2019-04-01" ]'

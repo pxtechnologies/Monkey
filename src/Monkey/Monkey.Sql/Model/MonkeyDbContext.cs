@@ -42,6 +42,9 @@ namespace Monkey.Sql.Model
         }
         protected override void OnModelCreating(ModelBuilder mb)
         {
+            mb.HasSequence<long>("HiLo")
+                .StartsAt(1).IncrementsBy(100);
+            mb.ForSqlServerUseSequenceHiLo("HiLo");
             mb.Entity<ProcedureParameterBinding>(x => x.HasKey(e => new
             {
                 e.ParameterId,
