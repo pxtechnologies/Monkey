@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Monkey.Generator
 {
     public interface ISourceCodeGenerator
     {
-        IEnumerable<SourceUnit> Generate();
+        Task<IEnumerable<SourceUnit>> Generate();
     }
     
 

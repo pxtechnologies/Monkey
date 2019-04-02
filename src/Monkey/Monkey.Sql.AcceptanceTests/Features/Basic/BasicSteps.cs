@@ -4,7 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Monkey.Compilation;
+using Monkey.Generator;
 using Monkey.Sql.AcceptanceTests.Configuration;
+using Monkey.Sql.Generator;
 using Monkey.Sql.Model;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
@@ -28,11 +31,38 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
         {
             await _applicationExecutor.ExecuteAsync<IRepository>(async repo =>
             {
-                await repo.Add(new ProcedureDescriptor() { ConnectionName = dbName, Name = procedureName, Schema = schema });
+                var proc = new ProcedureDescriptor() { ConnectionName = dbName, Name = procedureName, Schema = schema };
+                await repo.Add(proc);
+                
+
                 await repo.CommitChanges();
             });
             _context["procName"] = procedureName;
         }
+        [Given(@"I bind that procedure")]
+        public async Task GivenIBindThatProcedure()
+        {
+            var procName = _context["procName"].ToString();
+            var commadId = (long)_context["commandId"];
+            var resultId = (long) _context["resultId"];
+
+            await _applicationExecutor.ExecuteAsync<IRepository>(async repo =>
+                {
+                var procBinding = new ProcedureBinding()
+                {
+                    IsResultCollection = false,
+                    Mode = Mode.Command,
+                    Name = "AddUser",
+                    Procedure = await repo.Query<ProcedureDescriptor>()
+                        .FirstAsync(x=>x.Name == procName),
+                    RequestId = commadId,
+                    ResultId = resultId
+                };
+                await repo.Add(procBinding);
+                await repo.CommitChanges();
+                });
+        }
+
         [Given(@"I have mapped resultset '(.*)'")]
         public async Task GivenIHaveMappedResultsetToObject(string resultObjectType, Table table)
         {
@@ -45,6 +75,7 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
                 r.IsDynamic = true;
                 r.Namespace = "Basic";
                 await repo.Add(r);
+                _context["resultId"] = r.Id;
 
                 foreach (var m in mappings)
                 {
@@ -81,9 +112,16 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
         }
 
         [When(@"a commandhandler is generated")]
-        public void WhenACommandhandlerIsGenerated()
+        public async Task WhenACommandhandlerIsGenerated()
         {
-            ScenarioContext.Current.Pending();
+            var result = await this._applicationExecutor.ExecuteAsync<SqlCqrsGenerator,IEnumerable<SourceUnit>>( x => x.Generate() );
+            
+            DynamicAssembly assembly = new DynamicAssembly();
+            foreach (var r in result)
+                assembly.AppendSource(r);
+
+            TypeCompiler compiler = new TypeCompiler();
+            _context["assembly"] = assembly.Compile(compiler);
         }
         [When(@"It is executed with command '(.*)'")]
         public void ThenOnceItIsExecutedWithCommand(string p0)
@@ -109,6 +147,7 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
                     Namespace = "Basic"
                 };
                 await repo.Add(command);
+                _context["commandId"] = command.Id;
                 foreach (var m in mappings)
                 {
                     

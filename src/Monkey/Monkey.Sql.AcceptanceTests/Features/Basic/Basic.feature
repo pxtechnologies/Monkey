@@ -11,12 +11,12 @@ Background:
 
 Scenario: I can expose stored procedure to WebApi
 	Given I have a stored procedure with name 'AddUser' in 'Test' database
-	| Sql Line                                     |
-	| CREATE PROCEDURE AddUser @name nvarchar(255) |
-	| AS                                           |
-	| BEGIN                                        |
-	| SELECT @name + '!' as Name                   |
-	| END                                          |
+	| Sql Line                                                                   |
+	| CREATE PROCEDURE AddUser @name nvarchar(255), @id int, @birthdate datetime |
+	| AS                                                                         |
+	| BEGIN                                                                      |
+	| SELECT @name + '!' as Name, 1 as Id, getdate() as BirthDate                                               |
+	| END                                                                        |
 
 	And I have mapped 'AddUser' procedure from 'Test' database in apidatabase in schema 'dbo'
 	And I have mapped parameters to command 'AddUserCommand'
@@ -31,5 +31,6 @@ Scenario: I can expose stored procedure to WebApi
 	| Name          | nvarchar      | Name         | string       |
 	| BirthDate     | datetime      | BirthDate    | DateTime     |
 
+	And I bind that procedure
 	When a commandhandler is generated
 	And It is executed with command '[ "Id": 1, "Name": "John", "BirthDate": "2019-04-01" ]'

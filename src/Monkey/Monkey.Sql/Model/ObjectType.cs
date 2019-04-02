@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Monkey.Sql.Model
@@ -19,9 +20,20 @@ namespace Monkey.Sql.Model
         public bool IsPrimitive { get; set; }
         public bool IsVoid { get; set; }
         public bool IsDynamic { get; set; }
-        
 
-        public List<ObjectProperty> Properties { get; set; }
+        public string SrcName()
+        {
+            if (IsPrimitive) return Alias;
+            return FullName();
+        }
+
+        public string FullName()
+        {
+            if (String.IsNullOrWhiteSpace(Namespace))
+                return Name;
+            else return $"{Namespace}.{Name}";
+        }
+        public virtual List<ObjectProperty> Properties { get; set; }
 
         public ObjectType()
         {

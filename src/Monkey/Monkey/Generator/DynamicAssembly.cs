@@ -38,7 +38,7 @@ namespace Monkey.Generator
             return true;
         }
 
-        public void Compile(ITypeCompiler compiler)
+        public DynamicAssembly Compile(ITypeCompiler compiler)
         {
             Stopwatch s = new Stopwatch();
             s.Start();
@@ -46,6 +46,7 @@ namespace Monkey.Generator
             s.Stop();
             CompilationDate = DateTimeOffset.Now;
             CompilationDuration = s.Elapsed;
+            return this;
         }
     }
 }

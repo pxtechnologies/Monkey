@@ -7,8 +7,8 @@
 
         }
         public long ResultColumnColumnId { get; set; }
-        public long PropertyId { get; set; }
-        public ProcedureResultColumn ResultColumnColumn { get; set; }
-        public ObjectProperty ObjectProperty { get; set; }
+        public long ObjectPropertyId { get; set; }
+        public virtual ProcedureResultColumn ResultColumnColumn { get; set; }
+        public virtual ObjectProperty ObjectProperty { get; set; }
     }
 }

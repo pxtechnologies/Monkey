@@ -13,7 +13,7 @@ namespace Monkey.Sql.Model
         public string Type { get; set; }
 
         public long ProcedureId { get; set; }
-        public ProcedureDescriptor Procedure { get; set; }
+        public virtual ProcedureDescriptor Procedure { get; set; }
     }
 
     public class ProcedureResultColumn
@@ -27,6 +27,6 @@ namespace Monkey.Sql.Model
         public string Type { get; set; }
 
         public long ProcedureId { get; set; }
-        public ProcedureDescriptor Procedure { get; set; }
+        public virtual ProcedureDescriptor Procedure { get; set; }
     }
 }

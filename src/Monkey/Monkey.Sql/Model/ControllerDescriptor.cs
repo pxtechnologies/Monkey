@@ -10,6 +10,6 @@ namespace Monkey.Sql.Model
         public string Name { get; set; }
         public string Route { get; set; }
 
-        public List<ControllerActionDescriptor> Actions { get; set; }
+        public virtual List<ControllerActionDescriptor> Actions { get; set; }
     }
 }

@@ -54,6 +54,12 @@ namespace Monkey.Sql.Builder
             return this;
         }
 
+        public string GenerateCode()
+        {
+            SourceCodeBuilder s=  new SourceCodeBuilder();
+            GenerateCode(s);
+            return s.ToString();
+        }
         public void GenerateCode(SourceCodeBuilder sb)
         {
             

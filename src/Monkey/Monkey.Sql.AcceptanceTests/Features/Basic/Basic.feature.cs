@@ -94,13 +94,13 @@ this.FeatureBackground();
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
                         "Sql Line"});
             table1.AddRow(new string[] {
-                        "CREATE PROCEDURE AddUser @name nvarchar(255)"});
+                        "CREATE PROCEDURE AddUser @name nvarchar(255), @id int, @birthdate datetime"});
             table1.AddRow(new string[] {
                         "AS"});
             table1.AddRow(new string[] {
                         "BEGIN"});
             table1.AddRow(new string[] {
-                        "SELECT @name + \'!\' as Name"});
+                        "SELECT @name + \'!\' as Name, 1 as Id, getdate() as BirthDate"});
             table1.AddRow(new string[] {
                         "END"});
 #line 13
@@ -155,8 +155,10 @@ this.FeatureBackground();
 #line 28
  testRunner.And("I have mapped resultset \'UserEntity\'", ((string)(null)), table3, "And ");
 #line 34
- testRunner.When("a commandhandler is generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.And("I bind that procedure", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 35
+ testRunner.When("a commandhandler is generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 36
  testRunner.And("It is executed with command \'[ \"Id\": 1, \"Name\": \"John\", \"BirthDate\": \"2019-04-01\"" +
                     " ]\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden

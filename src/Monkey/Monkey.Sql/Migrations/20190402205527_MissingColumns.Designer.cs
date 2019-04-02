@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Monkey.Sql.Model;
 
 namespace Monkey.Sql.Migrations
 {
     [DbContext(typeof(MonkeyDbContext))]
-    partial class MonkeyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190402205527_MissingColumns")]
+    partial class MissingColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -164,9 +166,7 @@ namespace Monkey.Sql.Migrations
 
                     b.Property<int>("Mode");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255);
+                    b.Property<string>("Name");
 
                     b.Property<long>("RequestId");
 
@@ -267,9 +267,11 @@ namespace Monkey.Sql.Migrations
                 {
                     b.Property<long>("ResultColumnColumnId");
 
-                    b.Property<long>("ObjectPropertyId");
+                    b.Property<long>("PropertyId");
 
-                    b.HasKey("ResultColumnColumnId", "ObjectPropertyId");
+                    b.Property<long?>("ObjectPropertyId");
+
+                    b.HasKey("ResultColumnColumnId", "PropertyId");
 
                     b.HasIndex("ObjectPropertyId");
 
@@ -404,8 +406,7 @@ namespace Monkey.Sql.Migrations
                 {
                     b.HasOne("Monkey.Sql.Model.ObjectProperty", "ObjectProperty")
                         .WithMany()
-                        .HasForeignKey("ObjectPropertyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ObjectPropertyId");
 
                     b.HasOne("Monkey.Sql.Model.ProcedureResultColumn", "ResultColumnColumn")
                         .WithMany()

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Options;
 
 namespace Monkey.Sql.Builder
 {
@@ -88,8 +89,16 @@ namespace Monkey.Sql.Builder
             this._nameSpace = ns;
             return this;
         }
+
+        public string GenerateCode()
+        {
+            SourceCodeBuilder g = new SourceCodeBuilder();
+            GenerateCode(g);
+            return g.ToString();
+        }
         public void GenerateCode(SourceCodeBuilder sb)
         {
+            Validate();
             if (!string.IsNullOrWhiteSpace(_nameSpace))
                 sb.AppendLine($"namespace {_nameSpace}")
                     .OpenBlock();
@@ -107,6 +116,16 @@ namespace Monkey.Sql.Builder
 
             if (!string.IsNullOrWhiteSpace(_nameSpace))
                 sb.CloseBlock();
+            
+        }
+
+        private void Validate()
+        {
+            if(string.IsNullOrWhiteSpace(_name)) throw new ArgumentException("name");
+            if(string.IsNullOrWhiteSpace(_commandType)) throw new ArgumentException("Command Type");
+            if(string.IsNullOrWhiteSpace(_resultType)) throw new ArgumentException("Result Type");
+            if(string.IsNullOrWhiteSpace(_procName)) throw new ArgumentException("Procedure Name");
+            if(string.IsNullOrWhiteSpace(_dbName)) throw new ArgumentException("DbName");
             
         }
 
@@ -157,7 +176,7 @@ namespace Monkey.Sql.Builder
         
         private void GenerateMethodBody(SourceCodeBuilder sb)
         {
-            sb.AppendLine("$using(var connection = new SqlConnection(_config.GetConnectionString(_dbName)))");
+            sb.AppendLine($"using(var connection = new SqlConnection(_config.GetConnectionString(_dbName)))");
             sb.OpenBlock();
 
             sb.AppendLine("await connection.OpenAsync();");
@@ -165,7 +184,7 @@ namespace Monkey.Sql.Builder
             sb.AppendLine($"command.CommandType = CommandType.StoredProcedure;");
             sb.AppendLine($"command.CommandText = _procName;");
             foreach (var p in this.ParameterBindings)
-                sb.AppendLine($"command.AddWithValue({p.ParameterName},{p.Path});");
+                sb.AppendLine($"command.AddWithValue({p.ParameterName},cmd.{p.Path});");
 
             sb.AppendLine($"using(var rd = await command.ExecuteReaderAsync())").OpenBlock();
 

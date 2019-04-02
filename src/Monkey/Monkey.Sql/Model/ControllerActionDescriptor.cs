@@ -15,7 +15,7 @@ namespace Monkey.Sql.Model
         public HttpVerb Verb { get; set; }
 
         public long ResponseId { get; set; }
-        public ControllerResponse ControllerResponse { get; set; }
+        public virtual ControllerResponse ControllerResponse { get; set; }
         public bool IsResponseCollection { get; set; }
     }
 }

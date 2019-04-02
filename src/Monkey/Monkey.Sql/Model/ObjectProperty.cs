@@ -12,12 +12,12 @@ namespace Monkey.Sql.Model
         public string Name { get; set; }
         
         public long PropertyTypeId { get; set; }
-        public ObjectType PropertyType { get; set; }
+        public virtual ObjectType PropertyType { get; set; }
 
 
         public bool IsCollection { get; set; }
         public long DeclaringTypeId { get; set; }
-        public ObjectType DeclaringType { get; set; }
+        public virtual ObjectType DeclaringType { get; set; }
         
     }
 }

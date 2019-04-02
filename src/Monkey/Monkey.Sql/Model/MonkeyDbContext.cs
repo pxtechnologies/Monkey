@@ -39,9 +39,17 @@ namespace Monkey.Sql.Model
         public MonkeyDbContext(DbContextOptions<MonkeyDbContext> options, string schema) : base(options)
         {
             this._schemaName = schema;
+            
         }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLazyLoadingProxies();
+        }
+
         protected override void OnModelCreating(ModelBuilder mb)
         {
+           
             mb.HasSequence<long>("HiLo")
                 .StartsAt(1).IncrementsBy(100);
             mb.ForSqlServerUseSequenceHiLo("HiLo");
@@ -53,7 +61,7 @@ namespace Monkey.Sql.Model
             mb.Entity<ProcedureResultColumnBinding>(x => x.HasKey(e => new
             {
                 e.ResultColumnColumnId,
-                e.PropertyId
+                e.ObjectPropertyId
             }));
             mb.Entity<ProcedureBinding>(x => x.HasKey(e => new
             {
@@ -75,7 +83,16 @@ namespace Monkey.Sql.Model
                 .WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            
+            mb.Entity<ProcedureBinding>()
+                .HasOne(x => x.Request)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            mb.Entity<ProcedureBinding>()
+                .HasOne(x => x.Result)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
             mb.Entity<ObjectType>().HasDiscriminator<string>("Usage")
                 .HasValue<Query>("Query")
                 .HasValue<Command>("Command")

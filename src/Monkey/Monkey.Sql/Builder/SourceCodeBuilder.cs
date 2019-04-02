@@ -233,7 +233,7 @@ namespace Monkey.Sql.Builder
 
         public SourceCodeBuilder AppendLine(string value)
         {
-            _sb.AppendFormat($"{_linePrefix}{value}");
+            _sb.Append($"{_linePrefix}{value}");
             _sb.AppendLine();
             return this;
         }

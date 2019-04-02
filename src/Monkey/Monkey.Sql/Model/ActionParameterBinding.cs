@@ -4,9 +4,9 @@ namespace Monkey.Sql.Model
 {
     public class ActionParameterBinding
     {
-        public ControllerActionDescriptor Action { get; set; }
+        public virtual ControllerActionDescriptor Action { get; set; }
         public long ActionId { get; set; }
-        public ControllerRequest ControllerRequest { get; set; }
+        public virtual ControllerRequest ControllerRequest { get; set; }
         public long RequestId { get; set; }
 
         public int Order { get; set; }
