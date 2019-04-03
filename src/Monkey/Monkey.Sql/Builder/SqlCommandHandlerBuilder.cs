@@ -16,6 +16,7 @@ namespace Monkey.Sql.Builder
         private bool _isCollectionResult;
         private readonly List<BindingResult> _resultBindings;
         private readonly List<BindingParameter> _parameterBindings;
+        private List<string> _usingNs;
 
         public SqlCommandHandlerBuilder BindColumnResult(string path, string propType, string sqlColumnName)
         {
@@ -38,10 +39,33 @@ namespace Monkey.Sql.Builder
             return this;
         }
 
+        public SqlCommandHandlerBuilder AddUsing(string ns)
+        {
+            if (!_usingNs.Contains(ns))
+                _usingNs.Add(ns);
+            return this;
+        }
         public SqlCommandHandlerBuilder()
         {
+            _usingNs = new List<string>();
             _resultBindings = new List<BindingResult>();
             _parameterBindings = new List<BindingParameter>();
+        }
+
+        public SqlCommandHandlerBuilder AddDefaultUsings()
+        {
+            AddUsing("System")
+                .AddUsing("System.Configuration")
+                .AddUsing("System.Data")
+                .AddUsing("System.Data.SqlClient")
+                .AddUsing("System.Threading")
+                .AddUsing("System.Threading.Tasks")
+                .AddUsing("Monkey.Sql.Extensions")
+                .AddUsing("Monkey.Sql")
+                .AddUsing("Monkey.Cqrs")
+                .AddUsing("Microsoft.Extensions.Configuration");
+
+            return this;
         }
 
         public SqlCommandHandlerBuilder WithRootName(string name)
@@ -69,13 +93,26 @@ namespace Monkey.Sql.Builder
 
         public SqlCommandHandlerBuilder WithCommandTypeName(string commandName)
         {
-            _commandType = commandName;
+            _commandType = MergeUseOfType(commandName);
             return this;
+        }
+
+        private string MergeUseOfType(string typeName)
+        {
+            var type = typeName.ParseType();
+            if (type.IsNamespaceDefined)
+            {
+                if (!_usingNs.Contains(type.Namespace))
+                    _usingNs.Add(type.Namespace);
+                typeName = type.Name;
+            }
+
+            return typeName;
         }
 
         public SqlCommandHandlerBuilder WithResultTypeName(string resultName)
         {
-            _resultType = resultName;
+            _resultType = MergeUseOfType(resultName);
             return this;
         }
         public SqlCommandHandlerBuilder WithName(string name)
@@ -103,15 +140,19 @@ namespace Monkey.Sql.Builder
                 sb.AppendLine($"namespace {_nameSpace}")
                     .OpenBlock();
             
+            if(_usingNs.Any())
+                foreach (var ns in _usingNs)
+                    sb.AppendLine($"using {ns};");
+            sb.AppendLine();
 
-            sb.AppendLine($"public class {_name} : ICommandHandler<{_commandType},{_resultType}");
+            sb.AppendLine($"public class {_name} : ICommandHandler<{_commandType}, {_resultType}>");
 
             sb.OpenBlock();
 
             GenerateConsts(sb);
-            GenerateExecuteMethod(sb);
             GenerateCtor(sb);
-
+            GenerateExecuteMethod(sb);
+           
             sb.CloseBlock();
 
             if (!string.IsNullOrWhiteSpace(_nameSpace))
@@ -121,7 +162,7 @@ namespace Monkey.Sql.Builder
 
         private void Validate()
         {
-            if(string.IsNullOrWhiteSpace(_name)) throw new ArgumentException("name");
+            if(string.IsNullOrWhiteSpace(_name)) throw new ArgumentException("Name");
             if(string.IsNullOrWhiteSpace(_commandType)) throw new ArgumentException("Command Type");
             if(string.IsNullOrWhiteSpace(_resultType)) throw new ArgumentException("Result Type");
             if(string.IsNullOrWhiteSpace(_procName)) throw new ArgumentException("Procedure Name");
@@ -157,13 +198,12 @@ namespace Monkey.Sql.Builder
 
         private void GenerateResult(SourceCodeBuilder sb, string objName = "result")
         {
-            sb.AppendLine($"var {objName} = new {_resultType}({String.Join(",",ResultBindings.Select(x=>x.SqlColumnName.DblQuoted()))});");
+            sb.AppendLine($"var {objName} = new {_resultType}();");
             int i = 0;
             foreach (var r in this.ResultBindings)
             {
-                sb.AppendLine($"int index = ix[{i++}];");
-                sb.AppendLine($"if(!(await rd.IsDBNullAsync(index)))").IndentUp();
-                sb.AppendLine($"{objName}.{r.Path} = rd.{_mthDict[r.PropertyType]}(index);").IndentDown();
+                sb.AppendLine($"if(!(await rd.IsDBNullAsync(ix[{i}])))").IndentUp();
+                sb.AppendLine($"{objName}.{r.Path} = rd.{_mthDict[r.PropertyType]}(ix[{i++}]);").IndentDown();
             }
         }
         private ISqlReaderMethodDictionary _mthDict = new SqlReaderMethodDictionary();
@@ -184,16 +224,18 @@ namespace Monkey.Sql.Builder
             sb.AppendLine($"command.CommandType = CommandType.StoredProcedure;");
             sb.AppendLine($"command.CommandText = _procName;");
             foreach (var p in this.ParameterBindings)
-                sb.AppendLine($"command.AddWithValue({p.ParameterName},cmd.{p.Path});");
+                sb.AppendLine($"command.AddWithValue({p.ParameterName}, cmd.{p.Path});");
+            sb.AppendLine();
 
             sb.AppendLine($"using(var rd = await command.ExecuteReaderAsync())").OpenBlock();
 
-            sb.AppendLine("var lz = new Lazy<int[]>(() => rd.GetIndexes(), LazyThreadSafetyMode.None);");
+            sb.AppendLine($"var lz = new Lazy<int[]>(() => rd.GetIndexes({String.Join(", ", ResultBindings.Select(x => x.SqlColumnName.DblQuoted()))}), LazyThreadSafetyMode.None);");
 
             if (_isCollectionResult)
             {
                 sb.AppendLine($"List<{_resultType}> resultSet = new List<{_resultType}>();");
                 sb.AppendLine($"while(await rd.ReadAsync())").OpenBlock();
+                sb.AppendLine($"var ix = lz.Value;");
                 GenerateResult(sb);
                 sb.AppendLine($"resultSet.Add(result);");
 
@@ -203,6 +245,7 @@ namespace Monkey.Sql.Builder
             else
             {
                 sb.AppendLine($"if(await rd.ReadAsync())").OpenBlock();
+                sb.AppendLine($"var ix = lz.Value;");
                 GenerateResult(sb);
                 sb.AppendLine("return result;");
 

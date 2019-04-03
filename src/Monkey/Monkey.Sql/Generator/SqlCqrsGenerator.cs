@@ -54,13 +54,13 @@ namespace Monkey.Sql.Generator
         private async Task<SourceUnit> GenerateResult(ProcedureDescriptor proc, Result obj)
         {
             DataClassBuilder builder = new DataClassBuilder()
-                .InNamespace(proc.Schema)
+                .InNamespace(obj.Namespace)
                 .WithName(obj.Name);
 
             foreach (var p in obj.Properties)
                 builder.WithProperty(p.PropertyType.SrcName(), p.Name);
 
-            return new SourceUnit(proc.Schema, obj.Name, builder.GenerateCode());
+            return new SourceUnit(obj.Namespace, obj.Name, builder.GenerateCode());
         }
 
         private async Task<SourceUnit> GenerateCommand(ProcedureDescriptor proc, Mode mode, ObjectType obj)
@@ -71,13 +71,13 @@ namespace Monkey.Sql.Generator
                 throw new InvalidOperationException("Command mode cannot be used with query object.");
 
             DataClassBuilder builder = new DataClassBuilder()
-                .InNamespace(proc.Schema)
+                .InNamespace(obj.Namespace )
                 .WithName(obj.Name);
 
             foreach (var p in obj.Properties)
                 builder.WithProperty(p.PropertyType.SrcName(), p.Name);
 
-            return new SourceUnit(proc.Schema, obj.Name, builder.GenerateCode());
+            return new SourceUnit(obj.Namespace, obj.Name, builder.GenerateCode());
         }
 
         private async Task<SourceUnit> GenerateCommandHandler(ProcedureDescriptor proc, ProcedureBinding procBinding)
@@ -101,7 +101,9 @@ namespace Monkey.Sql.Generator
                 .InNamespace(proc.Schema)
                 .WithName(handlerTypeName)
                 .WithProcedureName(proc.Name, proc.ConnectionName)
-                .WithResultTypeName(procBinding.Result.FullName());
+                .WithCommandTypeName(procBinding.Request.FullName())
+                .WithResultTypeName(procBinding.Result.FullName())
+                .AddDefaultUsings();
 
             foreach (var p in paramBindings)
             {

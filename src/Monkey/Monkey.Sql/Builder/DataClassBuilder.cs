@@ -9,14 +9,23 @@ namespace Monkey.Sql.Builder
 
         private List<string> _interfaces;
         private List<IField> _props;
+        private List<string> _usingNs;
         private string _name;
         private string _nameSpace;
+        public DataClassBuilder AddUsing(string ns)
+        {
+            if(!_usingNs.Contains(ns))
+                _usingNs.Add(ns);
+            return this;
+        }
+
         public DataClassBuilder()
         {
             _name = "Dto";
             _nameSpace = "";
             _props = new List<IField>();
             _interfaces = new List<string>();
+            _usingNs = new List<string>(){ "System" };
         }
 
         public DataClassBuilder WithName(string name)
@@ -66,9 +75,16 @@ namespace Monkey.Sql.Builder
             if (!string.IsNullOrWhiteSpace(_nameSpace))
             {
                 sb.AppendLine($"namespace {_nameSpace}");
-                sb.AppendLine("{");
-                sb.IndentUp();
+                sb.OpenBlock();
             }
+
+            if (_usingNs.Any())
+            {
+                foreach (var n in _usingNs)
+                    sb.AppendLine($"using {n};");
+            }
+
+            sb.AppendLine();
 
             sb.AppendLine($"public class {_name}");
             if (_interfaces.Any())
@@ -79,20 +95,19 @@ namespace Monkey.Sql.Builder
                 sb.AppendLine();
             }
 
-            sb.AppendLine("{").IndentUp();
+            sb.OpenBlock();
 
 
             foreach (var prop in _props)
             {
                 sb.AppendLine($"public {prop.Type} {prop.Name} {{ get; set; }}");
             }
-            
-            sb.IndentDown().AppendLine("}");
+
+            sb.CloseBlock();
             
             if (!string.IsNullOrWhiteSpace(_nameSpace))
             {
-                sb.AppendLine("}");
-                sb.IndentDown();
+                sb.CloseBlock();
             }
         }
     }

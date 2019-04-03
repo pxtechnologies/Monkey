@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Monkey.Compilation;
+using Monkey.Cqrs;
 using Monkey.Generator;
+using Monkey.SimpleInjector;
 using Monkey.Sql.AcceptanceTests.Configuration;
 using Monkey.Sql.Generator;
 using Monkey.Sql.Model;
+using Monkey.Sql.SimpleInjector;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 
@@ -117,8 +122,13 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
             var result = await this._applicationExecutor.ExecuteAsync<SqlCqrsGenerator,IEnumerable<SourceUnit>>( x => x.Generate() );
             
             DynamicAssembly assembly = new DynamicAssembly();
-            foreach (var r in result)
-                assembly.AppendSource(r);
+            assembly.AppendSourceUnits(result);
+            assembly.AddReferenceFromType(typeof(ICommandHandler<,>));
+            assembly.AddReferenceFromType<SqlPackage>();
+            assembly.AddReferenceFromType<MonkeyPackage>();
+            assembly.AddReferenceFromType<IRepository>();
+            assembly.AddReferenceFromType<SqlParameterCollection>();
+            assembly.AddReferenceFromType<IConfiguration>();
 
             TypeCompiler compiler = new TypeCompiler();
             _context["assembly"] = assembly.Compile(compiler);
