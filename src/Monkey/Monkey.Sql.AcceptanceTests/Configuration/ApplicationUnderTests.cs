@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using Monkey.SimpleInjector;
 using Monkey.Sql.SimpleInjector;
 using SimpleInjector;
@@ -28,7 +29,7 @@ namespace Monkey.Sql.AcceptanceTests.Configuration
             _container = new Container();
             _container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
             _container.Options.DefaultLifestyle = Lifestyle.Scoped;
-
+            _container.RegisterInstance<IServiceProvider>(_container);
             Assembly[] catalog = new Assembly[]
             {
                 typeof(ApplicationUnderTestsPackage).Assembly,

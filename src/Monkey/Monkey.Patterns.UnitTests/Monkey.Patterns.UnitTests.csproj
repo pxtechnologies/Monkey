@@ -20,8 +20,15 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Monkey.Cqrs\Monkey.Cqrs.csproj" />
       <ProjectReference Include="..\Monkey.Sql\Monkey.Sql.csproj" />
       <ProjectReference Include="..\Monkey\Monkey.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="appsettings.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

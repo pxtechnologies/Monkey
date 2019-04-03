@@ -12,10 +12,10 @@ Background:
 Scenario: I can expose stored procedure to WebApi
 	Given I have a stored procedure with name 'AddUser' in 'Test' database
 	| Sql Line                                                                   |
-	| CREATE PROCEDURE AddUser @name nvarchar(255), @id int, @birthdate datetime |
+	| CREATE PROCEDURE AddUser @id int, @name nvarchar(255), @birthdate datetime |
 	| AS                                                                         |
 	| BEGIN                                                                      |
-	| SELECT @name + '!' as Name, 1 as Id, getdate() as BirthDate                                               |
+	| SELECT @name + '!' as Name, @id+1 as Id, DATEADD(dd,1, @birthdate) as BirthDate                                               |
 	| END                                                                        |
 
 	And I have mapped 'AddUser' procedure from 'Test' database in apidatabase in schema 'dbo'
@@ -33,4 +33,5 @@ Scenario: I can expose stored procedure to WebApi
 
 	And I bind that procedure
 	When a commandhandler is generated
-	And It is executed with command '[ "Id": 1, "Name": "John", "BirthDate": "2019-04-01" ]'
+	And It is executed with command '{ "Id": 1, "Name": "John", "BirthDate": "2019-04-01" }'
+	Then result is: '{ "Id": 2, "Name": "John!", "BirthDate": "2019-04-02" }'

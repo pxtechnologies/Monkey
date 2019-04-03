@@ -23,6 +23,7 @@ namespace Monkey.Sql.Extensions
             for (int i = 0; i < result.Length; i++)
             {
                 int index = columns.IndexOf(rd.GetName(i));
+                result[i] = index;
             }
 
 

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
@@ -52,12 +53,20 @@ namespace Monkey.Compilation
                     IEnumerable<Diagnostic> failures = result.Diagnostics.Where(diagnostic =>
                         diagnostic.IsWarningAsError ||
                         diagnostic.Severity == DiagnosticSeverity.Error);
-
+                    string[] lines = Regex.Split(code, "\r\n|\r|\n");
                     StringBuilder sb = new StringBuilder();
                     foreach (Diagnostic diagnostic in failures)
                     {
-                        
                         sb.AppendFormat("{0}: {1}\r\n", diagnostic.Id, diagnostic.GetMessage());
+                        var line = diagnostic.Location.GetLineSpan().StartLinePosition.Line;
+                        sb.AppendFormat($"Code({line}):\r\n");
+                        
+                        for (int i = line - 1; i < line + 2; i++)
+                        {
+                            sb.AppendLine($"{i}:{lines[i]}");
+                        }
+
+                        sb.AppendLine();
                     }
                     throw new CompilationException(sb.ToString()) { Errors = failures.ToArray() };
                 }

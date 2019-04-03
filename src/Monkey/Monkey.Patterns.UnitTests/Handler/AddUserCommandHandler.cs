@@ -4,7 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+//using Microsoft.EntityFrameworkCore.Internal;
 using Monkey.Patterns.UnitTests.WebApi;
 using Monkey.Sql.Extensions;
 
@@ -13,7 +13,6 @@ namespace Monkey.Patterns.UnitTests.Handler
     public class CreateUserHandler : IRequestHandler<CreateUserCommand, UserEntity>
     {
         private const string _connectionStringName = "";
-        private IConfiguration _config;
         public CreateUserHandler()
         {
             
@@ -21,13 +20,13 @@ namespace Monkey.Patterns.UnitTests.Handler
         public async Task<UserEntity> Execute(CreateUserCommand request)
         {
             using (var connection =
-                new SqlConnection(_config.GetConnectionString(_connectionStringName)))
+                new SqlConnection(ConfigurationManager.ConnectionStrings[_connectionStringName].ConnectionString))
             {
                 await connection.OpenAsync();
                 using (var cmd = connection.CreateCommand())
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-
+                    
                     cmd.Parameters.AddWithValue(nameof(request.Name), request.Name);
 
                     using (var rd = cmd.ExecuteReader())
@@ -37,12 +36,12 @@ namespace Monkey.Patterns.UnitTests.Handler
                         {
                             var ix = lz.Value;
                             UserEntity row = new UserEntity();
-
-                            row.Name = rd.GetString(ix[0]);
-
-
-
-
+                            
+                            row.Name = rd.GetString(ix[0]); 
+                            
+                            
+                                
+                            
                             return row;
                         }
 

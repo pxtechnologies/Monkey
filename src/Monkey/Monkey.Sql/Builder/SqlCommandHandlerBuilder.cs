@@ -60,6 +60,7 @@ namespace Monkey.Sql.Builder
                 .AddUsing("System.Data.SqlClient")
                 .AddUsing("System.Threading")
                 .AddUsing("System.Threading.Tasks")
+                .AddUsing("System.Data.SqlClient")
                 .AddUsing("Monkey.Sql.Extensions")
                 .AddUsing("Monkey.Sql")
                 .AddUsing("Monkey.Cqrs")
@@ -82,15 +83,7 @@ namespace Monkey.Sql.Builder
             _procName = procName;
             return this;
         }
-        public SqlCommandHandlerBuilder BindSqlResultSetColumn(string columnName, string path)
-        {
-            return this;
-        }
-        public SqlCommandHandlerBuilder BindSqlParameter(string parameterName, string path)
-        {
-            return this;
-        }
-
+        
         public SqlCommandHandlerBuilder WithCommandTypeName(string commandName)
         {
             _commandType = MergeUseOfType(commandName);
@@ -224,7 +217,7 @@ namespace Monkey.Sql.Builder
             sb.AppendLine($"command.CommandType = CommandType.StoredProcedure;");
             sb.AppendLine($"command.CommandText = _procName;");
             foreach (var p in this.ParameterBindings)
-                sb.AppendLine($"command.AddWithValue({p.ParameterName}, cmd.{p.Path});");
+                sb.AppendLine($"command.Parameters.AddWithValue({p.ParameterName.DblQuoted()}, cmd.{p.Path});");
             sb.AppendLine();
 
             sb.AppendLine($"using(var rd = await command.ExecuteReaderAsync())").OpenBlock();

@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Monkey.Compilation;
@@ -14,6 +15,7 @@ using Monkey.Sql.AcceptanceTests.Configuration;
 using Monkey.Sql.Generator;
 using Monkey.Sql.Model;
 using Monkey.Sql.SimpleInjector;
+using Newtonsoft.Json;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 
@@ -134,10 +136,30 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
             _context["assembly"] = assembly.Compile(compiler);
         }
         [When(@"It is executed with command '(.*)'")]
-        public void ThenOnceItIsExecutedWithCommand(string p0)
+        public async Task ThenOnceItIsExecutedWithCommand(string p0)
         {
-            ScenarioContext.Current.Pending();
+            DynamicAssembly assembly = (DynamicAssembly)_context["assembly"];
+            var type = assembly.Load("Basic", "AddUserCommand");
+            dynamic arg = JsonConvert.DeserializeObject(p0, type);
+
+            var commandHandlerType = assembly.Load("dbo", "AddUserCommandHandler");
+            await _applicationExecutor.ExecuteAsync<IServiceProvider>(async conteiner =>
+            {
+                dynamic commandHandler = conteiner.GetService(commandHandlerType);
+                _context["result"] = await commandHandler.Execute(arg);
+            });
         }
+        [Then(@"result is: '(.*)'")]
+        public void ThenResultIs(string p0)
+        {
+            DynamicAssembly assembly = (DynamicAssembly)_context["assembly"];
+            var type = assembly.Load("Basic", "UserEntity");
+            object expected = JsonConvert.DeserializeObject(p0, type);
+            object actual = _context["result"];
+
+            actual.Should().BeEquivalentTo(expected);
+        }
+
 
 
         [Given(@"I have mapped parameters to command '(.*)'")]

@@ -94,13 +94,13 @@ this.FeatureBackground();
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
                         "Sql Line"});
             table1.AddRow(new string[] {
-                        "CREATE PROCEDURE AddUser @name nvarchar(255), @id int, @birthdate datetime"});
+                        "CREATE PROCEDURE AddUser @id int, @name nvarchar(255), @birthdate datetime"});
             table1.AddRow(new string[] {
                         "AS"});
             table1.AddRow(new string[] {
                         "BEGIN"});
             table1.AddRow(new string[] {
-                        "SELECT @name + \'!\' as Name, 1 as Id, getdate() as BirthDate"});
+                        "SELECT @name + \'!\' as Name, @id+1 as Id, DATEADD(dd,1, @birthdate) as BirthDate"});
             table1.AddRow(new string[] {
                         "END"});
 #line 13
@@ -159,8 +159,10 @@ this.FeatureBackground();
 #line 35
  testRunner.When("a commandhandler is generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 36
- testRunner.And("It is executed with command \'[ \"Id\": 1, \"Name\": \"John\", \"BirthDate\": \"2019-04-01\"" +
-                    " ]\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("It is executed with command \'{ \"Id\": 1, \"Name\": \"John\", \"BirthDate\": \"2019-04-01\"" +
+                    " }\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 37
+ testRunner.Then("result is: \'{ \"Id\": 2, \"Name\": \"John!\", \"BirthDate\": \"2019-04-02\" }\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }

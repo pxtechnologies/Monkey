@@ -22,6 +22,18 @@ namespace Monkey.Generator
     {
         Dictionary<Guid, SourceUnit> _srcUnits = new Dictionary<Guid, SourceUnit>();
         Dictionary<string, SourceUnit> _nameUnits = new Dictionary<string, SourceUnit>();
+        private string _code;
+
+        public string Code
+        {
+            get
+            {
+                if (_code == null)
+                    _code = string.Join(Environment.NewLine, this.Select(x => x.Code));
+                return _code;
+            }
+            
+        }
 
         public bool Append(SourceUnit unit)
         {
@@ -39,6 +51,7 @@ namespace Monkey.Generator
                 {
                     _srcUnits.Add(unit.CodeHash, unit);
                     _nameUnits.Add(unit.FullName, unit);
+                    _code = null;
                     return true;
                 }
             }
@@ -106,8 +119,7 @@ namespace Monkey.Generator
         {
             Stopwatch s = new Stopwatch();
             s.Start();
-            _assembly = compiler.FastLoad(string.Join(Environment.NewLine, 
-                _sourceUnits.Select(x=>x.Code)), _references.ToArray());
+            _assembly = compiler.FastLoad(_sourceUnits.Code, _references.ToArray());
             s.Stop();
             CompilationDate = DateTimeOffset.Now;
             CompilationDuration = s.Elapsed;
