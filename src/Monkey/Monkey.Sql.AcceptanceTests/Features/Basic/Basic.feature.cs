@@ -31,8 +31,8 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Basic", "\tIn order to avoid silly mistakes\r\n\tAs a backend-developer\r\n\tI want to be told ho" +
-                    "w to get started with Monkey.WebApi\r\n\tAnd expose my backend as webapi easily", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Basic", "\tIn order to avoid silly mistakes\r\n\tAs a sql-developer\r\n\tI want to be told how to" +
+                    " get started with Monkey.Sql\r\n\tAnd generate command and query handlers easily", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -75,17 +75,15 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
 #line 7
 #line 8
  testRunner.Given("I have my system configured with SqlServer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 9
- testRunner.And("I configured basic WebApi features with swagger", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("I can expose stored procedure to WebApi")]
-        public virtual void ICanExposeStoredProcedureToWebApi()
+        [NUnit.Framework.DescriptionAttribute("I can invoke stored procedure though command-handler")]
+        public virtual void ICanInvokeStoredProcedureThoughCommand_Handler()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can expose stored procedure to WebApi", null, ((string[])(null)));
-#line 12
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can invoke stored procedure though command-handler", null, ((string[])(null)));
+#line 11
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
 #line 7
@@ -103,9 +101,9 @@ this.FeatureBackground();
                         "SELECT @name + \'!\' as Name, @id+1 as Id, DATEADD(dd,1, @birthdate) as BirthDate"});
             table1.AddRow(new string[] {
                         "END"});
-#line 13
+#line 12
  testRunner.Given("I have a stored procedure with name \'AddUser\' in \'Test\' database", ((string)(null)), table1, "Given ");
-#line 21
+#line 20
  testRunner.And("I have mapped \'AddUser\' procedure from \'Test\' database in apidatabase in schema \'" +
                     "dbo\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
@@ -129,7 +127,7 @@ this.FeatureBackground();
                         "datetime",
                         "BirthDate",
                         "DateTime"});
-#line 22
+#line 21
  testRunner.And("I have mapped parameters to command \'AddUserCommand\'", ((string)(null)), table2, "And ");
 #line hidden
             TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
@@ -152,16 +150,16 @@ this.FeatureBackground();
                         "datetime",
                         "BirthDate",
                         "DateTime"});
-#line 28
+#line 27
  testRunner.And("I have mapped resultset \'UserEntity\'", ((string)(null)), table3, "And ");
-#line 34
+#line 33
  testRunner.And("I bind that procedure", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 35
+#line 34
  testRunner.When("a commandhandler is generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 36
+#line 35
  testRunner.And("It is executed with command \'{ \"Id\": 1, \"Name\": \"John\", \"BirthDate\": \"2019-04-01\"" +
                     " }\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 37
+#line 36
  testRunner.Then("result is: \'{ \"Id\": 2, \"Name\": \"John!\", \"BirthDate\": \"2019-04-02\" }\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();

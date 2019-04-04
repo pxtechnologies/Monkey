@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace Monkey.Sql.Builder
+namespace Monkey.Builder
 {
     public sealed class SourceCodeBuilder
     {

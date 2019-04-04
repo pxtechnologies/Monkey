@@ -22,11 +22,7 @@ namespace Monkey.Sql.AcceptanceTests.Configuration
         {
             await _applicationExecutor.ExecuteAsync<IMonkeyDatabase>(async x=> await x.ReCreate());
         }
-        [Given(@"I configured basic WebApi features with swagger")]
-        public void GivenIConfiguredBasicWebApiFeaturesWithSwagger()
-        {
-            
-        }
+        
 
     }
 }

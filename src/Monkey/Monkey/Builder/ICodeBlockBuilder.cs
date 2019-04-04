@@ -1,4 +1,4 @@
-namespace Monkey.Sql.Builder
+namespace Monkey.Builder
 {
     public interface ICodeBlockBuilder
     {

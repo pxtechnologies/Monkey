@@ -23,6 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Monkey.Cqrs\Monkey.Cqrs.csproj" />
       <ProjectReference Include="..\Monkey\Monkey.csproj" />
     </ItemGroup>
 

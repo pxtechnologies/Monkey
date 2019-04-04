@@ -7,4 +7,14 @@ namespace Monkey.Cqrs
     {
         Task<TResult> Execute(TCommand cmd);
     }
+
+    public interface IQueryHandler<in TQuery, TQueryResult>
+    {
+        Task<TQueryResult[]> Execute(TQuery query);
+    }
+
+    public interface ISingleQueryHandler<in TQuery, TQueryResult>
+    {
+        Task<TQueryResult> Execute(TQuery query);
+    }
 }

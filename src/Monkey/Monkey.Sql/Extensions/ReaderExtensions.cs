@@ -1,10 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Text;
+using Microsoft.Extensions.Configuration;
+using Monkey.Cqrs;
+using Monkey.Generator;
 
 namespace Monkey.Sql.Extensions
 {
+    public static class DynamicAssemblyExtensions
+    {
+        public static DynamicAssembly AddDefaultReferences(this DynamicAssembly assembly)
+        {
+            assembly.AddReferenceFromType(typeof(ICommandHandler<,>));
+            assembly.AddReferenceFromType<IRepository>();
+            assembly.AddReferenceFromType<SqlParameterCollection>();
+            assembly.AddReferenceFromType<IConfiguration>();
+            return assembly;
+        }
+    }
     public static class ReaderExtensions
     {
         public static int IndexOf<TClass>(this TClass[] array, TClass search)

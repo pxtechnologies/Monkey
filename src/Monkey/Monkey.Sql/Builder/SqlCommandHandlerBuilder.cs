@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Options;
+using Monkey.Builder;
 
 namespace Monkey.Sql.Builder
 {
@@ -120,12 +121,7 @@ namespace Monkey.Sql.Builder
             return this;
         }
 
-        public string GenerateCode()
-        {
-            SourceCodeBuilder g = new SourceCodeBuilder();
-            GenerateCode(g);
-            return g.ToString();
-        }
+        
         public void GenerateCode(SourceCodeBuilder sb)
         {
             Validate();

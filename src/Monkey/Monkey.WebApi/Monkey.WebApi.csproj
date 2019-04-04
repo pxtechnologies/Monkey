@@ -5,8 +5,22 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="Configuration\**" />
+      <EmbeddedResource Remove="Configuration\**" />
+      <None Remove="Configuration\**" />
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="AutoMapper" Version="8.0.0" />
       <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Monkey\Monkey.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Model\" />
     </ItemGroup>
 
 </Project>

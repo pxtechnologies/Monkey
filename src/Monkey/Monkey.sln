@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monkey.Cqrs", "Monkey.Cqrs\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monkey.SimpleInjector", "Monkey.SimpleInjector\Monkey.SimpleInjector.csproj", "{80C2EFDB-5EA8-4285-8DA8-73E84C6BA46F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monkey.WebApi.SimpleInjector", "Monkey.WebApi.SimpleInjector\Monkey.WebApi.SimpleInjector.csproj", "{5590A24B-7A4D-4222-A2C6-CD8B03C718DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,10 @@ Global
 		{80C2EFDB-5EA8-4285-8DA8-73E84C6BA46F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80C2EFDB-5EA8-4285-8DA8-73E84C6BA46F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80C2EFDB-5EA8-4285-8DA8-73E84C6BA46F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5590A24B-7A4D-4222-A2C6-CD8B03C718DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5590A24B-7A4D-4222-A2C6-CD8B03C718DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5590A24B-7A4D-4222-A2C6-CD8B03C718DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5590A24B-7A4D-4222-A2C6-CD8B03C718DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -110,6 +116,7 @@ Global
 		{E8F92BF2-E958-4B4A-A9D1-9BABB988D148} = {203DCC1A-CF6B-421C-8A7A-CAB40182CAEA}
 		{B368089B-D66C-4B2F-A8E1-C50A049B91FE} = {4A5911B4-4CDC-4BF9-A810-78CF7085A83E}
 		{591A5B3B-51CC-46B0-945C-62FC5F783321} = {4A5911B4-4CDC-4BF9-A810-78CF7085A83E}
+		{5590A24B-7A4D-4222-A2C6-CD8B03C718DC} = {6CDC3976-D205-4E50-965E-881DAD466499}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8FC7FC1E-BD28-47AE-BD03-583D23AE89E1}

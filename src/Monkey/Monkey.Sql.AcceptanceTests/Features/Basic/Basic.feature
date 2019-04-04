@@ -1,15 +1,14 @@
 ﻿Feature: Basic
 	In order to avoid silly mistakes
-	As a backend-developer
-	I want to be told how to get started with Monkey.WebApi
-	And expose my backend as webapi easily
+	As a sql-developer
+	I want to be told how to get started with Monkey.Sql
+	And generate command and query handlers easily
 
 Background: 
 	Given I have my system configured with SqlServer
-	And I configured basic WebApi features with swagger
 	
 
-Scenario: I can expose stored procedure to WebApi
+Scenario: I can invoke stored procedure though command-handler
 	Given I have a stored procedure with name 'AddUser' in 'Test' database
 	| Sql Line                                                                   |
 	| CREATE PROCEDURE AddUser @id int, @name nvarchar(255), @birthdate datetime |

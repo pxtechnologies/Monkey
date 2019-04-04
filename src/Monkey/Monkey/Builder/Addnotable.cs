@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Monkey.Sql.Builder
+namespace Monkey.Builder
 {
     public class Addnotable
     {
@@ -19,6 +19,14 @@ namespace Monkey.Sql.Builder
             return this;
         }
         public void WriteAttributes(StringBuilder sb)
+        {
+            if (_attributes.Any())
+            {
+                var atts = string.Join(",", _attributes);
+                sb.AppendFormat($"[{atts}] ");
+            }
+        }
+        public void WriteAttributes(SourceCodeBuilder sb)
         {
             if(_attributes.Any())
             {

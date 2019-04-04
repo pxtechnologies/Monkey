@@ -12,6 +12,7 @@ using Monkey.Cqrs;
 using Monkey.Generator;
 using Monkey.SimpleInjector;
 using Monkey.Sql.AcceptanceTests.Configuration;
+using Monkey.Sql.Extensions;
 using Monkey.Sql.Generator;
 using Monkey.Sql.Model;
 using Monkey.Sql.SimpleInjector;
@@ -125,22 +126,17 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
             
             DynamicAssembly assembly = new DynamicAssembly();
             assembly.AppendSourceUnits(result);
-            assembly.AddReferenceFromType(typeof(ICommandHandler<,>));
-            assembly.AddReferenceFromType<SqlPackage>();
-            assembly.AddReferenceFromType<MonkeyPackage>();
-            assembly.AddReferenceFromType<IRepository>();
-            assembly.AddReferenceFromType<SqlParameterCollection>();
-            assembly.AddReferenceFromType<IConfiguration>();
-
+            assembly.AddDefaultReferences();
+            
             TypeCompiler compiler = new TypeCompiler();
             _context["assembly"] = assembly.Compile(compiler);
         }
         [When(@"It is executed with command '(.*)'")]
-        public async Task ThenOnceItIsExecutedWithCommand(string p0)
+        public async Task ThenOnceItIsExecutedWithCommand(string json)
         {
             DynamicAssembly assembly = (DynamicAssembly)_context["assembly"];
             var type = assembly.Load("Basic", "AddUserCommand");
-            dynamic arg = JsonConvert.DeserializeObject(p0, type);
+            dynamic arg = JsonConvert.DeserializeObject(json, type);
 
             var commandHandlerType = assembly.Load("dbo", "AddUserCommandHandler");
             await _applicationExecutor.ExecuteAsync<IServiceProvider>(async conteiner =>
@@ -150,11 +146,11 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
             });
         }
         [Then(@"result is: '(.*)'")]
-        public void ThenResultIs(string p0)
+        public void ThenResultIs(string json)
         {
             DynamicAssembly assembly = (DynamicAssembly)_context["assembly"];
             var type = assembly.Load("Basic", "UserEntity");
-            object expected = JsonConvert.DeserializeObject(p0, type);
+            object expected = JsonConvert.DeserializeObject(json, type);
             object actual = _context["result"];
 
             actual.Should().BeEquivalentTo(expected);

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -6,6 +7,19 @@ namespace Monkey
 {
     public static class StrExt
     {
+        public static IEnumerable<string> ToWords(this string str)
+        {
+            int prv = 0;
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (char.IsUpper(str[i]))
+                {
+                    string result = str.Substring(prv, i - prv);
+                    prv = i;
+                    yield return result;
+                }
+            }
+        }
         public static Guid ComputeMd5(this string str)
         {
             using (var h = new MD5CryptoServiceProvider())
