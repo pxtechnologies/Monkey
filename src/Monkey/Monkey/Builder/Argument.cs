@@ -1,3 +1,6 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Monkey.Builder
@@ -33,6 +36,48 @@ namespace Monkey.Builder
         {
             WriteAttributes(sb);
             sb.Append($"{_type} {_name}");
+        }
+    }
+
+    public class ArgumentCollection : IEnumerable<Argument>
+    {
+        private readonly List<Argument> _list;
+        
+        public ArgumentCollection()
+        {
+            _list = new List<Argument>();
+        }
+        public Argument Add(string type, string name, params string[] attributes)
+        {
+            Argument result = new Argument(type, name);
+            foreach (var attribute in attributes)
+            {
+                result.WithAttribute(attribute);
+            }
+            _list.Add(result);
+            return result;
+        }
+
+        public override string ToString()
+        {
+            return string.Join(",", this.Select(x => $"{x.Type} {x.Name}"));
+        }
+
+        public Argument Add(string type, string name)
+        {
+            Argument result = new Argument(type,name);
+            _list.Add(result);
+            return result;
+        }
+
+        public IEnumerator<Argument> GetEnumerator()
+        {
+            return _list.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

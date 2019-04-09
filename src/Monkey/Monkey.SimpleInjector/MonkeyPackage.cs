@@ -1,5 +1,6 @@
 ﻿using System;
 using Monkey.Compilation;
+using Monkey.Logging;
 using SimpleInjector;
 using SimpleInjector.Packaging;
 
@@ -10,6 +11,7 @@ namespace Monkey.SimpleInjector
         public void RegisterServices(Container container)
         {
             container.Register<ITypeCompiler, TypeCompiler>();
+            container.Register<ILogger, ConsoleLogger>();
         }
     }
 }

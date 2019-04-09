@@ -5,6 +5,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Scripts\20190404001.sql" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Scripts\20190404001.sql" />
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="AutoMapper" Version="8.0.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.3" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.3" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Monkey.Generator
@@ -31,8 +32,11 @@ namespace Monkey.Generator
                 throw new ArgumentException("This handler does not belong to this service");
 
             _handlers.Add(handler);
+            handler.Service = this;
             return this;
         }
+
+        public bool IsValid => !string.IsNullOrWhiteSpace(Name) && Assembly != null && Handlers.Any();
         public string Name { get; private set; }
         public Assembly Assembly { get; private set; }
         public IEnumerable<HandlerInfo> Handlers => _handlers;

@@ -69,6 +69,12 @@ namespace Monkey.Generator
         {
             return GetEnumerator();
         }
+
+        public void Append(SourceUnitCollection collection)
+        {
+            foreach (var i in collection)
+                this.Append(i);
+        }
     }
     public class DynamicAssembly
     {

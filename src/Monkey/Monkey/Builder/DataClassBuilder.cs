@@ -3,7 +3,6 @@ using System.Linq;
 
 namespace Monkey.Builder
 {
-    
     public class DataClassBuilder : ICodeBlockBuilder
     {
 
@@ -12,6 +11,8 @@ namespace Monkey.Builder
         private List<string> _usingNs;
         private string _name;
         private string _nameSpace;
+        public string Namespace => _nameSpace;
+        public string Name => _name;
         public DataClassBuilder AddUsing(string ns)
         {
             if(!_usingNs.Contains(ns))

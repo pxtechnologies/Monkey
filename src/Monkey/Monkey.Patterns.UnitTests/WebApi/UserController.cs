@@ -25,8 +25,10 @@ namespace Monkey.Patterns.UnitTests.WebApi
         public string Name { get; set; }
     }
 
+   
     public class UpdateUserCommand
     {
+        public Guid Id { get; set; }
     }
 
     public class CreateUserCommand
@@ -44,6 +46,13 @@ namespace Monkey.Patterns.UnitTests.WebApi
         public bool IsActive { get; set; }
     }
 
+    public class CreteUserProfile : Profile
+    {
+        public CreteUserProfile()
+        {
+            this.CreateMap<Guid, CreateUserCommand>().ForMember(x => x.Name, opt => opt.MapFrom(dst => dst));
+        }
+    }
     public class GetUserQuery
     {
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -7,6 +8,50 @@ namespace Monkey
 {
     public static class StrExt
     {
+        public static string RemoveWords(this string str, params string[] words)
+        {
+            return string.Concat(str.ToWords().Where(x => !words.Contains(x)));
+        }
+
+        public static string RemovePrefixWords(this string str, params string[] possibleSuffixes)
+        {
+            var words = str.ToWords().ToArray();
+            if (possibleSuffixes.Contains(words.First()))
+            {
+                return string.Concat(words.Take(words.Length - 1));
+            }
+
+            return str;
+        }
+
+        public static bool StartsWithPrefixes(this string str, params string[] prefixes)
+        {
+            var words = str.ToWords().ToArray();
+            if (prefixes.Contains(words[0]))
+                return true;
+            return false;
+        }
+        public static string EndsWithSingleSuffix(this string str, string newSuffix, params string[] oldSuffixes)
+        {
+            var words = str.ToWords().ToArray();
+            var lastWord = words.Last();
+            if (oldSuffixes.Contains(lastWord) || lastWord == newSuffix)
+            {
+                return$"{string.Concat(words.Take(words.Length - 1))}{newSuffix}";
+            }
+
+            return $"{str}{newSuffix}";
+        }
+        public static string RemoveSuffixWords(this string str, params string[] possibleSuffixes)
+        {
+            var words = str.ToWords().ToArray();
+            if (possibleSuffixes.Contains(words.Last()))
+            {
+                return string.Concat(words.Take(words.Length - 1));
+            }
+
+            return str;
+        }
         public static IEnumerable<string> ToWords(this string str)
         {
             int prv = 0;

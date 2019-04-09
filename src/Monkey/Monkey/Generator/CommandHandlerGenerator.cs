@@ -50,6 +50,7 @@ namespace Monkey.Generator
                 foreach (var handler in collection)
                 {
                     string serviceName = _provider.EvaluateHandler(handler);
+                    
                     if (!_services.TryGetValue(serviceName, out ServiceInfo service))
                     {
                         service = new ServiceInfo(_handlerFactory);
@@ -57,6 +58,7 @@ namespace Monkey.Generator
                         _services.Add(serviceName, service);
                     }
 
+                    
                     service.AddHandler(handler);
                 }
 

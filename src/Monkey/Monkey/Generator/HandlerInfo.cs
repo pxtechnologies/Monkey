@@ -20,6 +20,8 @@ namespace Monkey.Generator
             IsQueryHandler = isQueryHandler;
             HandlerInterfaceType = handlerInterfaceType;
         }
+        
+        public ServiceInfo Service { get; set; }
         public Type HandlerInterfaceType { get; private set; }
         public Type HandlerType { get; private set; }
         public Type RequestType { get; private set; }
@@ -28,4 +30,6 @@ namespace Monkey.Generator
         public bool IsCommandHandler { get; private set; }
         public bool IsQueryHandler { get; private set; }
     }
+
+    
 }

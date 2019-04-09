@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Monkey.Builder;
+using Monkey.Generator;
 
 namespace Monkey.WebApi.Builder
 {
@@ -9,16 +11,43 @@ namespace Monkey.WebApi.Builder
     {
         private string _name;
         private string _nameSpace;
-        public string _serviceName;
+        //public string _serviceName;
         private List<string> _usingNs;
-        private List<Action> _actions;
+        private List<ControllerAction> _actions;
+
+        public void AppendAction(HandlerInfo handler, 
+            string name,
+            string responseType,
+            HttpVerb verb,
+            bool isResponseCollection,
+            string route,
+            params Argument[] requestArguments)
+        {
+            if(_actions.Any(x=>x.Route == route && x.Verb == verb))
+                throw new ArgumentException("Route");
+            // TODO: add validation and UT
+            _actions.Add(new ControllerAction(handler, name, responseType, verb, isResponseCollection, route, requestArguments));
+        }
 
         public CqrsControllerBuilder()
         {
-            this._actions = new List<Action>();
+            this._actions = new List<ControllerAction>();
             this._usingNs = new List<string>();
         }
 
+        public string Namespace => _nameSpace;
+        public string TypeName => $"{_name}Controller";
+        public CqrsControllerBuilder WithName(string name)
+        {
+            this._name = name.Replace("Controller","");
+            return this;
+        }
+
+        public CqrsControllerBuilder InNamespace(string ns)
+        {
+            this._nameSpace = ns;
+            return this;
+        }
         public CqrsControllerBuilder AddUsing(string ns)
         {
             if (!_usingNs.Contains(ns))
@@ -49,7 +78,7 @@ namespace Monkey.WebApi.Builder
                     sb.AppendLine($"using {ns};");
             sb.AppendLine();
 
-            sb.AppendLine($"public class {_name} : ControllerBase");
+            sb.AppendLine($"public class {TypeName} : ControllerBase");
             sb.OpenBlock();
 
             GenerateLocals(sb).AppendLine();
