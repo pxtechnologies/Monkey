@@ -55,7 +55,8 @@ namespace Monkey
         public static IEnumerable<string> ToWords(this string str)
         {
             int prv = 0;
-            for (int i = 0; i < str.Length; i++)
+            if(str != null && str.Length > 1 && !string.IsNullOrWhiteSpace(str))
+            for (int i = 1; i < str.Length; i++)
             {
                 if (char.IsUpper(str[i]))
                 {
@@ -64,6 +65,8 @@ namespace Monkey
                     yield return result;
                 }
             }
+
+            yield return str.Substring(prv);
         }
         public static Guid ComputeMd5(this string str)
         {

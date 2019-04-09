@@ -96,7 +96,7 @@ namespace Monkey.WebApi.Builder
             foreach (var a in _actions)
             {
                 a.WriteAttributes(sb);
-                var args = a.RequestArguments.Select(x => x.ToDeclaration());
+                var args = a.RequestArguments.ToString();
                 a.WriteAttributes(sb);
                 sb.AppendLine($"public async Task<{a.ResponseType}> {a.Name}({args})");
                 sb.OpenBlock();
@@ -122,22 +122,22 @@ namespace Monkey.WebApi.Builder
             sb.AppendLine("private IMapper _mapper;");
             foreach (var a in _actions)
             {
-                sb.AppendLine($"private _{a.Name.StartLower()}Handler;");
+                sb.AppendLine($"private {a.HandlerInterfaceInfo} _{a.Name.StartLower()}Handler;");
             }
 
             return sb;
         }
         private SourceCodeBuilder GenerateCtor(SourceCodeBuilder sb)
         {
-            var args = string.Join(",", _actions.Select(x =>
-                $"{x.HandlerGenericInterfaceType.Name}<{x.HandlerRequestType.Name},{x.HandlerReturnType.Name}> {x.Name.StartLower()}Handler"));
+            
+            var args = string.Join(",", _actions.Select(x => $"{x.HandlerInterfaceInfo} {x.Name.StartLower()}Handler"));
             sb.AppendLine($"public {_name}({args}, IMapper mapper)");
             sb.OpenBlock();
 
             sb.AppendLine("this._mapper = mapper;");
             foreach (var a in _actions)
             {
-                sb.AppendLine($"this._{a.Name.StartLower()}Handler = {a.Name.StartLower()}Handler");
+                sb.AppendLine($"this._{a.Name.StartLower()}Handler = {a.Name.StartLower()}Handler;");
             }
             sb.CloseBlock();
             return sb;

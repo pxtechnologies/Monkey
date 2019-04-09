@@ -28,9 +28,9 @@ namespace Monkey.Patterns.UnitTests.Handler
             };
             var result = await handler.Execute(cmd);
 
-            Assert.Equal("John1", result.Name);
-            Assert.Equal(123, result.Id);
-            Assert.Equal(cmd.BirthDate, result.BirthDate);
+            Assert.Equal("John!", result.Name);
+            Assert.Equal(124, result.Id);
+            Assert.Equal(cmd.BirthDate, cmd.BirthDate);
         }
     }
 }

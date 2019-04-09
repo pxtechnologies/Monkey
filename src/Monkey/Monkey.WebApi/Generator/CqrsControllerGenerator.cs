@@ -73,7 +73,7 @@ namespace Monkey.WebApi.Generator
 
                     }
                 }
-                unit.Controller = new SourceUnit(builder.Namespace, builder.TypeName, builder.ToString());
+                unit.Controller = new SourceUnit(builder.Namespace, builder.TypeName, builder.GenerateCode());
                 return unit.GetAllUnits();
 
             }

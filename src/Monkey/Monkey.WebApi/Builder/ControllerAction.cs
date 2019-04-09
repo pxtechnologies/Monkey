@@ -14,9 +14,14 @@ namespace Monkey.WebApi.Builder
         public Type HandlerRequestType { get; private set; }
         public Type HandlerReturnType { get; private set; }
         public HttpVerb Verb { get; private set; }
-        public IList<Argument> RequestArguments { get; private set; }
+        public ArgumentCollection RequestArguments { get; private set; }
         public string ResponseType { get; private set; }
         public bool IsResponseCollection { get; private set; }
+        private readonly Lazy<FullTypeNameInfo> _handlerInterfaceInfo;
+        public FullTypeNameInfo HandlerInterfaceInfo
+        {
+            get { return _handlerInterfaceInfo.Value; }
+        }
 
         public ControllerAction(HandlerInfo handler, string name,
             string responseType,
@@ -46,7 +51,7 @@ namespace Monkey.WebApi.Builder
             Type handlerReturnType)
         {
             Name = name;
-            RequestArguments = requestArguments.ToList();
+            RequestArguments = new ArgumentCollection(requestArguments);
             ResponseType = responseType;
             Verb = verb;
             IsResponseCollection = isResponseCollection;
@@ -54,6 +59,7 @@ namespace Monkey.WebApi.Builder
             HandlerGenericInterfaceType = handlerGenericInterfaceType;
             HandlerRequestType = handlerRequestType;
             HandlerReturnType = handlerReturnType;
+            _handlerInterfaceInfo = new Lazy<FullTypeNameInfo>(() => FullTypeNameInfo.Parse(HandlerGenericInterfaceType.FullName));
         }
     }
 }

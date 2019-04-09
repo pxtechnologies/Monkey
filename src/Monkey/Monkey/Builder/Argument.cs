@@ -42,10 +42,14 @@ namespace Monkey.Builder
     public class ArgumentCollection : IEnumerable<Argument>
     {
         private readonly List<Argument> _list;
-        
+
         public ArgumentCollection()
         {
-            _list = new List<Argument>();
+            _list =new List<Argument>();
+        }
+        public ArgumentCollection(IEnumerable<Argument> requestArguments)
+        {
+            _list = new List<Argument>(requestArguments);
         }
         public Argument Add(string type, string name, params string[] attributes)
         {
@@ -60,7 +64,8 @@ namespace Monkey.Builder
 
         public override string ToString()
         {
-            return string.Join(",", this.Select(x => $"{x.Type} {x.Name}"));
+
+            return string.Join(", ", this.Select(x => x.ToDeclaration()));
         }
 
         public Argument Add(string type, string name)

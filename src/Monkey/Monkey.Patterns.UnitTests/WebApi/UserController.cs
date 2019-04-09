@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Monkey.Cqrs;
 
 namespace Monkey.Patterns.UnitTests.WebApi
 {
@@ -25,15 +26,37 @@ namespace Monkey.Patterns.UnitTests.WebApi
         public string Name { get; set; }
     }
 
-   
+    public class ActivateUserCommand
+    {
+        public Guid Id { get; set; }
+        public DateTime When { get; set; }
+        public string Name { get; set; }
+    }
     public class UpdateUserCommand
     {
         public Guid Id { get; set; }
+        public DateTime When { get; set; }
+        public string Name { get; set; }
     }
 
+    public class ActivateUserHandler : ICommandHandler<ActivateUserCommand, UserEntity>
+    {
+        public async Task<UserEntity> Execute(ActivateUserCommand cmd)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public class UpdateUserHandler : ICommandHandler<UpdateUserCommand, UserEntity>
+    {
+        public async Task<UserEntity> Execute(UpdateUserCommand cmd)
+        {
+            throw new NotImplementedException();
+        }
+    }
     public class CreateUserCommand
     {
         public string Name { get; set; }
+        public int Age { get; set; }
     }
 
     public class GetActiveUsersFromRequest

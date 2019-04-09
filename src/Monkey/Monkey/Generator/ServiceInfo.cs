@@ -20,6 +20,18 @@ namespace Monkey.Generator
             Name = name;
             return this;
         }
+
+        public ServiceInfo AddHandler(Type interfaceType, Type handlerType)
+        {
+            var handler = _factory.Create(interfaceType, handlerType);
+            if(handler == null)
+                throw new ArgumentException("Cannot create handler with provided parameters.");
+            return AddHandler(handler);
+        }
+        public ServiceInfo AddHandler<TInterface, THandler>()
+        {
+            return AddHandler(typeof(TInterface), typeof(THandler));
+        }
         public ServiceInfo AddHandler(HandlerInfo handler)
         {
             if (Assembly == null) Assembly = handler.HandlerType.Assembly;

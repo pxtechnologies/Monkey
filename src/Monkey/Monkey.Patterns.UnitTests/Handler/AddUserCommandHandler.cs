@@ -4,13 +4,14 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
-//using Microsoft.EntityFrameworkCore.Internal;
+using Monkey.Cqrs;
+
 using Monkey.Patterns.UnitTests.WebApi;
 using Monkey.Sql.Extensions;
 
 namespace Monkey.Patterns.UnitTests.Handler
 {
-    public class CreateUserHandler : IRequestHandler<CreateUserCommand, UserEntity>
+    public class CreateUserHandler : ICommandHandler<CreateUserCommand, UserEntity>
     {
         private const string _connectionStringName = "";
         public CreateUserHandler()
