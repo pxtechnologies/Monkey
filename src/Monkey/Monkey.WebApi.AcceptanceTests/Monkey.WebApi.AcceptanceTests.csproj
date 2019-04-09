@@ -35,6 +35,12 @@
     </ItemGroup>
 
     <ItemGroup>
+      <None Update="appsettings.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
       <SpecFlowFeatureFiles Update="Features\Basic.feature">
         <Generator>SpecFlowSingleFileGenerator</Generator>
         <LastGenOutput>Basic.feature.cs</LastGenOutput>

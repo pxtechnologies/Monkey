@@ -33,7 +33,7 @@ namespace Monkey.WebApi.AcceptanceTests.Configuration
                 .Build();
 
             _webHost.Start();
-            _container = (Container)_webHost.Services.GetService(typeof(IServiceProvider));
+            _container = ((ContainerAccessor)_webHost.Services.GetService(typeof(ContainerAccessor))).Container;
             _executor = ApplicationExecutor.Create(_container);
 
             _context.ScenarioContainer.RegisterInstanceAs(Executor);

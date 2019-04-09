@@ -16,17 +16,17 @@ namespace Monkey.WebApi.AcceptanceTests.Configuration
         [Given(@"I have writen my model with IRequestHandler pattern")]
         public void GivenIHaveWritenMyModelWithIRequestHandlerPattern()
         {
-            ScenarioContext.Current.Pending();
+            // Nothing to do here
         }
         [Given(@"I configured basic WebApi features with swagger")]
         public void GivenIConfiguredBasicWebApiFeaturesWithSwagger()
         {
-            ScenarioContext.Current.Pending();
+            // 
         }
         [Given(@"I add dynamic api to mvc")]
         public void GivenIAddDynamicApiToMvc()
         {
-            ScenarioContext.Current.Pending();
+            
         }
 
 

@@ -16,6 +16,15 @@ using System.Threading.Tasks;
 
 namespace Monkey.WebApi.AcceptanceTests.Configuration
 {
+    public class ContainerAccessor
+    {
+        public ContainerAccessor(Container container)
+        {
+            Container = container;
+        }
+
+        public Container Container { get; private set; }
+    }
     public class Startup
     {
         private Container _container;
@@ -36,24 +45,21 @@ namespace Monkey.WebApi.AcceptanceTests.Configuration
         }
         private void IntegrateSimpleInjector(IServiceCollection services)
         {
-            _container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
-
             services.AddHttpContextAccessor();
 
-            services.AddSingleton<IControllerActivator>(
-                new SimpleInjectorControllerActivator(_container));
-            services.AddSingleton<IViewComponentActivator>(
-                new SimpleInjectorViewComponentActivator(_container));
+            services.AddSingleton<IControllerActivator>(new SimpleInjectorControllerActivator(_container));
+            services.AddSingleton<IViewComponentActivator>(new SimpleInjectorViewComponentActivator(_container));
 
             services.EnableSimpleInjectorCrossWiring(_container);
             services.UseSimpleInjectorAspNetRequestScoping(_container);
+            services.Add(new ServiceDescriptor(typeof(ContainerAccessor), x => new ContainerAccessor(_container), ServiceLifetime.Singleton ));
         }
         private void CreateContainer()
         {
             _container = new Container();
             _container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
             _container.Options.DefaultLifestyle = Lifestyle.Scoped;
-            _container.RegisterInstance<IServiceProvider>(_container);
+            
             
         }
         private void InitializeContainer(IApplicationBuilder app)
