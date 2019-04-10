@@ -122,11 +122,11 @@ this.FeatureBackground();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("I can invoke update command handler on dynamic controller")]
-        public virtual void ICanInvokeUpdateCommandHandlerOnDynamicController()
+        [NUnit.Framework.DescriptionAttribute("I can invoke custom command handler on dynamic controller with no resource id")]
+        public virtual void ICanInvokeCustomCommandHandlerOnDynamicControllerWithNoResourceId()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can invoke update command handler on dynamic controller", null, ((string[])(null)));
-#line 23
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can invoke custom command handler on dynamic controller with no resource id", null, ((string[])(null)));
+#line 22
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
 #line 6
@@ -137,19 +137,16 @@ this.FeatureBackground();
                         "Code"});
             table3.AddRow(new string[] {
                         "1",
-                        "public class UpdateUser { public string Name { get;set; } public Guid Id {get; se" +
-                            "t; }}"});
+                        "public class ActivateUser { public string Name { get;set; }}"});
             table3.AddRow(new string[] {
                         "2",
                         "public class UserEntity { public Guid Id { get; set; } public string Name { get; " +
                             "set; }}"});
-#line 24
- testRunner.Given("I have written command \'UpdateUser\' and result as:", ((string)(null)), table3, "Given ");
-#line 28
- testRunner.And("I have written command-handler that accepts \'UpdateUser\' and returns \'UserEntity\'" +
-                    "", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 29
- testRunner.When("I found record with id to update", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 23
+ testRunner.Given("I have written command \'ActivateUser\' and result as:", ((string)(null)), table3, "Given ");
+#line 27
+ testRunner.And("I have written command-handler that accepts \'ActivateUser\' and returns \'UserEntit" +
+                    "y\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
                         "Line",
@@ -157,11 +154,105 @@ this.FeatureBackground();
             table4.AddRow(new string[] {
                         "1",
                         "{ \"Name\": \"John\" }"});
-#line 30
- testRunner.And("I invoke \'UserController\' with \'Put\' method and \'UpdateUserRequest\' argument:", ((string)(null)), table4, "And ");
-#line 33
+#line 28
+ testRunner.When("I invoke \'UserController\' with \'Activate\' method and \'ActivateUserRequest\' argume" +
+                    "nt:", ((string)(null)), table4, "When ");
+#line 31
+ testRunner.Then("CommandHandler is invoked with corresponding \'ActivateUser\' argument", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 32
+ testRunner.And("\'UserEntityResponse\' that corresponds to \'UserEntity\' is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("I can invoke update command handler on dynamic controller")]
+        public virtual void ICanInvokeUpdateCommandHandlerOnDynamicController()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can invoke update command handler on dynamic controller", null, ((string[])(null)));
+#line 35
+this.ScenarioInitialize(scenarioInfo);
+            this.ScenarioStart();
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Line",
+                        "Code"});
+            table5.AddRow(new string[] {
+                        "1",
+                        "public class UpdateUser { public string Name { get;set; } public Guid Id {get; se" +
+                            "t; }}"});
+            table5.AddRow(new string[] {
+                        "2",
+                        "public class UserEntity { public Guid Id { get; set; } public string Name { get; " +
+                            "set; }}"});
+#line 36
+ testRunner.Given("I have written command \'UpdateUser\' and result as:", ((string)(null)), table5, "Given ");
+#line 40
+ testRunner.And("I have written command-handler that accepts \'UpdateUser\' and returns \'UserEntity\'" +
+                    "", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 41
+ testRunner.When("I found record with id to update", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+            TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Line",
+                        "Json"});
+            table6.AddRow(new string[] {
+                        "1",
+                        "{ \"Name\": \"John\" }"});
+#line 42
+ testRunner.And("I invoke \'UserController\' with \'Put\' method and \'UpdateUserRequest\' argument:", ((string)(null)), table6, "And ");
+#line 45
  testRunner.Then("CommandHandler is invoked with corresponding \'UpdateUser\' argument", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 34
+#line 46
+ testRunner.And("\'UserEntityResponse\' that corresponds to \'UserEntity\' is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("I can invoke custom command handler on dynamic controller")]
+        public virtual void ICanInvokeCustomCommandHandlerOnDynamicController()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can invoke custom command handler on dynamic controller", null, ((string[])(null)));
+#line 48
+this.ScenarioInitialize(scenarioInfo);
+            this.ScenarioStart();
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Line",
+                        "Code"});
+            table7.AddRow(new string[] {
+                        "1",
+                        "public class ActivateUser { public string Name { get;set; } public Guid Id {get; " +
+                            "set; }}"});
+            table7.AddRow(new string[] {
+                        "2",
+                        "public class UserEntity { public Guid Id { get; set; } public string Name { get; " +
+                            "set; }}"});
+#line 49
+ testRunner.Given("I have written command \'ActivateUser\' and result as:", ((string)(null)), table7, "Given ");
+#line 53
+ testRunner.And("I have written command-handler that accepts \'ActivateUser\' and returns \'UserEntit" +
+                    "y\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 54
+ testRunner.When("I found record with id to update", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+            TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Line",
+                        "Json"});
+            table8.AddRow(new string[] {
+                        "1",
+                        "{ \"Name\": \"John\" }"});
+#line 55
+ testRunner.And("I invoke \'UserController\' with \'Activate\' method and \'ActivateUserRequest\' argume" +
+                    "nt:", ((string)(null)), table8, "And ");
+#line 58
+ testRunner.Then("CommandHandler is invoked with corresponding \'ActivateUser\' argument", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 59
  testRunner.And("\'UserEntityResponse\' that corresponds to \'UserEntity\' is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
