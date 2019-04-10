@@ -9,12 +9,21 @@ using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
+using Monkey.Compilation;
 using Monkey.Cqrs;
 using NSubstitute;
 
-
 namespace Monkey.Compilation
 {
+    
+
+    [AttributeUsage(AttributeTargets.Assembly)]
+    public class MonkeyGeneratedAttribute : Attribute
+    {
+
+    }
+
+    
     public interface ITypeCompiler
     {
         Type FastLoad(string code, string ns, string className, params Assembly[] references);
@@ -29,10 +38,12 @@ namespace Monkey.Compilation
         public Assembly FastLoad(string code, params Assembly[] rs)
         {
             string assemblyName = Path.GetRandomFileName();
+            string attribute = $"[assembly: Monkey.Compilation.MonkeyGenerated]\r\n";
+            code = code.Insert(code.IndexOf("namespace"),attribute);
             SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(code);
             
             MetadataReference[] references = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(x => !x.IsDynamic)
+                .Where(x => !x.IsDynamic && !x.GetCustomAttributes<MonkeyGeneratedAttribute>().Any())
                 .Union(rs)
                 .Distinct()
                 .Select(OnLoadAssembly)

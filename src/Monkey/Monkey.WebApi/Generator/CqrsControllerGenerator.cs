@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using AutoMapper;
 using Monkey.Builder;
 using Monkey.Generator;
 using Monkey.Logging;
@@ -95,7 +96,7 @@ namespace Monkey.WebApi.Generator
 
                 ArgumentCollection arguments = new ArgumentCollection();
 
-                var idArg = arguments.Add(prop.PropertyType.ToString(), prop.Name.StartLower(), "FromUrl");
+                var idArg = arguments.Add(prop.PropertyType.ToString(), prop.Name.StartLower(), "FromQuery");
                 var cmdArg = arguments.Add(handler.RequestType.Name.EndsWithSingleSuffix("Request", "Command"), "request", "FromBody");
                 // this is update action
                 // lets check if this put or post. 
@@ -109,11 +110,12 @@ namespace Monkey.WebApi.Generator
                     var responseType = handler.ResponseType.Name.EndsWithSingleSuffix("Response");
                     builder.AppendAction(handler, "Put", responseType, HttpVerb.Put,
                         false, $"api/{handler.Service.Name}/{{{idArg.Name}}}", arguments.ToArray());
+
                     srcUnit.Responses.Append(GenerateResponseType(responseType, handler.ResponseType));
                     srcUnit.ResultToResponseMappers.Append(GenerateResultToResponseMapper(responseType,handler.RequestType));
                     srcUnit.Requests.Append(GenerateRequestType(cmdArg.Type, handler.RequestType, prop.PropertyType, prop.Name));
                     srcUnit.RequestToCommandMappers.Append(GenerateRequestToCommandMapper(cmdArg.Type, handler.RequestType, prop.PropertyType, prop.Name));
-
+                    
                     builder.AddUsing(handler.ResponseType.Namespace + ".WebApi");
                     builder.AddUsing(handler.RequestType.Namespace + ".WebApi");
                     builder.AddUsing(handler.ResponseType.Namespace);
@@ -188,7 +190,10 @@ namespace Monkey.WebApi.Generator
         {
             AutomapperProfilerBuilder profile = new AutomapperProfilerBuilder()
                 .InNamespace(commandType.Namespace + ".WebApi.Profiles")
-                .ForType(requestType, commandType.Name);
+                .ForType(commandType.Name, requestType)
+                .WithDefaultUsings()
+                .AddUsing(commandType.Namespace)
+                .AddUsing(commandType.Namespace + ".WebApi"); 
 
             profile.WithDefaultMapping()
                 .WithValueMapping(exPropType.Name, exPropName);
@@ -199,7 +204,7 @@ namespace Monkey.WebApi.Generator
         {
             AutomapperProfilerBuilder profile = new AutomapperProfilerBuilder()
                 .InNamespace(commandType.Namespace + ".WebApi.Profiles")
-                .ForType(requestType, commandType.Name)
+                .ForType(commandType.Name, requestType)
                 .WithDefaultUsings()
                 .AddUsing(commandType.Namespace)
                 .AddUsing(commandType.Namespace + ".WebApi");

@@ -57,6 +57,7 @@ namespace Monkey.Patterns.UnitTests.WebApi
     {
         public string Name { get; set; }
         public int Age { get; set; }
+        public Guid Id { get; set; }
     }
 
     public class GetActiveUsersFromRequest
@@ -118,7 +119,7 @@ namespace Monkey.Patterns.UnitTests.WebApi
             _mapper = mapper;
         }
 
-        public async Task<UserResource> Post(CreateUserRequest request)
+        public async Task<UserResource> Post( CreateUserRequest request)
         {
             var cmd = _mapper.Map<CreateUserCommand>(request); // Optional if request != cmd
             var result = await _postHandler.Execute(cmd); // Must

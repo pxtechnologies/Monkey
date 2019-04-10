@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
@@ -18,10 +19,13 @@ namespace Monkey.WebApi.AcceptanceTests.Configuration
 
     public sealed class ApplicationExecutor : IApplicationExecutor
     {
+        private static int _counter;
         private readonly Container _container;
+        private readonly int _id;
         private ApplicationExecutor(Container container)
         {
             _container = container;
+            _id = Interlocked.Increment(ref _counter);
         }
 
         public static IApplicationExecutor Create(Container c)

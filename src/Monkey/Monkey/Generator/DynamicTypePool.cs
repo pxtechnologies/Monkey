@@ -16,7 +16,7 @@ namespace Monkey.Generator
     {
         private LinkedList<DynamicAssembly> _assemblies;
         private Guid _signature;
-        public Guid Signature { get; private set; }
+        public Guid Signature => _signature;
         public DynamicTypePool()
         {
             _assemblies = new LinkedList<DynamicAssembly>();

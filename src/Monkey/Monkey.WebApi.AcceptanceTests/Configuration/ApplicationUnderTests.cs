@@ -24,6 +24,11 @@ namespace Monkey.WebApi.AcceptanceTests.Configuration
             _context = context;
         }
 
+        [AfterScenario()]
+        public void CleanUp()
+        {
+            _webHost.StopAsync().GetAwaiter().GetResult();
+        }
 
         [BeforeScenario()]
         public void InitContainer()

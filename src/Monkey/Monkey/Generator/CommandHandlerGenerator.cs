@@ -18,6 +18,7 @@ namespace Monkey.Generator
     {
         IEnumerable<ServiceInfo> GetServices();
         void Discover(params Assembly[] assemblies);
+        void Discover(Predicate<HandlerInfo> filter, params Assembly[] assemblies);
     }
 
     public class ServiceMetadataRegister : IServiceMetadataProvider
@@ -37,6 +38,13 @@ namespace Monkey.Generator
 
         public void Discover(params Assembly[] assemblies)
         {
+            Discover(null, assemblies);
+        }
+        public void Discover(Predicate<HandlerInfo> filter, params Assembly[] assemblies)
+        {
+            if (filter == null)
+                filter = x => true;
+
             foreach (var handlerType in assemblies.SelectMany(x => x.GetTypes())
                 .Where(x=>!x.IsAbstract && x.IsClass && !x.IsInterface))
             {
@@ -45,7 +53,8 @@ namespace Monkey.Generator
                     .Where(x => x.Namespace == "Monkey.Cqrs")
                     .Where(x => validaHandlers.Any(y => x.Name.StartsWith(y)))
                     .Select(interfaceType => _handlerFactory.Create(interfaceType, handlerType))
-                    .Where(x => x != null);
+                    .Where(x => x != null)
+                    .Where(x => filter(x));
 
                 foreach (var handler in collection)
                 {

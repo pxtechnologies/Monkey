@@ -23,6 +23,7 @@ namespace Monkey.WebApi.AcceptanceTests.Integration
     public class ControllerInvocationDataHolder
     {
         private object _actualResult;
+        private Guid _id;
         public Dictionary<string, Type> Types { get; private set; }
         public Type CommandHandlerInterface { get; set; }
 
@@ -30,6 +31,12 @@ namespace Monkey.WebApi.AcceptanceTests.Integration
         {
             get { return _actualResult; }
             set { _actualResult = value; }
+        }
+
+        public Guid Id
+        {
+            get { return _id; }
+            set { _id = value; }
         }
 
         public ControllerInvocationDataHolder()
@@ -57,18 +64,18 @@ namespace Monkey.WebApi.AcceptanceTests.Integration
             
             var mockInstance = _applicationExecutor.Execute<MockRegister,object>(register => register.GetMock(_data.CommandHandlerInterface) );
             _applicationExecutor.Execute<IServiceMetadataProvider>(provider =>
-                provider.Discover(mockInstance.GetType().Assembly));
+                provider.Discover(x => x.HandlerIType == _data.CommandHandlerInterface, mockInstance.GetType().Assembly));
 
             var ret = "new UserEntity() { Name = \"Elton\" }";
             MockHandlerBuilder assertBuilder = new MockHandlerBuilder()
-                .With(_data.Types["CreateUser"], _data.Types["UserEntity"])
+                .With(_data.Types[commandType], _data.Types["UserEntity"])
                 .WithReturn(ret);
 
             _applicationExecutor.InvokeDynamic(assertBuilder);
         }
 
-        [Given(@"I have written command and result as:")]
-        public void GivenIHaveWrittenCommandAndResultAs(Table table)
+        [Given(@"I have written command '(.*)' and result as:")]
+        public void GivenIHaveWrittenCommandAndResultAs(string commandType, Table table)
         {
             var lines = table.CreateSet<CSharpCode>().ToArray();
             SourceCodeBuilder sb = new SourceCodeBuilder();
@@ -79,11 +86,18 @@ namespace Monkey.WebApi.AcceptanceTests.Integration
             TypeCompiler compiler = new TypeCompiler();
             var typeAssembly = compiler.FastLoad(sb.ToString());
 
-            _data.Types["CreateUser"] = typeAssembly.GetType("Test.CreateUser");
+            _data.Types[commandType] = typeAssembly.GetType($"Test.{commandType}");
             _data.Types["UserEntity"] = typeAssembly.GetType("Test.UserEntity");
         }
+        [When(@"I found record with id to update")]
+        public void WhenIFoundRecordWithIdToUpdate()
+        {
+            _data.Id = Guid.NewGuid();
+        }
+
+
         [When(@"I invoke '(.*)' with '(.*)' method and '(.*)' argument:")]
-        public async Task WhenIInvokeWithMethodAndArgument(string controllerTypeName, string methodName, string commandType, Table table)
+        public async Task WhenIInvokeWithMethodAndArgument(string controllerTypeName, string methodName, string requestType, Table table)
         {
             var json = string.Join(Environment.NewLine, table.CreateSet<JsonScript>().Select(x => x.Json));
 
@@ -103,8 +117,11 @@ namespace Monkey.WebApi.AcceptanceTests.Integration
             var controllerType = assembly.Load(assembly.SourceUnits.First(x => x.FullName.Contains("Controller")).FullName);
             _applicationExecutor.Execute(controllerType, controller =>
             {
-                var createUserObj = JsonConvert.DeserializeObject(json, assembly.Load("Test.WebApi","CreateUserRequest"));
-                Task task = (Task)controllerType.GetMethod(methodName).Invoke(controller, new object[] { createUserObj });
+                var createUserObj = JsonConvert.DeserializeObject(json, assembly.Load("Test.WebApi", requestType));
+                var parameters = new List<object>() { createUserObj };
+                if(_data.Id != Guid.Empty) 
+                    parameters.Insert(0, _data.Id);
+                Task task = (Task)controllerType.GetMethod(methodName).Invoke(controller, parameters.ToArray());
                 task.GetAwaiter().GetResult();
                 dynamic dTask = task;
                 var response = dTask.Result;
@@ -116,8 +133,8 @@ namespace Monkey.WebApi.AcceptanceTests.Integration
         public void ThenCommandHandlerIsInvokedWithCorrespondingArgument(string commandTypeName)
         {
             MockHandlerBuilder assertBuilder = new MockHandlerBuilder()
-                .With(_data.Types["CreateUser"], _data.Types["UserEntity"])
-                .WithArg("Arg.Is<CreateUser>(x => x.Name == \"John\" )");
+                .With(_data.Types[commandTypeName], _data.Types["UserEntity"])
+                .WithArg($"Arg.Is<{commandTypeName}>(x => x.Name == \"John\" )");
 
             _applicationExecutor.InvokeDynamic(assertBuilder);
         }
