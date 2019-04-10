@@ -9,7 +9,7 @@ using Monkey.Builder;
 using Monkey.Compilation;
 using Monkey.Cqrs;
 using Monkey.Generator;
-using Monkey.WebApi.AcceptanceTests.Assertations;
+using Monkey.WebApi.AcceptanceTests.Assertion;
 using Monkey.WebApi.AcceptanceTests.Configuration;
 using Monkey.WebApi.Generator;
 using Monkey.WebApi.SimpleInjector;
@@ -20,31 +20,6 @@ using TechTalk.SpecFlow.Assist;
 
 namespace Monkey.WebApi.AcceptanceTests.Integration
 {
-    public class ControllerInvocationDataHolder
-    {
-        private object _actualResult;
-        private Guid _id;
-        public Dictionary<string, Type> Types { get; private set; }
-        public Type CommandHandlerInterface { get; set; }
-
-        public object ActualResult
-        {
-            get { return _actualResult; }
-            set { _actualResult = value; }
-        }
-
-        public Guid Id
-        {
-            get { return _id; }
-            set { _id = value; }
-        }
-
-        public ControllerInvocationDataHolder()
-        {
-            Types = new Dictionary<string, Type>();
-        }
-    }
-
     [Binding]
     public class ControllerInvocationSteps
     {
@@ -148,20 +123,5 @@ namespace Monkey.WebApi.AcceptanceTests.Integration
             name.Should().Be("Elton");
         }
 
-    }
-
-    class JsonScript
-    {
-        public int Line { get; set; }
-        public string Json { get; set; }
-    }
-    class CSharpCode
-    {
-        public int Line { get; set; }
-        public string Code { get; set; }
-    }
-    public interface IDynamicMock
-    {
-        Task Execute();
     }
 }

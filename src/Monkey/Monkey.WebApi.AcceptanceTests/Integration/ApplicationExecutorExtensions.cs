@@ -1,4 +1,4 @@
-﻿using Monkey.WebApi.AcceptanceTests.Assertations;
+﻿using Monkey.WebApi.AcceptanceTests.Assertion;
 using Monkey.WebApi.AcceptanceTests.Configuration;
 
 namespace Monkey.WebApi.AcceptanceTests.Integration

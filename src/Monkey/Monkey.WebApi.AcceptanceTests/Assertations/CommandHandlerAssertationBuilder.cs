@@ -8,7 +8,7 @@ using Monkey.Compilation;
 using Monkey.Cqrs;
 using Monkey.WebApi.AcceptanceTests.Integration;
 
-namespace Monkey.WebApi.AcceptanceTests.Assertations
+namespace Monkey.WebApi.AcceptanceTests.Assertion
 {
     
     public class MockHandlerBuilder

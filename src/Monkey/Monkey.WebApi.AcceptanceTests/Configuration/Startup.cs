@@ -16,15 +16,6 @@ using System.Threading.Tasks;
 
 namespace Monkey.WebApi.AcceptanceTests.Configuration
 {
-    public class ContainerAccessor
-    {
-        public ContainerAccessor(Container container)
-        {
-            Container = container;
-        }
-
-        public Container Container { get; private set; }
-    }
     public class Startup
     {
         private Container _container;
