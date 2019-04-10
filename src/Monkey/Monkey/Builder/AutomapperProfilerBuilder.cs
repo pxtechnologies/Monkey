@@ -88,6 +88,13 @@ namespace Monkey.Builder
         {
             return this;
         }
+        public AutomapperProfilerBuilder WithDefaultUsings()
+        {
+            this.AddUsing("AutoMapper");
+            this.AddUsing("System.Linq");
+            this.AddUsing("System.Collections.Generic");
+            return this;
+        }
 
         public void WithValueMapping(string srcType, string dstMemberName)
         {

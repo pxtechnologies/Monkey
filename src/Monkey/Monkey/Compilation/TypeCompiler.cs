@@ -9,6 +9,8 @@ using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
+using Monkey.Cqrs;
+using NSubstitute;
 
 
 namespace Monkey.Compilation
@@ -42,7 +44,8 @@ namespace Monkey.Compilation
                 assemblyName,
                 syntaxTrees: new[] { syntaxTree },
                 references: references,
-                options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+                options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, optimizationLevel:OptimizationLevel.Release)
+                );
 
             using (var ms = new MemoryStream())
             {
@@ -65,7 +68,7 @@ namespace Monkey.Compilation
                         {
                             sb.AppendLine($"{i}:{lines[i]}");
                         }
-
+                       
                         sb.AppendLine();
                     }
                     throw new CompilationException(sb.ToString()) { Errors = failures.ToArray() };
@@ -73,7 +76,11 @@ namespace Monkey.Compilation
                 else
                 {
                     ms.Seek(0, SeekOrigin.Begin);
-                    Assembly assembly = Assembly.Load(ms.ToArray());
+                    string tmpFile = Path.GetTempFileName() + ".dll";
+                    using (var file = File.OpenWrite(tmpFile))
+                        ms.CopyTo(file);
+
+                    Assembly assembly = Assembly.LoadFrom(tmpFile);
                     return assembly;
                 }
             }
@@ -84,7 +91,9 @@ namespace Monkey.Compilation
             try
             {
                 if (string.IsNullOrWhiteSpace(x.Location))
-                    return null;
+                {
+                    return null;   
+                }
                 return MetadataReference.CreateFromFile(x.Location);
             }
             catch (Exception ex)

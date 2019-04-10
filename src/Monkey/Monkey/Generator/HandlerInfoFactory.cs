@@ -11,6 +11,10 @@ namespace Monkey.Generator
     {
         public HandlerInfo Create(Type interfaceType, Type handlerType)
         {
+            //TODO: Refactor to allow handlerType to be null
+
+            if(interfaceType == null) throw new ArgumentNullException(nameof(interfaceType));
+
             if (interfaceType.IsAssignableFrom(handlerType))
             {
                 if (interfaceType.IsGenericType && !interfaceType.IsGenericTypeDefinition)

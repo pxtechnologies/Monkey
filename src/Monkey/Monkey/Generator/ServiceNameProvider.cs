@@ -8,13 +8,13 @@ namespace Monkey.Generator
     {
         string EvaluateHandler(HandlerInfo info);
     }
-    public class ServiceNameProvider
+    public class ServiceNameProvider : IServiceNameProvider
     {
         public string EvaluateHandler(HandlerInfo info)
         {
             if (info.IsCommandHandler)
             {
-                var sn = info.HandlerType.GetCustomAttribute<ServiceNameAttribute>();
+                var sn = info.HandlerIType.GetCustomAttribute<ServiceNameAttribute>();
                 if (sn != null)
                     return sn.ServiceName;
                 string text = info.RequestType.Name.Replace("CommandHandler", "");
@@ -31,7 +31,7 @@ namespace Monkey.Generator
             }
             else if (info.IsQueryHandler)
             {
-                var sn = info.HandlerType.GetCustomAttribute<ServiceNameAttribute>();
+                var sn = info.HandlerIType.GetCustomAttribute<ServiceNameAttribute>();
                 if (sn != null)
                     return sn.ServiceName;
 

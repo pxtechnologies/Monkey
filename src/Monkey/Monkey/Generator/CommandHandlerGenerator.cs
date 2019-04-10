@@ -17,7 +17,7 @@ namespace Monkey.Generator
     public interface IServiceMetadataProvider
     {
         IEnumerable<ServiceInfo> GetServices();
-        
+        void Discover(params Assembly[] assemblies);
     }
 
     public class ServiceMetadataRegister : IServiceMetadataProvider
@@ -41,7 +41,7 @@ namespace Monkey.Generator
                 .Where(x=>!x.IsAbstract && x.IsClass && !x.IsInterface))
             {
                 var collection = handlerType.GetInterfaces()
-                    .Where(x => x.IsGenericType && x.IsGenericTypeDefinition)
+                    .Where(x => x.IsGenericType)
                     .Where(x => x.Namespace == "Monkey.Cqrs")
                     .Where(x => validaHandlers.Any(y => x.Name.StartsWith(y)))
                     .Select(interfaceType => _handlerFactory.Create(interfaceType, handlerType))
@@ -69,16 +69,5 @@ namespace Monkey.Generator
             "ISingleQueryHandler",
             "ICommandHandler"
         };
-    }
-
-    public class DynamicTypePool
-    {
-        private List<DynamicAssembly> _assemblies;
-
-        public DynamicTypePool()
-        {
-            _assemblies = new List<DynamicAssembly>();
-        }
-
     }
 }

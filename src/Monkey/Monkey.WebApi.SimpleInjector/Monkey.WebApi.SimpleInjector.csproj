@@ -8,4 +8,8 @@
     <PackageReference Include="SimpleInjector.Packaging" Version="4.5.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Monkey.WebApi\Monkey.WebApi.csproj" />
+  </ItemGroup>
+
 </Project>

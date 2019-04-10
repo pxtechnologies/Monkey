@@ -83,16 +83,23 @@ namespace Monkey.Generator
         }
         private SourceUnitCollection _sourceUnits;
         private Assembly _assembly;
+        public Assembly Assembly => _assembly;
         public DateTimeOffset CompilationDate { get; private set; }
         public TimeSpan CompilationDuration { get; private set; }
         private readonly List<Assembly> _references;
-
+        public SourceUnitCollection SourceUnits => _sourceUnits;
         public void AddReferenceFromType<TClass>()
         {
             var type = typeof(TClass);
             AddReferenceFromType(type);
         }
-
+        public void AddReferenceFromTypes(IEnumerable<Type> types)
+        {
+            foreach (var type in types)
+            {
+                AddReferenceFromType(type);
+            }
+        }
         public void AddReferenceFromType(Type type)
         {
             var assembly = type.Assembly;
@@ -110,6 +117,10 @@ namespace Monkey.Generator
         {
             return _assembly.GetType($"{ns}.{typeName}");
         }
+        public Type Load(string fullType)
+        {
+            return _assembly.GetType(fullType);
+        }
 
         public void SetSourceUnits(SourceUnitCollection collection)
         {
@@ -121,8 +132,9 @@ namespace Monkey.Generator
                 _sourceUnits.Append(s);
         }
 
-        public DynamicAssembly Compile(ITypeCompiler compiler)
+        public DynamicAssembly Compile(ITypeCompiler compiler = null)
         {
+            if (compiler == null) compiler = new TypeCompiler();
             Stopwatch s = new Stopwatch();
             s.Start();
             _assembly = compiler.FastLoad(_sourceUnits.Code, _references.ToArray());

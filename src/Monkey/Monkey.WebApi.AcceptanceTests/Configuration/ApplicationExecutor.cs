@@ -7,11 +7,14 @@ namespace Monkey.WebApi.AcceptanceTests.Configuration
 {
     public interface IApplicationExecutor
     {
+        void Execute(Type obj, Action<object> action);
+        object Execute(Type obj, Func<object, object> method);
         void Execute<TService>(Action<TService> method);
         TResult Execute<TService, TResult>(Func<TService, TResult> method);
         Task<TResult> ExecuteAsync<TService, TResult>(Func<TService, Task<TResult>> method);
         Task ExecuteAsync<TService>(Func<TService, Task> method);
     }
+
 
     public sealed class ApplicationExecutor : IApplicationExecutor
     {
@@ -25,6 +28,25 @@ namespace Monkey.WebApi.AcceptanceTests.Configuration
         {
             return new ApplicationExecutor(c);
         }
+
+        public void Execute(Type obj, Action<object> action)
+        {
+            using (var scope = AsyncScopedLifestyle.BeginScope(_container))
+            {
+                var service = scope.GetInstance(obj);
+                action(service);
+            }
+        }
+
+        public object Execute(Type obj, Func<object, object> method)
+        {
+            using (var scope = AsyncScopedLifestyle.BeginScope(_container))
+            {
+                var service = scope.GetInstance(obj);
+                return method(service);
+            }
+        }
+
         public void Execute<TService>(Action<TService> method)
         {
             using (var scope = AsyncScopedLifestyle.BeginScope(_container))

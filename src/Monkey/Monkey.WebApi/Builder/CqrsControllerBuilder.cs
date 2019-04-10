@@ -61,7 +61,6 @@ namespace Monkey.WebApi.Builder
                 .AddUsing("System.Data")
                 .AddUsing("System.Threading")
                 .AddUsing("System.Threading.Tasks")
-                .AddUsing("System.Data.SqlClient")
                 .AddUsing("Monkey.Cqrs")
                 .AddUsing("Microsoft.Extensions.Configuration");
 
@@ -131,7 +130,7 @@ namespace Monkey.WebApi.Builder
         {
             
             var args = string.Join(",", _actions.Select(x => $"{x.HandlerInterfaceInfo} {x.Name.StartLower()}Handler"));
-            sb.AppendLine($"public {_name}({args}, IMapper mapper)");
+            sb.AppendLine($"public {TypeName}({args}, IMapper mapper)");
             sb.OpenBlock();
 
             sb.AppendLine("this._mapper = mapper;");

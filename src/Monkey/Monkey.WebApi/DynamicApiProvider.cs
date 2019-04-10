@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Monkey.Generator;
@@ -20,6 +22,16 @@ namespace Monkey.WebApi
             
             foreach(var t in controllers)
                 feature.Controllers.Add(t.GetTypeInfo());
+        }
+    }
+
+    public static class DynamicAssemblyExtensions
+    {
+        public static DynamicAssembly AddWebApiReferences(this DynamicAssembly a)
+        {
+            a.AddReferenceFromType<Profile>();
+            a.AddReferenceFromType<ControllerBase>();
+            return a;
         }
     }
 }

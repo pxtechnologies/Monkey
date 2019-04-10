@@ -29,7 +29,7 @@ namespace Monkey.WebApi.UnitTests
 
             var srcUnits = this.Sut.Generate(service).ToArray();
 
-            CSharpCodeAssertations.CodeParses(string.Join(Environment.NewLine, srcUnits.Select(x=>x.Code)));
+            CSharpCodeAssertions.CodeParses(string.Join(Environment.NewLine, srcUnits.Select(x=>x.Code)));
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Monkey.WebApi.UnitTests
 
             var srcUnits = this.Sut.Generate(service).ToArray();
 
-            CSharpCodeAssertations.CodeParses(string.Join(Environment.NewLine, srcUnits.Select(x => x.Code)));
+            CSharpCodeAssertions.CodeParses(string.Join(Environment.NewLine, srcUnits.Select(x => x.Code)));
         }
 
         [Fact]
@@ -51,7 +51,7 @@ namespace Monkey.WebApi.UnitTests
 
             var srcUnits = this.Sut.Generate(service).ToArray();
 
-            CSharpCodeAssertations.CodeParses(string.Join(Environment.NewLine, srcUnits.Select(x => x.Code)));
+            CSharpCodeAssertions.CodeParses(string.Join(Environment.NewLine, srcUnits.Select(x => x.Code)));
         }
 
         protected override CqrsControllerGenerator CreateSut()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Monkey.Builder;
 using Monkey.Generator;
 using Monkey.Logging;
@@ -48,6 +49,7 @@ namespace Monkey.WebApi.Generator
             _logger = logger;
         }
 
+        
         public IEnumerable<SourceUnit> Generate(ServiceInfo service)
         {
             if (service.IsValid)
@@ -56,7 +58,10 @@ namespace Monkey.WebApi.Generator
 
                 CqrsControllerBuilder builder = new CqrsControllerBuilder()
                     .WithName(service.Name)
-                    .InNamespace(service.Assembly.GetName().Name + ".WebApi");
+                    .InNamespace(service.Assembly.GetName().Name + ".WebApi")
+                    .AddDefaultUsings()
+                    .AddUsing("Microsoft.AspNetCore.Mvc")
+                    .AddUsing("AutoMapper");
 
                 foreach (HandlerInfo h in service.Handlers)
                 {
@@ -108,6 +113,11 @@ namespace Monkey.WebApi.Generator
                     srcUnit.ResultToResponseMappers.Append(GenerateResultToResponseMapper(responseType,handler.RequestType));
                     srcUnit.Requests.Append(GenerateRequestType(cmdArg.Type, handler.RequestType, prop.PropertyType, prop.Name));
                     srcUnit.RequestToCommandMappers.Append(GenerateRequestToCommandMapper(cmdArg.Type, handler.RequestType, prop.PropertyType, prop.Name));
+
+                    builder.AddUsing(handler.ResponseType.Namespace + ".WebApi");
+                    builder.AddUsing(handler.RequestType.Namespace + ".WebApi");
+                    builder.AddUsing(handler.ResponseType.Namespace);
+                    builder.AddUsing(handler.RequestType.Namespace);
                 }
                 else
                 {
@@ -122,6 +132,11 @@ namespace Monkey.WebApi.Generator
                     srcUnit.ResultToResponseMappers.Append(GenerateResultToResponseMapper(responseType, handler.RequestType));
                     srcUnit.Requests.Append(GenerateRequestType(cmdArg.Type, handler.RequestType, prop.PropertyType, prop.Name));
                     srcUnit.RequestToCommandMappers.Append(GenerateRequestToCommandMapper(cmdArg.Type, handler.RequestType, prop.PropertyType, prop.Name));
+
+                    builder.AddUsing(handler.ResponseType.Namespace + ".WebApi");
+                    builder.AddUsing(handler.RequestType.Namespace + ".WebApi");
+                    builder.AddUsing(handler.ResponseType.Namespace);
+                    builder.AddUsing(handler.RequestType.Namespace);
                 }
             }
             else
@@ -140,6 +155,11 @@ namespace Monkey.WebApi.Generator
                     srcUnit.ResultToResponseMappers.Append(GenerateResultToResponseMapper(responseType, handler.RequestType));
                     srcUnit.Requests.Append(GenerateRequestType(cmdArg.Type, handler.RequestType));
                     srcUnit.RequestToCommandMappers.Append(GenerateRequestToCommandMapper(cmdArg.Type, handler.RequestType));
+
+                    builder.AddUsing(handler.ResponseType.Namespace + ".WebApi");
+                    builder.AddUsing(handler.RequestType.Namespace + ".WebApi");
+                    builder.AddUsing(handler.ResponseType.Namespace);
+                    builder.AddUsing(handler.RequestType.Namespace);
                 }
                 else
                 {
@@ -155,6 +175,11 @@ namespace Monkey.WebApi.Generator
                     srcUnit.ResultToResponseMappers.Append(GenerateResultToResponseMapper(responseType, handler.RequestType));
                     srcUnit.Requests.Append(GenerateRequestType(cmdArg.Type, handler.RequestType));
                     srcUnit.RequestToCommandMappers.Append(GenerateRequestToCommandMapper(cmdArg.Type, handler.RequestType));
+
+                    builder.AddUsing(handler.ResponseType.Namespace + ".WebApi");
+                    builder.AddUsing(handler.RequestType.Namespace + ".WebApi");
+                    builder.AddUsing(handler.ResponseType.Namespace);
+                    builder.AddUsing(handler.RequestType.Namespace);
                 }
             }
         }
@@ -174,7 +199,10 @@ namespace Monkey.WebApi.Generator
         {
             AutomapperProfilerBuilder profile = new AutomapperProfilerBuilder()
                 .InNamespace(commandType.Namespace + ".WebApi.Profiles")
-                .ForType(requestType, commandType.Name);
+                .ForType(requestType, commandType.Name)
+                .WithDefaultUsings()
+                .AddUsing(commandType.Namespace)
+                .AddUsing(commandType.Namespace + ".WebApi");
 
             profile.WithDefaultMapping();
 
@@ -213,7 +241,10 @@ namespace Monkey.WebApi.Generator
         {
             AutomapperProfilerBuilder profile = new AutomapperProfilerBuilder()
                 .InNamespace(resultType.Namespace + ".WebApi.Profiles")
-                .ForType(responseTypeName, resultType.Name);
+                .ForType(responseTypeName, resultType.Name)
+                .WithDefaultUsings()
+                .AddUsing(resultType.Namespace)
+                .AddUsing(resultType.Namespace + ".WebApi");
 
             profile.WithDefaultMapping();
 

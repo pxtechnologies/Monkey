@@ -10,9 +10,10 @@ namespace Monkey.WebApi.Generator
     {
         private readonly IServiceMetadataProvider _cqrsMetadataRegister;
         private readonly ICqrsControllerGenerator _cqrsControllerGenerator;
-        public WebApiCqrsGenerator(IServiceMetadataProvider cqrsMetadataRegister)
+        public WebApiCqrsGenerator(IServiceMetadataProvider cqrsMetadataRegister, ICqrsControllerGenerator cqrsControllerGenerator)
         {
             _cqrsMetadataRegister = cqrsMetadataRegister;
+            _cqrsControllerGenerator = cqrsControllerGenerator;
         }
 
         public async Task<IEnumerable<SourceUnit>> Generate()

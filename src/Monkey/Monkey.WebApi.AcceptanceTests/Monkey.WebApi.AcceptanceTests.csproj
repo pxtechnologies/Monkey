@@ -7,6 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <SpecFlowObsoleteCodeBehindFiles Remove="Features\Basic.feature.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="AutoMapper" Version="8.0.0" />
         <PackageReference Include="FluentAssertions" Version="5.6.0" />
         <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
@@ -19,18 +23,20 @@
         <PackageReference Include="SimpleInjector.Packaging" Version="4.5.1" />
         <PackageReference Include="SpecFlow" Version="3.0.188" />
         <PackageReference Include="SpecFlow.Tools.MsBuild.Generation" Version="3.0.188" />
+        <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.2" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Monkey.SimpleInjector\Monkey.SimpleInjector.csproj" />
       <ProjectReference Include="..\Monkey.WebApi.SimpleInjector\Monkey.WebApi.SimpleInjector.csproj" />
+      <ProjectReference Include="..\Monkey.WebApi\Monkey.WebApi.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Features\Basic.feature.cs">
+      <Compile Update="Integration\ControllerInvocations.feature.cs">
+        <DependentUpon>ControllerInvocations.feature</DependentUpon>
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
-        <DependentUpon>Basic.feature</DependentUpon>
       </Compile>
     </ItemGroup>
 
@@ -41,9 +47,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <SpecFlowFeatureFiles Update="Features\Basic.feature">
+      <SpecFlowFeatureFiles Update="Integration\ControllerInvocations.feature">
+        <Visible>$(UsingMicrosoftNETSdk)</Visible>
+        <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+        <LastGenOutput>ControllerInvocations.feature.cs</LastGenOutput>
         <Generator>SpecFlowSingleFileGenerator</Generator>
-        <LastGenOutput>Basic.feature.cs</LastGenOutput>
       </SpecFlowFeatureFiles>
     </ItemGroup>
 

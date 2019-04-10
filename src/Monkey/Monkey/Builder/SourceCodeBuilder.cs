@@ -418,5 +418,12 @@ namespace Monkey.Builder
         }
 
         public int MaxCapacity => _sb.MaxCapacity;
+
+        public SourceCodeBuilder AppendLines(IEnumerable<string> lines)
+        {
+            foreach (var i in lines)
+                AppendLine(i);
+            return this;
+        }
     }
 }

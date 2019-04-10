@@ -4,7 +4,7 @@ namespace Monkey.Generator
 {
     public class HandlerInfo
     {
-        internal HandlerInfo(Type handlerInterfaceType, 
+        internal HandlerInfo(Type handlerIType, 
             Type handlerType,
             Type requestType,
             Type responseType,
@@ -18,11 +18,11 @@ namespace Monkey.Generator
             IsResponseCollection = isResponseCollection;
             IsCommandHandler = isCommandHandler;
             IsQueryHandler = isQueryHandler;
-            HandlerInterfaceType = handlerInterfaceType;
+            HandlerIType = handlerIType;
         }
         
         public ServiceInfo Service { get; set; }
-        public Type HandlerInterfaceType { get; private set; }
+        public Type HandlerIType { get; private set; }
         public Type HandlerType { get; private set; }
         public Type RequestType { get; private set; }
         public Type ResponseType { get; private set; }

@@ -2,14 +2,18 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Monkey.Cqrs;
+using NSubstitute;
+using Xunit;
 
 namespace Monkey.WebApi.UnitTests
 {
-    public static class CSharpCodeAssertations
+    public static class CSharpCodeAssertions
     {
         public static void CodeParses(string code)
         {
@@ -38,4 +42,6 @@ namespace Monkey.WebApi.UnitTests
                 throw new AssertionFailedException(sb.ToString());
         }
     }
+
+    
 }

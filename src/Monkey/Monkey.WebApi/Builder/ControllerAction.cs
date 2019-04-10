@@ -34,7 +34,7 @@ namespace Monkey.WebApi.Builder
             verb, 
             isResponseCollection, 
             route, 
-            handler.HandlerInterfaceType,
+            handler.HandlerIType,
             handler.RequestType,
             handler.ResponseType)
         {

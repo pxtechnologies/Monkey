@@ -13,21 +13,12 @@ namespace Monkey.WebApi.AcceptanceTests.Configuration
         }
 
 
-        [Given(@"I have writen my model with IRequestHandler pattern")]
-        public void GivenIHaveWritenMyModelWithIRequestHandlerPattern()
+        [Given(@"The applications container is configured")]
+        public void GivenTheApplicationsContainerIsConfigured()
         {
-            // Nothing to do here
+            // it's done though hooks
         }
-        [Given(@"I configured basic WebApi features with swagger")]
-        public void GivenIConfiguredBasicWebApiFeaturesWithSwagger()
-        {
-            // 
-        }
-        [Given(@"I add dynamic api to mvc")]
-        public void GivenIAddDynamicApiToMvc()
-        {
-            
-        }
+
 
 
     }

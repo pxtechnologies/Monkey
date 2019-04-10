@@ -21,7 +21,7 @@ namespace Monkey.Generator
             return this;
         }
 
-        public ServiceInfo AddHandler(Type interfaceType, Type handlerType)
+        public ServiceInfo AddHandler(Type interfaceType, Type handlerType = null)
         {
             var handler = _factory.Create(interfaceType, handlerType);
             if(handler == null)
@@ -34,13 +34,18 @@ namespace Monkey.Generator
         }
         public ServiceInfo AddHandler(HandlerInfo handler)
         {
-            if (Assembly == null) Assembly = handler.HandlerType.Assembly;
-            if (Assembly != handler.HandlerType.Assembly)
+            //TODO: Write UT when handler.HandlerType is null
+
+            if (handler == null) throw new ArgumentNullException(nameof(handler));
+            if (Assembly == null) Assembly = handler?.HandlerType?.Assembly ?? handler.RequestType.Assembly;
+            if (Assembly != (handler?.HandlerType?.Assembly ?? handler.RequestType.Assembly))
                 throw new ArgumentException("Handler is from different assembly.");
 
-            var serviceName = handler.HandlerType.GetCustomAttribute<ServiceNameAttribute>();
-            if (Name == null) Name = serviceName.ServiceName;
-            if (serviceName!= null && serviceName.ServiceName != Name)
+            var serviceName = handler.HandlerType?.GetCustomAttribute<ServiceNameAttribute>();
+            if (Name == null && serviceName != null)
+                Name = serviceName.ServiceName;
+
+            if (serviceName != null && serviceName.ServiceName != Name)
                 throw new ArgumentException("This handler does not belong to this service");
 
             _handlers.Add(handler);
@@ -48,7 +53,11 @@ namespace Monkey.Generator
             return this;
         }
 
-        public bool IsValid => !string.IsNullOrWhiteSpace(Name) && Assembly != null && Handlers.Any();
+        public bool IsValid
+        {
+            get { return !string.IsNullOrWhiteSpace(Name) && Assembly != null && Handlers.Any(); }
+        }
+
         public string Name { get; private set; }
         public Assembly Assembly { get; private set; }
         public IEnumerable<HandlerInfo> Handlers => _handlers;
