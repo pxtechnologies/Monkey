@@ -1,4 +1,4 @@
-﻿namespace Monkey.WebApi.AcceptanceTests.Integration
+﻿namespace Monkey.WebApi.AcceptanceTests.Integration.Bindings
 {
     class CSharpCode
     {

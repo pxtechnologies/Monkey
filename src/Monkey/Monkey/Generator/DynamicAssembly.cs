@@ -88,6 +88,7 @@ namespace Monkey.Generator
         public TimeSpan CompilationDuration { get; private set; }
         private readonly List<Assembly> _references;
         public SourceUnitCollection SourceUnits => _sourceUnits;
+        public IEnumerable<Assembly> References => _references;
         public void AddReferenceFromType<TClass>()
         {
             var type = typeof(TClass);
@@ -99,6 +100,10 @@ namespace Monkey.Generator
             {
                 AddReferenceFromType(type);
             }
+        }
+        public void AddReferenceFrom(IEnumerable<Assembly> assemblies)
+        {
+            _references.AddRange(assemblies);
         }
         public void AddReferenceFromType(Type type)
         {

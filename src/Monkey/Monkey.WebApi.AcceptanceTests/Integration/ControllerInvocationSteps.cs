@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -11,6 +12,7 @@ using Monkey.Cqrs;
 using Monkey.Generator;
 using Monkey.WebApi.AcceptanceTests.Assertion;
 using Monkey.WebApi.AcceptanceTests.Configuration;
+using Monkey.WebApi.AcceptanceTests.Integration.Bindings;
 using Monkey.WebApi.Generator;
 using Monkey.WebApi.SimpleInjector;
 using Newtonsoft.Json;
@@ -31,6 +33,33 @@ namespace Monkey.WebApi.AcceptanceTests.Integration
             _data = data;
             _applicationExecutor = applicationExecutor;
         }
+        [Given(@"I have written command-handlers as follows:")]
+        public void GivenIHaveWrittenCommand_HandlersAsFollows(Table table)
+        {
+            var hArgs = table.CreateSet<HandlerArgs>();
+            Type[] handlers = hArgs.Select(x =>
+                    typeof(ICommandHandler<,>).MakeGenericType(_data.Types[x.CommandType], _data.Types[x.ResultType]))
+                .ToArray();
+
+            var assemblies = _applicationExecutor.Execute<MockRegister, Assembly[]>(register =>
+            {
+                return handlers.Select(i => register.GetMock(i).GetType().Assembly).Distinct().ToArray();
+            });
+
+            _applicationExecutor.Execute<IServiceMetadataProvider>(provider =>
+                provider.Discover(x => handlers.Contains(x.HandlerIType), assemblies));
+
+            foreach (var h in hArgs)
+            {
+                var ret = "new UserEntity() { Name = \"Elton\" }";
+                MockHandlerBuilder assertBuilder = new MockHandlerBuilder()
+                    .With(_data.Types[h.CommandType], _data.Types[h.ResultType])
+                    .WithReturn(ret);
+
+                _applicationExecutor.InvokeDynamic(assertBuilder);
+            }
+        }
+
         [Given(@"I have written command-handler that accepts '(.*)' and returns '(.*)'")]
         public void GivenIHaveWrittenCommand_HandlerThatAcceptsAndReturns(string commandType, string resultType)
         {
@@ -50,7 +79,7 @@ namespace Monkey.WebApi.AcceptanceTests.Integration
         }
 
         [Given(@"I have written command '(.*)' and result as:")]
-        public void GivenIHaveWrittenCommandAndResultAs(string commandType, Table table)
+        public void GivenIHaveWrittenCommandAndResultAs(string commandTypes, Table table)
         {
             var lines = table.CreateSet<CSharpCode>().ToArray();
             SourceCodeBuilder sb = new SourceCodeBuilder();
@@ -61,7 +90,8 @@ namespace Monkey.WebApi.AcceptanceTests.Integration
             TypeCompiler compiler = new TypeCompiler();
             var typeAssembly = compiler.FastLoad(sb.ToString());
 
-            _data.Types[commandType] = typeAssembly.GetType($"Test.{commandType}");
+            foreach(var commandType in commandTypes.Split(','))
+                _data.Types[commandType] = typeAssembly.GetType($"Test.{commandType}");
             _data.Types["UserEntity"] = typeAssembly.GetType("Test.UserEntity");
         }
         [When(@"I found record with id to update")]
@@ -80,12 +110,17 @@ namespace Monkey.WebApi.AcceptanceTests.Integration
             var result = await this._applicationExecutor.ExecuteAsync<ISourceCodeGenerator, IEnumerable<SourceUnit>>(async x => (await x.Generate()).ToArray());
             this._applicationExecutor.Execute<IDynamicTypePool>(pool =>
             {
-                assembly = new DynamicAssembly();
-                pool.Add(assembly);
-                assembly.AppendSourceUnits(result);
-                assembly.AddWebApiReferences();
-                assembly.AddReferenceFromTypes(_data.Types.Values);
-                assembly.Compile();
+                if (pool.CanMerge)
+                    assembly = pool.Merge(result);
+                else
+                {
+                    assembly = new DynamicAssembly();
+                    pool.Add(assembly);
+                    assembly.AppendSourceUnits(result);
+                    assembly.AddWebApiReferences();
+                    assembly.AddReferenceFromTypes(_data.Types.Values);
+                    assembly.Compile();
+                }
             });
             
 

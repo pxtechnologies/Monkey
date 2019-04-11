@@ -257,6 +257,107 @@ this.FeatureBackground();
 #line hidden
             this.ScenarioCleanup();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("I can have many actions on one dynamic controller")]
+        public virtual void ICanHaveManyActionsOnOneDynamicController()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can have many actions on one dynamic controller", null, ((string[])(null)));
+#line 61
+this.ScenarioInitialize(scenarioInfo);
+            this.ScenarioStart();
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Line",
+                        "Code"});
+            table9.AddRow(new string[] {
+                        "1",
+                        "public class ActivateUser { public string Name { get;set; } public Guid Id {get; " +
+                            "set; }}"});
+            table9.AddRow(new string[] {
+                        "2",
+                        "public class UserEntity { public Guid Id { get; set; } public string Name { get; " +
+                            "set; }}"});
+            table9.AddRow(new string[] {
+                        "3",
+                        "public class ActivateUsers { public string Name { get;set; } }"});
+            table9.AddRow(new string[] {
+                        "4",
+                        "public class UpdateUser { public string Name { get;set; } public Guid Id {get; se" +
+                            "t; }}"});
+            table9.AddRow(new string[] {
+                        "5",
+                        "public class CreateUser { public string Name { get;set; }}"});
+#line 62
+ testRunner.Given("I have written command \'ActivateUser,ActivateUsers,UpdateUser,CreateUser\' and res" +
+                    "ult as:", ((string)(null)), table9, "Given ");
+#line hidden
+            TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
+                        "CommandType",
+                        "ResultType"});
+            table10.AddRow(new string[] {
+                        "ActivateUser",
+                        "UserEntity"});
+            table10.AddRow(new string[] {
+                        "ActivateUsers",
+                        "UserEntity"});
+            table10.AddRow(new string[] {
+                        "UpdateUser",
+                        "UserEntity"});
+            table10.AddRow(new string[] {
+                        "CreateUser",
+                        "UserEntity"});
+#line 69
+ testRunner.And("I have written command-handlers as follows:", ((string)(null)), table10, "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table11 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Line",
+                        "Json"});
+            table11.AddRow(new string[] {
+                        "1",
+                        "{ \"Name\": \"John\" }"});
+#line 77
+ testRunner.When("I invoke \'UserController\' with \'Post\' method and \'CreateUserRequest\' argument:", ((string)(null)), table11, "When ");
+#line 80
+ testRunner.Then("CommandHandler is invoked with corresponding \'CreateUser\' argument", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 81
+ testRunner.And("\'UserEntityResponse\' that corresponds to \'UserEntity\' is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 83
+ testRunner.When("I found record with id to update", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+            TechTalk.SpecFlow.Table table12 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Line",
+                        "Json"});
+            table12.AddRow(new string[] {
+                        "1",
+                        "{ \"Name\": \"John\" }"});
+#line 84
+ testRunner.And("I invoke \'UserController\' with \'Activate\' method and \'ActivateUserRequest\' argume" +
+                    "nt:", ((string)(null)), table12, "And ");
+#line 87
+ testRunner.Then("CommandHandler is invoked with corresponding \'ActivateUser\' argument", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 88
+ testRunner.And("\'UserEntityResponse\' that corresponds to \'UserEntity\' is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 90
+ testRunner.When("I found record with id to update", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+            TechTalk.SpecFlow.Table table13 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Line",
+                        "Json"});
+            table13.AddRow(new string[] {
+                        "1",
+                        "{ \"Name\": \"John\" }"});
+#line 91
+ testRunner.And("I invoke \'UserController\' with \'Put\' method and \'UpdateUserRequest\' argument:", ((string)(null)), table13, "And ");
+#line 94
+ testRunner.Then("CommandHandler is invoked with corresponding \'UpdateUser\' argument", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 95
+ testRunner.And("\'UserEntityResponse\' that corresponds to \'UserEntity\' is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
     }
 }
 #pragma warning restore

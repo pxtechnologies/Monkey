@@ -5,29 +5,28 @@ using Monkey.Generator;
 
 namespace Monkey.WebApi.Generator
 {
-    
-    public class WebApiCqrsGenerator : ISourceCodeGenerator
+    public interface IWebApiGenerator
     {
-        private readonly IServiceMetadataProvider _cqrsMetadataRegister;
+        SourceUnitCollection Generate(IEnumerable<ServiceInfo> serviceInfos);
+    }
+    public class WebApiCqrsGenerator : IWebApiGenerator
+    {
         private readonly ICqrsControllerGenerator _cqrsControllerGenerator;
-        public WebApiCqrsGenerator(IServiceMetadataProvider cqrsMetadataRegister, ICqrsControllerGenerator cqrsControllerGenerator)
+        public WebApiCqrsGenerator(ICqrsControllerGenerator cqrsControllerGenerator)
         {
-            _cqrsMetadataRegister = cqrsMetadataRegister;
             _cqrsControllerGenerator = cqrsControllerGenerator;
         }
+        
 
-        public async Task<IEnumerable<SourceUnit>> Generate()
+        public SourceUnitCollection Generate(IEnumerable<ServiceInfo> serviceInfos)
         {
             SourceUnitCollection collection = new SourceUnitCollection();
-
-            foreach (var sourceUnit in _cqrsMetadataRegister.GetServices()
-                .SelectMany(_cqrsControllerGenerator.Generate))
+            foreach (var sourceUnit in serviceInfos.SelectMany(_cqrsControllerGenerator.Generate))
             {
                 collection.Append(sourceUnit);
             }
 
             return collection;
         }
-       
     }
 }

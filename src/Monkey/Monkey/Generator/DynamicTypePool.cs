@@ -10,6 +10,8 @@ namespace Monkey.Generator
         Guid Signature { get; }
         IEnumerable<Assembly> GetAssemblies();
         DynamicTypePool Add(DynamicAssembly assembly);
+        bool CanMerge { get; }
+        DynamicAssembly Merge(IEnumerable<SourceUnit> units);
     }
 
     public class DynamicTypePool : IDynamicTypePool
@@ -27,6 +29,26 @@ namespace Monkey.Generator
             //TODO: Change this
             if(_assemblies.Any())
                 yield return _assemblies.Last.Value.Assembly;
+        }
+        public bool CanMerge
+        {
+            get { return _assemblies.Any(); }
+        }
+
+        public DynamicAssembly Merge(IEnumerable<SourceUnit> units)
+        {
+            //TODO: Rething this...
+
+            var newOnes = units.Except(_assemblies.SelectMany(x => x.SourceUnits));
+            if (newOnes.Any())
+            {
+                DynamicAssembly n = new DynamicAssembly();
+                this._assemblies.AddFirst(n);
+                n.AddReferenceFrom(_assemblies.First().References);
+                n.AppendSourceUnits(newOnes);
+                return n.Compile();
+            }
+            else return _assemblies.First();
         }
         public DynamicTypePool Add(DynamicAssembly assembly)
         {

@@ -14,6 +14,25 @@ namespace Monkey.Generator
             _codeMd5 = new Lazy<Guid>(() => Code.ComputeMd5());
             Version = version;
         }
+
+        protected bool Equals(SourceUnit other)
+        {
+            return Equals(CodeHash, other.CodeHash);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((SourceUnit) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return CodeHash.GetHashCode();
+        }
+
         public long Version { get; private set; }
         public Guid CodeHash => _codeMd5.Value;
         public string Code { get; private set; }

@@ -9,7 +9,7 @@ namespace Monkey.Logging
     {
         void Info(string text, params object[] args);
         void Warn(string text, params object[] args);
-        void Error(string text, params object[] args);
+        void Error(Exception ex, string text, params object[] args);
         void Debug(string text, params object[] args);
     }
 
@@ -45,10 +45,11 @@ namespace Monkey.Logging
             Write(text, args);
         }
 
-        public void Error(string text, params object[] args)
+        public void Error(Exception ex, string text, params object[] args)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Write(text, args);
+            Console.WriteLine(ex.Message);
         }
 
         public void Debug(string text, params object[] args)
