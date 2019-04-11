@@ -8,12 +8,60 @@ namespace Monkey.WebApi.Builder
 {
     public class ControllerAction : Addnotable
     {
-        public string Route { get; private set; }
+        private string _route;
+        private HttpVerb _verb;
+        public override void WriteAttributes(SourceCodeBuilder sb)
+        {
+            sb.Append(sb.Prefix);
+            base.WriteAttributes(sb);
+            sb.AppendLine();
+        }
+
+        public string Route
+        {
+            get { return _route; }
+            set
+            {
+                if (_route != null)
+                {
+                    var old = $"Route(\"{_route}\")";
+                    _attributes.Remove(old);
+                }
+                _route = value;
+                base.WithAttribute($"Route(\"{_route}\")");
+            }
+        }
+
         public string Name { get; private set; }
         public Type HandlerGenericInterfaceType { get; private set; }
         public Type HandlerRequestType { get; private set; }
         public Type HandlerReturnType { get; private set; }
-        public HttpVerb Verb { get; private set; }
+
+        public HttpVerb Verb
+        {
+            get { return _verb; }
+            set
+            {
+                string old = MapVerbToAttribute(_verb);
+                _attributes.Remove(old);
+                _verb = value;
+                WithAttribute(MapVerbToAttribute(_verb));
+            }
+        }
+
+        private string MapVerbToAttribute(HttpVerb verb)
+        {
+            switch (verb)
+            {
+                case HttpVerb.Post: return "HttpPost";
+                case HttpVerb.Put: return "HttpPut";
+                case HttpVerb.Delete: return "HttpDelete";
+                case HttpVerb.Get: return "HttpGet";
+
+                default: throw new NotSupportedException();
+            }
+        }
+
         public ArgumentCollection RequestArguments { get; private set; }
         public string ResponseType { get; private set; }
         public bool IsResponseCollection { get; private set; }

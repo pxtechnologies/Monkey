@@ -96,7 +96,7 @@ namespace Monkey.WebApi.Builder
             {
                 a.WriteAttributes(sb);
                 var args = a.RequestArguments.ToString();
-                a.WriteAttributes(sb);
+                
                 sb.AppendLine($"public async Task<{a.ResponseType}> {a.Name}({args})");
                 sb.OpenBlock();
 

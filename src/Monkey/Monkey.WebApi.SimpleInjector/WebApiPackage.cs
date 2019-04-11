@@ -1,6 +1,8 @@
 ﻿using System;
 using AutoMapper;
 using Monkey.Generator;
+using Monkey.Services;
+using Monkey.WebApi.Feature;
 using Monkey.WebApi.Generator;
 using SimpleInjector;
 using SimpleInjector.Packaging;
@@ -11,6 +13,9 @@ namespace Monkey.WebApi.SimpleInjector
     {
         public void RegisterServices(Container container)
         {
+            container.RegisterInstance(DynamicChangeProvider.Instance);
+            
+            container.Collection.Append<IMetadataChangedSubscriber, DynamicChangeProvider>(Lifestyle.Singleton);
             container.Register<DynamicApiFeature>(Lifestyle.Singleton);
             container.Register<ICommandHandlerRegister, CommandHandlerRegister>(Lifestyle.Singleton);
             container.Register<IWebApiGenerator, WebApiCqrsGenerator>(Lifestyle.Singleton);

@@ -6,7 +6,7 @@ namespace Monkey.Builder
 {
     public class Addnotable
     {
-        private List<string> _attributes;
+        protected List<string> _attributes;
 
         public Addnotable()
         {
@@ -26,12 +26,12 @@ namespace Monkey.Builder
                 sb.AppendFormat($"[{atts}] ");
             }
         }
-        public void WriteAttributes(SourceCodeBuilder sb)
+        public virtual void WriteAttributes(SourceCodeBuilder sb)
         {
             if(_attributes.Any())
             {
                 var atts = string.Join(",", _attributes);
-                sb.AppendFormat($"[{atts}] ");
+                sb.Append($"[{atts}] ");
             }
         }
     }

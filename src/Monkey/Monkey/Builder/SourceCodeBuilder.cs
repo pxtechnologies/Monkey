@@ -11,6 +11,7 @@ namespace Monkey.Builder
         private StringBuilder _sb;
         private int _indent = 0;
         private string _linePrefix = "";
+        public string Prefix => _linePrefix;
         private string _tab = "   ";
         public SourceCodeBuilder IndentUp()
         {

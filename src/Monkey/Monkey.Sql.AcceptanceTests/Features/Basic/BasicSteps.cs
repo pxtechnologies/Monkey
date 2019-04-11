@@ -122,7 +122,7 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
         [When(@"a commandhandler is generated")]
         public async Task WhenACommandhandlerIsGenerated()
         {
-            var result = await this._applicationExecutor.ExecuteAsync<SqlCqrsGenerator,IEnumerable<SourceUnit>>( x => x.Generate() );
+            var result = await this._applicationExecutor.ExecuteAsync<ISqlCqrsGenerator,SourceUnitCollection>( x => x.Generate(0) );
             
             DynamicAssembly assembly = new DynamicAssembly();
             assembly.AppendSourceUnits(result);

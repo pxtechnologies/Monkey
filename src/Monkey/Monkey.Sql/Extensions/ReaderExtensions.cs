@@ -17,6 +17,10 @@ namespace Monkey.Sql.Extensions
             assembly.AddReferenceFromType<IRepository>();
             assembly.AddReferenceFromType<SqlParameterCollection>();
             assembly.AddReferenceFromType<IConfiguration>();
+            assembly.Purpose = AssemblyPurpose.Handlers |
+                               AssemblyPurpose.Queries |
+                               AssemblyPurpose.Commands |
+                               AssemblyPurpose.Results;
             return assembly;
         }
     }

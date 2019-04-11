@@ -8,21 +8,25 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Monkey.SimpleInjector;
+using Monkey.Sql.Services;
 using Monkey.Sql.SimpleInjector;
 using Monkey.Sql.WebApiHost.Configuration;
 using Monkey.Sql.WebApiHost.Services;
 using Monkey.WebApi;
+using Monkey.WebApi.Feature;
 using Monkey.WebApi.SimpleInjector;
 using SimpleInjector;
 using SimpleInjector.Advanced;
 using SimpleInjector.Integration.AspNetCore.Mvc;
 using SimpleInjector.Lifestyles;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Monkey.Sql.WebApiHost
 {
@@ -50,7 +54,15 @@ namespace Monkey.Sql.WebApiHost
                     m.FeatureProviders.Add(dynamicApiFeatureProvider);
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            
+
+            services.AddSingleton<IActionDescriptorChangeProvider>(DynamicChangeProvider.Instance);
+            services.AddSingleton(DynamicChangeProvider.Instance);
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+            });
+
         }
         private void IntegrateSimpleInjector(IServiceCollection services)
         {
@@ -97,8 +109,20 @@ namespace Monkey.Sql.WebApiHost
                 app.UseDeveloperExceptionPage();
             }
             _container.Verify();
+
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Monkey Dynamic API");
+            });
+
             app.UseMvc();
             _isReady = true;
+
+            _container.GetInstance<IDbChangeListener>().Start();
         }
     }
 }

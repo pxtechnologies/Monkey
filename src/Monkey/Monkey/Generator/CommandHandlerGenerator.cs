@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
+using Monkey.Services;
 
 namespace Monkey.Generator
 {
@@ -25,12 +26,16 @@ namespace Monkey.Generator
     {
         private readonly IServiceNameProvider _provider;
         private readonly IHandlerInfoFactory _handlerFactory;
+        private readonly IEnumerable<IMetadataChangedSubscriber> _subscribers;
         private readonly Dictionary<string,ServiceInfo> _services;
 
-        public ServiceMetadataRegister(IServiceNameProvider provider, IHandlerInfoFactory handlerFactory)
+        public ServiceMetadataRegister(IServiceNameProvider provider, 
+            IHandlerInfoFactory handlerFactory, 
+            IEnumerable<IMetadataChangedSubscriber> subscribers)
         {
             _provider = provider;
             _handlerFactory = handlerFactory;
+            _subscribers = subscribers;
             _services = new Dictionary<string, ServiceInfo>();
         }
 
@@ -72,7 +77,8 @@ namespace Monkey.Generator
                 }
 
             }
-
+            foreach(var i in _subscribers)
+                i.Changed();
         }
         private readonly string[] validaHandlers = new string[] { "IQueryHandler",
             "ISingleQueryHandler",

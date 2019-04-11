@@ -2,7 +2,9 @@
 using System.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Monkey.Sql.Generator;
 using Monkey.Sql.Model;
+using Monkey.Sql.Services;
 using SimpleInjector;
 using SimpleInjector.Packaging;
 
@@ -12,6 +14,9 @@ namespace Monkey.Sql.SimpleInjector
     {
         public void RegisterServices(Container container)
         {
+            container.Register<ISqlCqrsGenerator, SqlCqrsGenerator>(Lifestyle.Scoped);
+            container.Register<IServiceMatadataLoader, ServiceMatadataLoader>(Lifestyle.Scoped);
+            container.Register<IDbChangeListener, DbChangeListener>(Lifestyle.Singleton);
             container.Register<IRepository>(()=> SqlPackage.OnCreate(container), Lifestyle.Scoped);
             container.Register<IMonkeyDatabase>(() => new MonkeyDatabase(SqlPackage.OnCreate(container).Database));
         }

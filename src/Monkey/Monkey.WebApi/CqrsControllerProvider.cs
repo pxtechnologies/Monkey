@@ -21,21 +21,25 @@ namespace Monkey.WebApi
         {
             var result = _webApiGenerator.Generate(services);
 
-            DynamicAssembly assembly = null;
-            if (_dynamicPool.CanMerge)
-                assembly = _dynamicPool.Merge(result);
-            else
-            {
-                assembly = new DynamicAssembly();
-                _dynamicPool.Add(assembly);
-                assembly.AppendSourceUnits(result);
-                assembly.AddWebApiReferences();
-                assembly.Compile();
-            }
+            DynamicAssembly assembly = new DynamicAssembly();
+            
+            assembly.AppendSourceUnits(result);
+            assembly.AddWebApiReferences();
 
-            return assembly.Assembly.GetTypes()
+            AssemblyPurpose p = AssemblyPurpose.Handlers | AssemblyPurpose.Commands | AssemblyPurpose.Queries |
+                                AssemblyPurpose.Results;
+            assembly.AddReferenceFrom(_dynamicPool.Where(x=>(x.Purpose & p) > 0).Select(x=>x.Assembly));
+
+            _dynamicPool.Add(assembly);
+
+            assembly.Compile();
+
+
+            var controllerTypes = assembly.Assembly.GetTypes()
                 .Where(x => typeof(ControllerBase).IsAssignableFrom(x))
                 .ToArray();
+
+            return controllerTypes;
         }
     }
 }

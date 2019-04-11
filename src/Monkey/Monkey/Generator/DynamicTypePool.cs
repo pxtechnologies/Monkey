@@ -1,17 +1,18 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
 namespace Monkey.Generator
 {
-    public interface IDynamicTypePool
+    public interface IDynamicTypePool : IEnumerable<DynamicAssembly>
     {
         Guid Signature { get; }
         IEnumerable<Assembly> GetAssemblies();
         DynamicTypePool Add(DynamicAssembly assembly);
         bool CanMerge { get; }
-        DynamicAssembly Merge(IEnumerable<SourceUnit> units);
+        DynamicAssembly Merge(IEnumerable<SourceUnit> units, AssemblyPurpose referencePurposes = AssemblyPurpose.None);
     }
 
     public class DynamicTypePool : IDynamicTypePool
@@ -35,7 +36,7 @@ namespace Monkey.Generator
             get { return _assemblies.Any(); }
         }
 
-        public DynamicAssembly Merge(IEnumerable<SourceUnit> units)
+        public DynamicAssembly Merge(IEnumerable<SourceUnit> units, AssemblyPurpose referencePurposes = AssemblyPurpose.None)
         {
             //TODO: Rething this...
 
@@ -43,9 +44,17 @@ namespace Monkey.Generator
             if (newOnes.Any())
             {
                 DynamicAssembly n = new DynamicAssembly();
-                this._assemblies.AddFirst(n);
+                
                 n.AddReferenceFrom(_assemblies.First().References);
                 n.AppendSourceUnits(newOnes);
+                if (referencePurposes != AssemblyPurpose.None)
+                {
+                    var refs = _assemblies.Where(x => (x.Purpose & referencePurposes) > 0)
+                        .Select(x=>x.Assembly)
+                        .ToArray();
+                    n.AddReferenceFrom(refs);
+                }
+                this._assemblies.AddFirst(n);
                 return n.Compile();
             }
             else return _assemblies.First();
@@ -56,6 +65,16 @@ namespace Monkey.Generator
             _assemblies.AddFirst(assembly);
             return this;
 
+        }
+
+        public IEnumerator<DynamicAssembly> GetEnumerator()
+        {
+            return _assemblies.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

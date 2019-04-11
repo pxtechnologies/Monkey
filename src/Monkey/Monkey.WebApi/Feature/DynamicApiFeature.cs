@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Monkey.Generator;
 using Monkey.WebApi.Generator;
 
-namespace Monkey.WebApi
+namespace Monkey.WebApi.Feature
 {
     public class DynamicApiFeature
     {

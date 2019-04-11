@@ -39,7 +39,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monkey.WebApi.SimpleInjecto
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apps", "Apps", "{03DDC688-1113-479D-BC2E-8D757CACC7A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monkey.Sql.WebApiHost", "Monkey.Sql.WebApiHost\Monkey.Sql.WebApiHost.csproj", "{01DDAA04-76D7-4589-BB69-AE6091F80E25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monkey.Sql.WebApiHost", "Monkey.Sql.WebApiHost\Monkey.Sql.WebApiHost.csproj", "{01DDAA04-76D7-4589-BB69-AE6091F80E25}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{EBB4050F-7000-4717-B99E-4191267C0568}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\README.md = ..\..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

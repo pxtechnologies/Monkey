@@ -50,7 +50,13 @@ namespace Monkey.WebApi.Generator
             _logger = logger;
         }
 
-        
+        private string ToNamespace(string assemblyName)
+        {
+            string ns = new string(assemblyName.Where(x => Char.IsLetter(x)).ToArray());
+            if (!string.IsNullOrWhiteSpace(ns))
+                return ns + ".WebApi";
+            else return "Temp.WebApi";
+        }
         public IEnumerable<SourceUnit> Generate(ServiceInfo service)
         {
             if (service.IsValid)
@@ -59,7 +65,7 @@ namespace Monkey.WebApi.Generator
 
                 CqrsControllerBuilder builder = new CqrsControllerBuilder()
                     .WithName(service.Name)
-                    .InNamespace(service.Assembly.GetName().Name + ".WebApi")
+                    .InNamespace(ToNamespace(service.Assembly.GetName().Name))
                     .AddDefaultUsings()
                     .AddUsing("Microsoft.AspNetCore.Mvc")
                     .AddUsing("AutoMapper");

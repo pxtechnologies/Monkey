@@ -10,6 +10,11 @@ namespace Monkey.WebApi
         {
             a.AddReferenceFromType<Profile>();
             a.AddReferenceFromType<ControllerBase>();
+            a.Purpose = AssemblyPurpose.RequestProfiles |
+                        AssemblyPurpose.ResponseProfiles |
+                        AssemblyPurpose.Controllers |
+                        AssemblyPurpose.Responses |
+                        AssemblyPurpose.Requests;
             return a;
         }
     }

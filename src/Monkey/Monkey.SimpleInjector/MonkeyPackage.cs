@@ -1,8 +1,11 @@
 ﻿using System;
 using Monkey.Compilation;
+using Monkey.Extensions;
 using Monkey.Generator;
 using Monkey.Logging;
+using Monkey.Services;
 using SimpleInjector;
+using SimpleInjector.Lifestyles;
 using SimpleInjector.Packaging;
 
 namespace Monkey.SimpleInjector
@@ -16,6 +19,8 @@ namespace Monkey.SimpleInjector
         public static Func<ILogger> LoggerFactory { get; set; }
         public void RegisterServices(Container container)
         {
+            ServiceProviderExtension.ScopeFactory = s => AsyncScopedLifestyle.BeginScope(container);
+            
             container.Register<ITypeCompiler, TypeCompiler>();
             container.Register<IServiceMetadataProvider, ServiceMetadataRegister>(Lifestyle.Singleton);
             container.Register<IServiceNameProvider, ServiceNameProvider>(Lifestyle.Singleton);

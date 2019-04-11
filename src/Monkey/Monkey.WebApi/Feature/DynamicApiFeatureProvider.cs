@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 
-namespace Monkey.WebApi
+namespace Monkey.WebApi.Feature
 {
     public class DynamicApiFeatureProvider : IApplicationFeatureProvider<ControllerFeature>
     {

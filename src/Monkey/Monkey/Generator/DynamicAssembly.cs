@@ -23,7 +23,7 @@ namespace Monkey.Generator
         Dictionary<Guid, SourceUnit> _srcUnits = new Dictionary<Guid, SourceUnit>();
         Dictionary<string, SourceUnit> _nameUnits = new Dictionary<string, SourceUnit>();
         private string _code;
-
+        public long Version { get; set; }
         public string Code
         {
             get
@@ -69,7 +69,7 @@ namespace Monkey.Generator
         {
             return GetEnumerator();
         }
-
+        
         public void Append(SourceUnitCollection collection)
         {
             foreach (var i in collection)
@@ -78,6 +78,7 @@ namespace Monkey.Generator
     }
     public class DynamicAssembly
     {
+        public AssemblyPurpose Purpose { get; set; }
         public Guid SrcHash {
             get { return string.Concat(_sourceUnits.Select(x => x.CodeHash.ToString())).ComputeMd5(); }
         }
@@ -148,5 +149,19 @@ namespace Monkey.Generator
             CompilationDuration = s.Elapsed;
             return this;
         }
+    }
+    [Flags]
+    public enum AssemblyPurpose
+    {
+        None = 0,
+        Handlers = 1,
+        Commands = 2,
+        Queries = 4,
+        Results = 8,
+        Requests = 16,
+        Responses = 32,
+        RequestProfiles = 64,
+        ResponseProfiles = 128,
+        Controllers = 256
     }
 }

@@ -12,7 +12,7 @@ using Monkey.Sql.Model;
 
 namespace Monkey.Sql.Generator
 {
-    public class SqlCqrsGenerator : ISourceCodeGenerator
+    public class SqlCqrsGenerator : ISqlCqrsGenerator
     {
         private readonly IRepository _repo;
 
@@ -21,7 +21,7 @@ namespace Monkey.Sql.Generator
             _repo = repo;
         }
 
-        public async Task<IEnumerable<SourceUnit>> Generate()
+        public async Task<SourceUnitCollection> Generate(long version)
         {
             SourceUnitCollection collection = new SourceUnitCollection();
 
