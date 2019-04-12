@@ -12,7 +12,7 @@ using Monkey.Sql.Model;
 
 namespace Monkey.Sql.Generator
 {
-    public class SqlCqrsGenerator : ISqlCqrsGenerator
+    internal class SqlCqrsGenerator : ISqlCqrsGenerator
     {
         private readonly IRepository _repo;
 

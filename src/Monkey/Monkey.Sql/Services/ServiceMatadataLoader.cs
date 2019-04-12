@@ -12,7 +12,7 @@ namespace Monkey.Sql.Services
         Task Load();
     }
 
-    public class ServiceMatadataLoader : IServiceMatadataLoader
+    internal class ServiceMatadataLoader : IServiceMatadataLoader
     {
         private ISqlCqrsGenerator _sqlCqrsGenerator;
         private IServiceMetadataProvider _metadataProvider;

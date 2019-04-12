@@ -155,7 +155,7 @@ this.FeatureBackground();
 #line 33
  testRunner.And("I bind that procedure", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 34
- testRunner.When("a commandhandler is generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("a commandhandler is generated as \'AddUserCommandHandler\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 35
  testRunner.And("It is executed with command \'{ \"Id\": 1, \"Name\": \"John\", \"BirthDate\": \"2019-04-01\"" +
                     " }\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");

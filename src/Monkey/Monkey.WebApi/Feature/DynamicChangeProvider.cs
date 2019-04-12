@@ -1,12 +1,15 @@
 ﻿using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Primitives;
-using Monkey.Services;
+using Monkey.Generator;
+using Monkey.PubSub;
 
 namespace Monkey.WebApi.Feature
 {
     
-    public class DynamicChangeProvider : IActionDescriptorChangeProvider, IMetadataChangedSubscriber
+    public class DynamicChangeProvider : IActionDescriptorChangeProvider, 
+        IEventSubscriber<ServiceMadatadaChangedEvent>
     {
         public static DynamicChangeProvider Instance = new DynamicChangeProvider();
         public CancellationTokenSource TokenSource { get; private set; }
@@ -17,7 +20,7 @@ namespace Monkey.WebApi.Feature
         }
         public bool HasChanged { get; set; }
 
-        public void Changed()
+        private void Changed()
         {
             if(this != Instance)
                 Instance.Changed();
@@ -26,6 +29,11 @@ namespace Monkey.WebApi.Feature
                 HasChanged = true;
                 TokenSource?.Cancel();
             }
+        }
+
+        public async Task Handle<TEvent>()
+        {
+            Instance.Changed();
         }
     }
 }

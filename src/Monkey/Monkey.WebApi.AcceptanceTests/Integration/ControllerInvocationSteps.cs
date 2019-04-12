@@ -107,7 +107,8 @@ namespace Monkey.WebApi.AcceptanceTests.Integration
             var json = string.Join(Environment.NewLine, table.CreateSet<JsonScript>().Select(x => x.Json));
 
             DynamicAssembly assembly = null;
-            var result = await this._applicationExecutor.ExecuteAsync<ISourceCodeGenerator, IEnumerable<SourceUnit>>(async x => (await x.Generate()).ToArray());
+            ServiceInfo[] services = this._applicationExecutor.Execute<IServiceMetadataProvider, IEnumerable<ServiceInfo>>(x => x.GetServices()).ToArray();
+            var result = await this._applicationExecutor.ExecuteAsync<IWebApiGenerator, SourceUnitCollection>(async x => x.Generate(services));
             this._applicationExecutor.Execute<IDynamicTypePool>(pool =>
             {
                 if (pool.CanMerge)

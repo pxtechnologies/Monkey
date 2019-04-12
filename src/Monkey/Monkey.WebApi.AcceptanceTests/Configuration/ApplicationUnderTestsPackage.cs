@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using Microsoft.Extensions.Configuration;
 using Monkey.Cqrs;
 using Monkey.WebApi.AcceptanceTests.Integration;
 using SimpleInjector;
@@ -17,6 +18,7 @@ namespace Monkey.WebApi.AcceptanceTests.Configuration
             var config = builder.Build();
             container.RegisterInstance<IConfigurationRoot>(config);
             container.RegisterInstance<IConfiguration>(config);
+            container.Register<IServiceProvider>(() => container, Lifestyle.Singleton);
             container.Register<MockRegister>(Lifestyle.Singleton);
             container.Register(typeof(ICommandHandler<,>), typeof(Integration.DispatchingCommandHandler<,>), Lifestyle.Singleton);
         }

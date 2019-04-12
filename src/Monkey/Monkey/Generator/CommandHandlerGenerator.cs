@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
+using Monkey.PubSub;
 using Monkey.Services;
 
 namespace Monkey.Generator
@@ -14,7 +15,7 @@ namespace Monkey.Generator
     {
         Task<IEnumerable<SourceUnit>> Generate();
     }
-
+    public class ServiceMadatadaChangedEvent { }
     public interface IServiceMetadataProvider
     {
         IEnumerable<ServiceInfo> GetServices();
@@ -26,16 +27,18 @@ namespace Monkey.Generator
     {
         private readonly IServiceNameProvider _provider;
         private readonly IHandlerInfoFactory _handlerFactory;
-        private readonly IEnumerable<IMetadataChangedSubscriber> _subscribers;
+        private readonly IEventHub _hub;
+
         private readonly Dictionary<string,ServiceInfo> _services;
 
         public ServiceMetadataRegister(IServiceNameProvider provider, 
             IHandlerInfoFactory handlerFactory, 
-            IEnumerable<IMetadataChangedSubscriber> subscribers)
+            IEventHub hub)
         {
             _provider = provider;
             _handlerFactory = handlerFactory;
-            _subscribers = subscribers;
+            _hub = hub;
+           
             _services = new Dictionary<string, ServiceInfo>();
         }
 
@@ -77,8 +80,8 @@ namespace Monkey.Generator
                 }
 
             }
-            foreach(var i in _subscribers)
-                i.Changed();
+
+            _hub.Publish(new ServiceMadatadaChangedEvent());
         }
         private readonly string[] validaHandlers = new string[] { "IQueryHandler",
             "ISingleQueryHandler",

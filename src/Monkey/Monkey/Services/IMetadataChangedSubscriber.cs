@@ -4,8 +4,5 @@ using System.Text;
 
 namespace Monkey.Services
 {
-    public interface IMetadataChangedSubscriber
-    {
-        void Changed();
-    }
+    
 }

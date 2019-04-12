@@ -31,6 +31,6 @@ Scenario: I can invoke stored procedure though command-handler
 	| BirthDate     | datetime      | BirthDate    | DateTime     |
 
 	And I bind that procedure
-	When a commandhandler is generated
+	When a commandhandler is generated as 'AddUserCommandHandler'
 	And It is executed with command '{ "Id": 1, "Name": "John", "BirthDate": "2019-04-01" }'
 	Then result is: '{ "Id": 2, "Name": "John!", "BirthDate": "2019-04-02" }'

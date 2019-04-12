@@ -118,9 +118,11 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
                 await repo.CommitChanges();
             });
         }
+        
+        
 
-        [When(@"a commandhandler is generated")]
-        public async Task WhenACommandhandlerIsGenerated()
+        [When(@"a commandhandler is generated as '(.*)'")]
+        public async Task WhenACommandhandlerIsGenerated(string handlerName)
         {
             var result = await this._applicationExecutor.ExecuteAsync<ISqlCqrsGenerator,SourceUnitCollection>( x => x.Generate(0) );
             
@@ -130,6 +132,8 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
             
             TypeCompiler compiler = new TypeCompiler();
             _context["assembly"] = assembly.Compile(compiler);
+
+            assembly.Assembly.GetTypes().Should().Contain(x => x.Name == handlerName);
         }
         [When(@"It is executed with command '(.*)'")]
         public async Task ThenOnceItIsExecutedWithCommand(string json)

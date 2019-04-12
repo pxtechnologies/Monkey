@@ -11,7 +11,7 @@ namespace Monkey.Sql.Services
     {
         void Start();
     }
-    public class DbChangeListener : IDbChangeListener
+    internal class DbChangeListener : IDbChangeListener
     {
         private readonly IServiceProvider _serviceProvider;
 

@@ -14,7 +14,7 @@ namespace Monkey.WebApi.Generator
     {
         IEnumerable<SourceUnit> Generate(ServiceInfo service);
     }
-    public class CqrsControllerGenerator : ICqrsControllerGenerator
+    internal class CqrsControllerGenerator : ICqrsControllerGenerator
     {
         class ControllerSourceUnit
         {

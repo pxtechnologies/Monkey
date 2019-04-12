@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Monkey.PubSub;
 using Monkey.SimpleInjector;
 using Monkey.Sql.Services;
 using Monkey.Sql.SimpleInjector;
@@ -83,16 +84,18 @@ namespace Monkey.Sql.WebApiHost
 
 
         }
+
+        private Assembly[] _assemblyCatalog;
         private void InitializeContainer(IApplicationBuilder app)
         {
-            Assembly[] catalog = new Assembly[]
+            _assemblyCatalog = new Assembly[]
             {
                 typeof(HostPackage).Assembly,
                 typeof(MonkeyPackage).Assembly,
                 typeof(WebApiPackage).Assembly,
                 typeof(SqlPackage).Assembly
             };
-            _container.RegisterPackages(catalog);
+            _container.RegisterPackages(_assemblyCatalog);
             // Add application presentation components:
             _container.RegisterMvcControllers(app);
             _container.RegisterMvcViewComponents(app);
@@ -121,7 +124,7 @@ namespace Monkey.Sql.WebApiHost
 
             app.UseMvc();
             _isReady = true;
-
+            _container.GetInstance<IEventHub>().WireEvents(_assemblyCatalog);
             _container.GetInstance<IDbChangeListener>().Start();
         }
     }

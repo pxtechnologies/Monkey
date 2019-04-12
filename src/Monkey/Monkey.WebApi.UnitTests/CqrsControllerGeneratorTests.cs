@@ -13,21 +13,30 @@ using Xunit;
 
 namespace Monkey.WebApi.UnitTests
 {
-    public class CqrsControllerGeneratorTests : TestFor<CqrsControllerGenerator>
+    public class CqrsControllerGeneratorTests 
     {
+        Fixture Fx = new Fixture();
+        class Fixture : TestFor<CqrsControllerGenerator>
+        {
+            private ILogger _logger;
+            protected override CqrsControllerGenerator CreateSut()
+            {
+                return new CqrsControllerGenerator(_logger);
+            }
+        }
         private ServiceInfo Service()
         {
             return new ServiceInfo(new HandlerInfoFactory());
         }
 
-        private ILogger _logger;
+        
         [Fact]
         public void CreateActionParses()
         {
             var service = Service().WithName("User")
                 .AddHandler(typeof(ICommandHandler<CreateUserCommand, UserEntity>), typeof(CreateUserHandler));
 
-            var srcUnits = this.Sut.Generate(service).ToArray();
+            var srcUnits = this.Fx.Sut.Generate(service).ToArray();
 
             CSharpCodeAssertions.CodeParses(string.Join(Environment.NewLine, srcUnits.Select(x=>x.Code)));
         }
@@ -38,7 +47,7 @@ namespace Monkey.WebApi.UnitTests
             var service = Service().WithName("User")
                 .AddHandler(typeof(ICommandHandler<UpdateUserCommand, UserEntity>), typeof(UpdateUserHandler));
 
-            var srcUnits = this.Sut.Generate(service).ToArray();
+            var srcUnits = this.Fx.Sut.Generate(service).ToArray();
 
             CSharpCodeAssertions.CodeParses(string.Join(Environment.NewLine, srcUnits.Select(x => x.Code)));
         }
@@ -49,14 +58,11 @@ namespace Monkey.WebApi.UnitTests
             var service = Service().WithName("User")
                 .AddHandler(typeof(ICommandHandler<ActivateUserCommand, UserEntity>), typeof(ActivateUserHandler));
 
-            var srcUnits = this.Sut.Generate(service).ToArray();
+            var srcUnits = this.Fx.Sut.Generate(service).ToArray();
 
             CSharpCodeAssertions.CodeParses(string.Join(Environment.NewLine, srcUnits.Select(x => x.Code)));
         }
 
-        protected override CqrsControllerGenerator CreateSut()
-        {
-            return new CqrsControllerGenerator(_logger);
-        }
+        
     }
 }
