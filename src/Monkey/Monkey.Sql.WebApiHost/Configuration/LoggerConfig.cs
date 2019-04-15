@@ -14,7 +14,7 @@ namespace Monkey.Sql.WebApiHost.Configuration
                 .Enrich.WithMachineName()
                 .Enrich.WithProcessId()
                 .Enrich.With(new ExceptionEnricher())
-                .WriteTo.Console(outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [Level: {Level}] [Environment: {Env}] [CorrelationId: {CorrelationId}] {EscapedMessage} {EscapedException}{NewLine}");
+                .WriteTo.Console();
         }
     }
     class ExceptionEnricher : ILogEventEnricher

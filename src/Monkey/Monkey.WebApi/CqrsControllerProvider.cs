@@ -33,7 +33,7 @@ namespace Monkey.WebApi
                                 AssemblyPurpose.Results;
             assembly.AddReferenceFrom(_dynamicPool.Where(x=>(x.Purpose & p) > 0).Select(x=>x.Assembly));
 
-            _dynamicPool.Add(assembly);
+            _dynamicPool.AddOrReplace(assembly);
 
             assembly.Compile();
 

@@ -21,6 +21,7 @@ namespace Monkey.Generator
         IEnumerable<ServiceInfo> GetServices();
         void Discover(params Assembly[] assemblies);
         void Discover(Predicate<HandlerInfo> filter, params Assembly[] assemblies);
+        void Clear();
     }
 
     public class ServiceMetadataRegister : IServiceMetadataProvider
@@ -83,6 +84,12 @@ namespace Monkey.Generator
 
             _hub.Publish(new ServiceMadatadaChangedEvent());
         }
+
+        public void Clear()
+        {
+            _services.Clear();
+        }
+
         private readonly string[] validaHandlers = new string[] { "IQueryHandler",
             "ISingleQueryHandler",
             "ICommandHandler"

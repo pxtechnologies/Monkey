@@ -108,13 +108,13 @@ namespace Monkey.WebApi.Generator
                 // this is update action
                 // lets check if this put or post. 
                 // Put assumes that we have command starting with name "Update" or "Modify"
-                if (handler.RequestType.Name.StartsWithPrefixes("Update", "Modify"))
+                if (handler.RequestType.Name.StartsWithPrefixes("Update", "Modify", "Edit"))
                 {
                     // this is pure PUT
                     // Id is taken from command.id
                     // ResultResponse Put(int id, updaterequest request);
 
-                    var responseType = handler.ResponseType.Name.EndsWithSingleSuffix("Response");
+                    var responseType = handler.ResponseType.Name.EndsWithSingleSuffix("Response","Result");
                     builder.AppendAction(handler, "Put", responseType, HttpVerb.Put,
                         false, $"api/{handler.Service.Name}/{{{idArg.Name}}}", arguments.ToArray());
 
@@ -131,7 +131,7 @@ namespace Monkey.WebApi.Generator
                 else
                 {
                     // This is custom method
-                    var responseType = handler.ResponseType.Name.EndsWithSingleSuffix("Response");
+                    var responseType = handler.ResponseType.Name.EndsWithSingleSuffix("Response", "Result");
                     string name = handler.RequestType.Name.RemoveSuffixWords("Command").RemoveWords(handler.Service.Name);
                     builder.AppendAction(handler, name, responseType,
                         HttpVerb.Post, handler.IsResponseCollection, $"api/{handler.Service.Name}/{{{idArg.Name}}}/{name}",
@@ -153,9 +153,9 @@ namespace Monkey.WebApi.Generator
                 ArgumentCollection arguments = new ArgumentCollection();
                 var cmdArg = arguments.Add(handler.RequestType.Name.EndsWithSingleSuffix("Request", "Command"), "request", "FromBody");
                 // this might be create method
-                if (handler.RequestType.Name.StartsWithPrefixes("Create", "Insert"))
+                if (handler.RequestType.Name.StartsWithPrefixes("Create", "Insert", "Add"))
                 {
-                    var responseType = handler.ResponseType.Name.EndsWithSingleSuffix("Response");
+                    var responseType = handler.ResponseType.Name.EndsWithSingleSuffix("Response", "Result");
                     builder.AppendAction(handler, "Post", responseType,
                         HttpVerb.Post, handler.IsResponseCollection, $"api/{handler.Service.Name}",
                         arguments.ToArray());
@@ -173,7 +173,7 @@ namespace Monkey.WebApi.Generator
                 else
                 {
                     // This is unkown method.
-                    var responseType = handler.ResponseType.Name.EndsWithSingleSuffix("Response");
+                    var responseType = handler.ResponseType.Name.EndsWithSingleSuffix("Response", "Result");
                     string name = handler.RequestType.Name.RemoveSuffixWords("Command").RemoveWords(handler.Service.Name);
                     builder.AppendAction(handler, name, responseType,
                         HttpVerb.Post, handler.IsResponseCollection, $"api/{handler.Service.Name}/{name}",

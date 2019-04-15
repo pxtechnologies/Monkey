@@ -11,7 +11,7 @@ namespace Monkey.Generator
     {
         Guid Signature { get; }
         IEnumerable<Assembly> GetAssemblies();
-        DynamicTypePool Add(DynamicAssembly assembly);
+        DynamicTypePool AddOrReplace(DynamicAssembly assembly);
         bool CanMerge { get; }
         DynamicAssembly Merge(IEnumerable<SourceUnit> units, AssemblyPurpose referencePurposes = AssemblyPurpose.None);
     }
@@ -62,9 +62,13 @@ namespace Monkey.Generator
             }
             else return _assemblies.First();
         }
-        public DynamicTypePool Add(DynamicAssembly assembly)
+        public DynamicTypePool AddOrReplace(DynamicAssembly assembly)
         {
+            //TODO: Should be based on class-full-name
             _signature = Guid.NewGuid();
+            var toReplace = _assemblies.FirstOrDefault(x => x.Purpose == assembly.Purpose);
+            if (toReplace != null)
+                _assemblies.Remove(toReplace);
             _assemblies.AddFirst(assembly);
             return this;
 

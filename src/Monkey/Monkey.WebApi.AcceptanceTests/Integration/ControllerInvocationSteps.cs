@@ -117,7 +117,7 @@ namespace Monkey.WebApi.AcceptanceTests.Integration
                 else
                 {
                     assembly = new DynamicAssembly(NSubstitute.Substitute.For<IEventHub>());
-                    pool.Add(assembly);
+                    pool.AddOrReplace(assembly);
                     assembly.AppendSourceUnits(result);
                     assembly.AddWebApiReferences();
                     assembly.AddReferenceFromTypes(_data.Types.Values);

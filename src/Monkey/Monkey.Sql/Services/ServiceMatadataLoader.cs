@@ -37,21 +37,20 @@ namespace Monkey.Sql.Services
             var result = await _sqlCqrsGenerator.Generate(0);
             if (result.Any())
             {
-                _logger.Info("New metadata model loaded from database with {version} version.", result.Version);
-                DynamicAssembly assembly = null;
-                if (_dynamicPool.CanMerge)
-                    assembly = _dynamicPool.Merge(result);
-                else
+                if (_dynamicPool.All(x => x.SourceUnits.SrcHash != result.SrcHash))
                 {
-                    assembly = new DynamicAssembly(_eventHub);
+                    _logger.Info("New metadata model loaded from database with {hash} hash.", result.SrcHash);
+
+                    DynamicAssembly assembly = new DynamicAssembly(_eventHub);
                     assembly.AddDefaultReferences();
                     assembly.AppendSourceUnits(result);
                     assembly.Compile();
+
+
+                    _dynamicPool.AddOrReplace(assembly);
+                    _metadataProvider.Clear();
+                    _metadataProvider.Discover(assembly.Assembly);
                 }
-
-                _dynamicPool.Add(assembly);
-
-                _metadataProvider.Discover(assembly.Assembly);
             }
         }
     }

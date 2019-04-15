@@ -21,6 +21,7 @@ namespace Monkey.WebApi.Feature
             if (!services.Any())
                 return;
 
+            feature.Controllers.Clear();
             var controllers = _cqrsControllerProvider.GetControllerTypes(services);
 
             foreach (var t in controllers)
