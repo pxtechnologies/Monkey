@@ -119,7 +119,7 @@ namespace Monkey.WebApi.Generator
                         false, $"api/{handler.Service.Name}/{{{idArg.Name}}}", arguments.ToArray());
 
                     srcUnit.Responses.Append(GenerateResponseType(responseType, handler.ResponseType));
-                    srcUnit.ResultToResponseMappers.Append(GenerateResultToResponseMapper(responseType,handler.RequestType));
+                    srcUnit.ResultToResponseMappers.Append(GenerateResultToResponseMapper(responseType,handler.ResponseType));
                     srcUnit.Requests.Append(GenerateRequestType(cmdArg.Type, handler.RequestType, prop.PropertyType, prop.Name));
                     srcUnit.RequestToCommandMappers.Append(GenerateRequestToCommandMapper(cmdArg.Type, handler.RequestType, prop.PropertyType, prop.Name));
                     
@@ -138,7 +138,7 @@ namespace Monkey.WebApi.Generator
                         arguments.ToArray());
 
                     srcUnit.Responses.Append(GenerateResponseType(responseType, handler.ResponseType));
-                    srcUnit.ResultToResponseMappers.Append(GenerateResultToResponseMapper(responseType, handler.RequestType));
+                    srcUnit.ResultToResponseMappers.Append(GenerateResultToResponseMapper(responseType, handler.ResponseType));
                     srcUnit.Requests.Append(GenerateRequestType(cmdArg.Type, handler.RequestType, prop.PropertyType, prop.Name));
                     srcUnit.RequestToCommandMappers.Append(GenerateRequestToCommandMapper(cmdArg.Type, handler.RequestType, prop.PropertyType, prop.Name));
 
@@ -161,7 +161,7 @@ namespace Monkey.WebApi.Generator
                         arguments.ToArray());
 
                     srcUnit.Responses.Append(GenerateResponseType(responseType, handler.ResponseType));
-                    srcUnit.ResultToResponseMappers.Append(GenerateResultToResponseMapper(responseType, handler.RequestType));
+                    srcUnit.ResultToResponseMappers.Append(GenerateResultToResponseMapper(responseType, handler.ResponseType));
                     srcUnit.Requests.Append(GenerateRequestType(cmdArg.Type, handler.RequestType));
                     srcUnit.RequestToCommandMappers.Append(GenerateRequestToCommandMapper(cmdArg.Type, handler.RequestType));
 
@@ -181,7 +181,7 @@ namespace Monkey.WebApi.Generator
 
 
                     srcUnit.Responses.Append(GenerateResponseType(responseType, handler.ResponseType));
-                    srcUnit.ResultToResponseMappers.Append(GenerateResultToResponseMapper(responseType, handler.RequestType));
+                    srcUnit.ResultToResponseMappers.Append(GenerateResultToResponseMapper(responseType, handler.ResponseType));
                     srcUnit.Requests.Append(GenerateRequestType(cmdArg.Type, handler.RequestType));
                     srcUnit.RequestToCommandMappers.Append(GenerateRequestToCommandMapper(cmdArg.Type, handler.RequestType));
 
