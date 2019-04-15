@@ -19,7 +19,7 @@ namespace Monkey.WebApi
 
         public async Task Handle(AssemblyCompiledEvent e)
         {
-            if ((e.Purpose & AssemblyPurpose.Handlers) > 0)
+            if (e.IsSuccess && (e.Purpose & AssemblyPurpose.Handlers) > 0)
             {
                 var handlers = e.Assembly.GetExportedTypes()
                     .Select(x => new

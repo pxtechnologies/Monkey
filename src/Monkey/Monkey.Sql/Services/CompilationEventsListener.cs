@@ -28,7 +28,8 @@ namespace Monkey.Sql.Services
                 Hash = e.SourceCode.SrcHash,
                 ServerName = Environment.MachineName,
                 Source = e.SourceCode.Code,
-                Version = (int)e.SourceCode.Version
+                Version = (int)e.SourceCode.Version,
+                Errors = e.Errors
             });
             await _repo.CommitChanges();
         }

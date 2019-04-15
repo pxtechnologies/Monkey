@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Monkey.Extensions;
+using Monkey.Logging;
 
 namespace Monkey.Sql.Services
 {
@@ -15,9 +16,10 @@ namespace Monkey.Sql.Services
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public DbChangeListener(IServiceProvider serviceProvider)
+        public DbChangeListener(IServiceProvider serviceProvider, ILogger logger)
         {
             _serviceProvider = serviceProvider;
+            _logger = logger;
             _worker = new Thread(OnRun);
             _worker.IsBackground = true;
         }
@@ -31,15 +33,23 @@ namespace Monkey.Sql.Services
         {
             while (true)
             {
-                using (_serviceProvider.Scope())
+                try
                 {
-                    await _serviceProvider.GetService<IServiceMatadataLoader>().Load();
+                    using (_serviceProvider.Scope())
+                    {
+                        await _serviceProvider.GetService<IServiceMatadataLoader>().Load();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex, "Compilation failed: {message}", ex.Message);
                 }
 
                 await Task.Delay(TimeSpan.FromMinutes(10));
             }
         }
 
+        private ILogger _logger;
         private Thread _worker;
         public void Start()
         {

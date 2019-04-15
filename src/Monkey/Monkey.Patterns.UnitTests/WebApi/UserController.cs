@@ -19,6 +19,8 @@ namespace Monkey.Patterns.UnitTests.WebApi
 
     public class UpdateUserRequest
     {
+         public DateTime When { get; set; }
+        public string Name { get; set; }
     }
 
     public class UserEntity

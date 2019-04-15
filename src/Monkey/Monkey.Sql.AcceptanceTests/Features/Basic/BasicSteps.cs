@@ -100,13 +100,13 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
                     r.Properties.Add(property);
 
                     ProcedureResultColumnBinding binding = new ProcedureResultColumnBinding();
-                    binding.ObjectProperty = property;
-                    binding.ResultColumnColumn = await repo.Query<ProcedureResultColumn>()
+                    binding.Property = property;
+                    binding.ResultColumn = await repo.Query<ProcedureResultColumn>()
                         .FirstOrDefaultAsync(x => x.Name == m.SqlColumnName);
 
-                    if (binding.ResultColumnColumn == null)
+                    if (binding.ResultColumn == null)
                     {
-                        binding.ResultColumnColumn = new ProcedureResultColumn()
+                        binding.ResultColumn = new ProcedureResultColumn()
                         {
                             Name = m.SqlColumnName,
                             Procedure = await repo.Query<ProcedureDescriptor>().FirstAsync(x => x.Name == procName),

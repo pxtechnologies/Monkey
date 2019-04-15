@@ -58,9 +58,9 @@ namespace Monkey.Builder
             _props.Add(field);
             return this;
         }
-        public DataClassBuilder WithProperty(string type, string name)
+        public DataClassBuilder WithProperty(FullTypeNameInfo type, string name)
         {
-            WithProperty(new Field(type, name));
+            WithProperty(new Field(type.ToString(), name));
             return this;
         }
 

@@ -8,18 +8,43 @@ using Xunit;
 
 namespace Monkey.Patterns.UnitTests
 {
+    public static class MappingExpressionExtensions
+    {
+        public static IMappingExpression<TSource, TDest> IgnoreAllUnmapped<TSource, TDest>(this IMappingExpression<TSource, TDest> expression)
+        {
+            expression.ForAllMembers(opt => opt.Ignore());
+            return expression;
+        }
+    }
     public class MapperProfile : Profile
     {
         public MapperProfile()
         {
-            CreateMap<CreateUserRequest, CreateUserCommand>();
-            CreateMap<Guid, CreateUserCommand>().ForMember(x => x.Id, opt => opt.MapFrom(dst => dst));
-            CreateMap<UpdateUserRequest, UpdateUserCommand>();
+            CreateMap<CreateUserRequest, CreateUserCommand>()
+                .ForMember(x => x.Age, opt => opt.Ignore())
+                .ForMember(x => x.Id, opt => opt.Ignore());
+                //.IgnoreAllUnmapped();
 
-            CreateMap<Guid, GetUserByIdQuery>().ForMember(x => x.Id, opt => opt.MapFrom(src => src));
-            CreateMap<string, GetUserByNameQuery>().ForMember(dst => dst.Name, opt => opt.MapFrom(src => src));
-            CreateMap<GetActiveUsersFromRequest, GetActiveUsersFromQuery>();
-            CreateMap<UserEntity, UserResource>();
+            CreateMap<Guid, CreateUserCommand>()
+                .ForMember(x => x.Id, opt => opt.MapFrom(dst => dst))
+                .ForAllOtherMembers(opt => opt.Ignore());
+
+            CreateMap<UpdateUserRequest, UpdateUserCommand>()
+                .IgnoreAllUnmapped();
+
+            CreateMap<Guid, GetUserByIdQuery>()
+                .ForMember(x => x.Id, opt => opt.MapFrom(src => src))
+                .IgnoreAllUnmapped();
+
+            CreateMap<string, GetUserByNameQuery>()
+                .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src))
+                .IgnoreAllUnmapped();
+
+            CreateMap<GetActiveUsersFromRequest, GetActiveUsersFromQuery>()
+                .IgnoreAllUnmapped();
+
+            CreateMap<UserEntity, UserResource>()
+                .ForAllOtherMembers(x => x.Ignore());
         }
     }
     public class UsersControllerTests : TestFor<UsersController>
@@ -40,6 +65,7 @@ namespace Monkey.Patterns.UnitTests
                 cfg.AddProfile<MapperProfile>();
                 
             });
+            config.AssertConfigurationIsValid();
             config.CompileMappings();
             _mapper = config.CreateMapper();
 

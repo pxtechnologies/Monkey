@@ -6,9 +6,9 @@
         {
 
         }
-        public long ResultColumnColumnId { get; set; }
-        public long ObjectPropertyId { get; set; }
-        public virtual ProcedureResultColumn ResultColumnColumn { get; set; }
-        public virtual ObjectProperty ObjectProperty { get; set; }
+        public virtual long ResultColumnId { get; set; }
+        public virtual long PropertyId { get; set; }
+        public virtual ProcedureResultColumn ResultColumn { get; set; }
+        public virtual ObjectProperty Property { get; set; }
     }
 }

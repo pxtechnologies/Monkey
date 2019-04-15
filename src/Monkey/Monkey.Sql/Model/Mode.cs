@@ -2,6 +2,7 @@
 {
     public enum Mode
     {
-        Query, Command
+        Query = 4,
+        Command = 2
     }
 }

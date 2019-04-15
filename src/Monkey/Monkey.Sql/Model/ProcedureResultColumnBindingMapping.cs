@@ -1,4 +1,5 @@
-﻿using Monkey.Sql.Model.Core;
+﻿using Microsoft.EntityFrameworkCore;
+using Monkey.Sql.Model.Core;
 
 namespace Monkey.Sql.Model
 {
@@ -8,9 +9,19 @@ namespace Monkey.Sql.Model
         {
             HasKey(e => new
             {
-                e.ResultColumnColumnId,
-                e.ObjectPropertyId
+                ResultColumnColumnId = e.ResultColumnId,
+                ObjectPropertyId = e.PropertyId
             });
+
+            HasOne(x => x.Property)
+                .WithMany()
+                .HasForeignKey(x => x.PropertyId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            HasOne(x => x.ResultColumn)
+                .WithMany()
+                .HasForeignKey(x => x.ResultColumnId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

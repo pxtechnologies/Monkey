@@ -319,26 +319,26 @@ namespace Monkey.Sql.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    ResultColumnColumnId = table.Column<long>(nullable: false),
-                    ObjectPropertyId = table.Column<long>(nullable: false)
+                    ResultColumnId = table.Column<long>(nullable: false),
+                    PropertyId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProcedureResultColumnBindings", x => new { x.ResultColumnColumnId, x.ObjectPropertyId });
+                    table.PrimaryKey("PK_ProcedureResultColumnBindings", x => new { x.ResultColumnId, x.PropertyId });
                     table.ForeignKey(
-                        name: "FK_ProcedureResultColumnBindings_ObjectProperties_ObjectPropertyId",
-                        column: x => x.ObjectPropertyId,
+                        name: "FK_ProcedureResultColumnBindings_ObjectProperties_PropertyId",
+                        column: x => x.PropertyId,
                         principalSchema: "dbo",
                         principalTable: "ObjectProperties",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ProcedureResultColumnBindings_ProcedureResultDescriptors_ResultColumnColumnId",
-                        column: x => x.ResultColumnColumnId,
+                        name: "FK_ProcedureResultColumnBindings_ProcedureResultDescriptors_ResultColumnId",
+                        column: x => x.ResultColumnId,
                         principalSchema: "dbo",
                         principalTable: "ProcedureResultDescriptors",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -396,10 +396,10 @@ namespace Monkey.Sql.Migrations
                 column: "ProcedureId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProcedureResultColumnBindings_ObjectPropertyId",
+                name: "IX_ProcedureResultColumnBindings_PropertyId",
                 schema: "dbo",
                 table: "ProcedureResultColumnBindings",
-                column: "ObjectPropertyId");
+                column: "PropertyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProcedureResultDescriptors_ProcedureId",

@@ -192,7 +192,7 @@ namespace Monkey.Sql.Builder
             foreach (var r in this.ResultBindings)
             {
                 sb.AppendLine($"if(!(await rd.IsDBNullAsync(ix[{i}])))").IndentUp();
-                sb.AppendLine($"{objName}.{r.Path} = rd.{_mthDict[r.PropertyType.ToString()]}(ix[{i++}]);").IndentDown();
+                sb.AppendLine($"{objName}.{r.Path} = rd.{_mthDict[r.PropertyType.GetPrimitiveType()]}(ix[{i++}]);").IndentDown();
             }
         }
         private ISqlReaderMethodDictionary _mthDict = new SqlReaderMethodDictionary();

@@ -19,7 +19,10 @@ namespace Monkey.Sql.Services
         private IServiceMetadataProvider _metadataProvider;
         private IDynamicTypePool _dynamicPool;
         private ILogger _logger;
-        public ServiceMatadataLoader(IServiceMetadataProvider metadataProvider, ISqlCqrsGenerator sqlCqrsGenerator, IDynamicTypePool dynamicPool, ILogger logger, IEventHub eventHub)
+        public ServiceMatadataLoader(IServiceMetadataProvider metadataProvider, 
+            ISqlCqrsGenerator sqlCqrsGenerator, 
+            IDynamicTypePool dynamicPool, 
+            ILogger logger, IEventHub eventHub)
         {
             _metadataProvider = metadataProvider;
             _sqlCqrsGenerator = sqlCqrsGenerator;

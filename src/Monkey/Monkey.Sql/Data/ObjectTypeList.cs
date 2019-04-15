@@ -80,7 +80,7 @@ namespace Monkey.Sql.Data
             _list.Add(new object[]
             {
                 id,
-                type.Name,
+                type.FullName,
                 type.Namespace,
                 "BCL",
                 true,
@@ -96,7 +96,7 @@ namespace Monkey.Sql.Data
             var type = typeof(TType);
             var id = _counter++;
             _list.Add(new object[]{ id,
-                type.Name,
+                type.FullName,
                 type.Namespace,
                 "BCL",
                 true,
@@ -109,7 +109,7 @@ namespace Monkey.Sql.Data
             FullTypeNameInfo ft = FullTypeNameInfo.Parse(type.FullName);
             id = _counter++;
             _list.Add(new object[]{ id,
-                ft.ToString(),
+                ft.ToString(false,true),
                 ft.Namespace,
                 "BCL",
                 true,

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Monkey.Builder;
 using Monkey.Generator;
+using Monkey.Logging;
 using Monkey.Sql.Builder;
 using Monkey.Sql.Model;
 
@@ -34,6 +35,7 @@ namespace Monkey.Sql.Generator
             return collection;
         }
 
+        private ILogger _logger;
         private async Task<SourceUnit[]> GenerateCqrsHandlerForProcedure(ProcedureDescriptor proc)
         {
             SourceUnit[] result = new SourceUnit[3];
@@ -44,7 +46,12 @@ namespace Monkey.Sql.Generator
                 .Include(x=>x.Request)
                 .Include(x => x.Request.Properties)
                 .FirstOrDefaultAsync(x => x.ProcedureId == proc.Id);
-            if(procBinding == null) return new SourceUnit[0];
+
+            if (procBinding == null)
+            {
+                _logger.Warn("Procedure {ProcedureName} has no bindings.", proc.Name);
+                return new SourceUnit[0];
+            }
 
             result[0] = await GenerateCommandHandler(proc, procBinding);
             result[1] = await GenerateCommand(proc, procBinding.Mode, procBinding.Request);
@@ -91,9 +98,9 @@ namespace Monkey.Sql.Generator
                 .ToArrayAsync();
 
             var resultBindings = await _repo.Query<ProcedureResultColumnBinding>()
-                .Where(x => x.ResultColumnColumn.ProcedureId == proc.Id)
-                .Include(x => x.ResultColumnColumn)
-                .Include(x => x.ObjectProperty)
+                .Where(x => x.ResultColumn.ProcedureId == proc.Id)
+                .Include(x => x.ResultColumn)
+                .Include(x => x.Property)
                 .ToArrayAsync();
 
             
@@ -114,9 +121,9 @@ namespace Monkey.Sql.Generator
 
             foreach (var rCol in resultBindings)
             {
-                handlerBuilder.BindColumnResult(rCol.ObjectProperty.Name,
-                    rCol.ObjectProperty.PropertyType.SrcName(),
-                    rCol.ResultColumnColumn.Name);
+                handlerBuilder.BindColumnResult(rCol.Property.Name,
+                    rCol.Property.PropertyType.FullName(),
+                    rCol.ResultColumn.Name);
             }
 
             return new SourceUnit(proc.Schema,

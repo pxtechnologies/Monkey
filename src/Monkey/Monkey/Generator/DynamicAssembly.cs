@@ -150,20 +150,43 @@ namespace Monkey.Generator
             if (compiler == null) compiler = new TypeCompiler();
             Stopwatch s = new Stopwatch();
             s.Start();
-            _assembly = compiler.FastLoad(_sourceUnits.Code, _references.ToArray());
-            s.Stop();
-            CompilationDate = DateTimeOffset.Now;
-            CompilationDuration = s.Elapsed;
-
-            _eventHub.Publish(new AssemblyCompiledEvent()
+            try
             {
-                Assembly = _assembly,
-                Duration = CompilationDuration,
-                SourceCode = _sourceUnits,
-                When = CompilationDate,
-                Purpose = this.Purpose,
-                Data = File.ReadAllBytes(_assembly.Location)
-            });
+                
+                _assembly = compiler.FastLoad(_sourceUnits.Code, _references.ToArray());
+                s.Stop();
+                CompilationDate = DateTimeOffset.Now;
+                CompilationDuration = s.Elapsed;
+
+                _eventHub.Publish(new AssemblyCompiledEvent()
+                {
+                    Assembly = _assembly,
+                    Duration = CompilationDuration,
+                    SourceCode = _sourceUnits,
+                    When = CompilationDate,
+                    Purpose = this.Purpose,
+                    Data = File.ReadAllBytes(_assembly.Location)
+                });
+            }
+            catch (Exception ex)
+            {
+                s.Stop();
+                CompilationDate = DateTimeOffset.Now;
+                CompilationDuration = s.Elapsed;
+
+                _eventHub.Publish(new AssemblyCompiledEvent()
+                {
+                    Assembly = _assembly,
+                    Duration = CompilationDuration,
+                    SourceCode = _sourceUnits,
+                    When = CompilationDate,
+                    Purpose = this.Purpose,
+                    Errors = ex.Message
+                    
+                });
+                throw;
+            }
+
             return this;
         }
 
@@ -179,6 +202,10 @@ namespace Monkey.Generator
         public AssemblyPurpose Purpose { get; set; }
         public byte[] Data { get; set; }
         public string Errors { get; set; }
+        public bool IsSuccess
+        {
+            get { return string.IsNullOrWhiteSpace(Errors); }
+        }
     }
     [Flags]
     public enum AssemblyPurpose

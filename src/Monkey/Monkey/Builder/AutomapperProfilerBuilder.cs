@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace Monkey.Builder
 {
@@ -10,18 +11,24 @@ namespace Monkey.Builder
         private List<string> _usingNs;
         public string Namespace => _nameSpace;
         public string Name => _name;
-        private string _sourceType;
-        private string _destinationType;
+        private FullTypeNameInfo _sourceType;
+        private FullTypeNameInfo _destinationType;
         public AutomapperProfilerBuilder WithName(string name)
         {
             this._name = name;
             return this;
         }
-        public AutomapperProfilerBuilder ForType(string dst, string src)
+        public AutomapperProfilerBuilder ForType(FullTypeNameInfo dst, FullTypeNameInfo src)
         {
             _sourceType = src;
             _destinationType = dst;
-            this._name = src + dst.EndsWithSingleSuffix("Profile");
+            this._name = src.IsNullable ? src.GenericArguments.First().Name : src.Name + dst.Name.EndsWithSingleSuffix("Profile");
+            return this;
+        }
+
+        public AutomapperProfilerBuilder AddIgnore(params string[] ignoreParams)
+        {
+            IgnoreProperties.AddRange(ignoreParams);
             return this;
         }
         public AutomapperProfilerBuilder()
@@ -29,6 +36,7 @@ namespace Monkey.Builder
             _name = "Profile";
             _nameSpace = "";
             Mappings = new List<Mapping>();
+            IgnoreProperties = new List<string>();
             _usingNs = new List<string>() { "System" };
         }
         public AutomapperProfilerBuilder InNamespace(string ns)
@@ -68,11 +76,31 @@ namespace Monkey.Builder
 
             sb.AppendLine($"public {_name}()");
             sb.OpenBlock();
-            sb.AppendLine($"this.CreateMap<{_sourceType},{_destinationType}>();");
+
+            string eol = IgnoreProperties.Any() ? "" : ";";
+            sb.AppendLine($"{sb.Prefix}this.CreateMap<{_sourceType.ToString()}, {_destinationType.ToString()}>(){eol}");
+            if(IgnoreProperties.Any())
+            {
+                sb.IndentUp();
+                for (var index = 0; index < this.IgnoreProperties.Count; index++)
+                {
+                    var i = this.IgnoreProperties[index];
+                    eol = index == this.IgnoreProperties.Count - 1 ? ";" : "";
+                    sb.AppendLine($".ForMember(dst => dst.{i}, opt => opt.Ignore()){eol}");
+                }
+
+                sb.IndentDown();
+            }
             foreach (var m in Mappings)
             {
-                sb.AppendLine($"this.CreateMap<{m.SrcType}, {_destinationType}>().ForMember(x => x.{m.DstMemberName}, opt => opt.MapFrom(dst => dst));");
+                if(m.SrcType.IsNullable)
+                    sb.AppendLine($"this.CreateMap<{m.SrcType.GenericArguments.First().ToString()}, {_destinationType.ToString()}>().ForMember(x => x.{m.DstMemberName}, opt => opt.MapFrom(dst => dst)).ForAllOtherMembers(opt => opt.Ignore());");
+
+                else
+                    sb.AppendLine($"this.CreateMap<{m.SrcType.ToString()}, {_destinationType.ToString()}>().ForMember(x => x.{m.DstMemberName}, opt => opt.MapFrom(dst => dst)).ForAllOtherMembers(opt => opt.Ignore());");
             }
+
+            
             sb.CloseBlock();
 
             sb.CloseBlock();
@@ -83,7 +111,7 @@ namespace Monkey.Builder
             }
         }
         private List<Mapping> Mappings { get; set; }
-        
+        private List<string> IgnoreProperties { get; set; }
         public AutomapperProfilerBuilder WithDefaultMapping()
         {
             return this;
@@ -96,17 +124,18 @@ namespace Monkey.Builder
             return this;
         }
 
-        public void WithValueMapping(string srcType, string dstMemberName)
+        public AutomapperProfilerBuilder WithValueMapping(FullTypeNameInfo srcType, string dstMemberName)
         {
             Mappings.Add(new Mapping(srcType, dstMemberName));
+            return this;
         }
 
         class Mapping
         {
-            public string SrcType { get; private set; }
+            public FullTypeNameInfo SrcType { get; private set; }
             public string DstMemberName { get; private set; }
 
-            public Mapping(string srcType, string dstMemberName)
+            public Mapping(FullTypeNameInfo srcType, string dstMemberName)
             {
                 SrcType = srcType;
                 DstMemberName = dstMemberName;

@@ -5,11 +5,19 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="Data\Class1.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
       <None Remove="Scripts\20190404001.sql" />
     </ItemGroup>
 
     <ItemGroup>
       <EmbeddedResource Include="Scripts\20190404001.sql" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="Data\Class1.cs" />
     </ItemGroup>
 
     <ItemGroup>

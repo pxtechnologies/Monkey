@@ -107,7 +107,14 @@ namespace Monkey.WebApi.SimpleInjector
             if (_signature != pool.Signature || _mapper == null)
             {
                 _signature = pool.Signature;
-                _mapper = new Mapper(new MapperConfiguration(cfg => cfg.AddProfiles(pool.GetAssemblies())));
+                _mapper = new Mapper(new MapperConfiguration(cfg =>
+                {
+                    cfg.AddProfiles(pool.GetAssemblies());
+                    
+                }));
+                
+                _mapper.ConfigurationProvider.AssertConfigurationIsValid();
+                _mapper.ConfigurationProvider.CompileMappings();
             }
 
             return _mapper;

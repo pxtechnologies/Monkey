@@ -102,7 +102,8 @@ namespace Monkey.WebApi.Generator
 
                 ArgumentCollection arguments = new ArgumentCollection();
 
-                var idArg = arguments.Add(prop.PropertyType.ToString(), prop.Name.StartLower());
+                var propTypeInfo = (FullTypeNameInfo) prop.PropertyType;
+                var idArg = arguments.Add(propTypeInfo.ToString(), prop.Name.StartLower());
                 var cmdArg = arguments.Add(handler.RequestType.Name.EndsWithSingleSuffix("Request", "Command"), "request", "FromBody");
                 // this is update action
                 // lets check if this put or post. 
@@ -202,7 +203,8 @@ namespace Monkey.WebApi.Generator
                 .AddUsing(commandType.Namespace + ".WebApi"); 
 
             profile.WithDefaultMapping()
-                .WithValueMapping(exPropType.Name, exPropName);
+                .WithValueMapping(exPropType, exPropName)
+                .AddIgnore(exPropName);
             
             return new SourceUnit(profile.Namespace, profile.Name, profile.GenerateCode());
         }
@@ -227,7 +229,7 @@ namespace Monkey.WebApi.Generator
 
             foreach (var p in commandType.GetProperties())
             {
-                builder.WithProperty(p.PropertyType.Name, p.Name);
+                builder.WithProperty(p.PropertyType, p.Name);
             }
 
             var src = builder.GenerateCode();
@@ -241,7 +243,7 @@ namespace Monkey.WebApi.Generator
 
             foreach (var p in commandType.GetProperties().Where(x=>x.Name != exPropName))
             {
-                builder.WithProperty(p.PropertyType.Name, p.Name);
+                builder.WithProperty(p.PropertyType, p.Name);
             }
 
             var src = builder.GenerateCode();
@@ -270,7 +272,7 @@ namespace Monkey.WebApi.Generator
 
             foreach (var p in responseType.GetProperties())
             {
-                builder.WithProperty(p.PropertyType.Name, p.Name);
+                builder.WithProperty(p.PropertyType, p.Name);
             }
 
             var src = builder.GenerateCode();

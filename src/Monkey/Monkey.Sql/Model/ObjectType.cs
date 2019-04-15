@@ -29,7 +29,7 @@ namespace Monkey.Sql.Model
 
         public string FullName()
         {
-            if (String.IsNullOrWhiteSpace(Namespace))
+            if (String.IsNullOrWhiteSpace(Namespace) || IsPrimitive)
                 return Name;
             else return $"{Namespace}.{Name}";
         }

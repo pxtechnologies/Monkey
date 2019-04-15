@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -6,22 +7,34 @@ namespace Monkey.Sql.Builder
 {
     sealed class SqlReaderMethodDictionary : ISqlReaderMethodDictionary
     {
-        private readonly Dictionary<string, string> _dictionary;
+        private readonly Dictionary<Type, string> _dictionary;
         public SqlReaderMethodDictionary()
         {
-            _dictionary = new Dictionary<string, string>();
-            _dictionary.Add("string", nameof(IDataReader.GetString));
-            _dictionary.Add("int", nameof(IDataReader.GetInt32));
-            _dictionary.Add("bool", nameof(IDataReader.GetBoolean));
-            _dictionary.Add("DateTime", nameof(IDataReader.GetDateTime));
-            _dictionary.Add("float", nameof(IDataReader.GetFloat));
-            _dictionary.Add("long", nameof(IDataReader.GetInt64));
-            _dictionary.Add("DateTimeOffset", nameof(SqlDataReader.GetDateTimeOffset));
-            _dictionary.Add("Decimal", nameof(SqlDataReader.GetDecimal));
-            _dictionary.Add("Double", nameof(SqlDataReader.GetDouble));
+            _dictionary = new Dictionary<Type, string>();
+            _dictionary.Add(typeof(string), nameof(IDataRecord.GetString));
+            AddStruct<int>( nameof(IDataRecord.GetInt32));
+            AddStruct<byte>( nameof(IDataRecord.GetByte));
+            AddStruct<short>( nameof(IDataRecord.GetInt16));
+            AddStruct<bool>( nameof(IDataRecord.GetBoolean));
+            AddStruct<DateTime>( nameof(IDataRecord.GetDateTime));
+            AddStruct<float>( nameof(IDataRecord.GetFloat));
+            AddStruct<long>( nameof(IDataRecord.GetInt64));
+            AddStruct<DateTimeOffset>( nameof(SqlDataReader.GetDateTimeOffset));
+            AddStruct<Decimal>( nameof(SqlDataReader.GetDecimal));
+            AddStruct<TimeSpan>( nameof(SqlDataReader.GetTimeSpan));
+            AddStruct<Double>( nameof(SqlDataReader.GetDouble));
 
         }
-        public string this[string type]
+
+        private SqlReaderMethodDictionary AddStruct<TStruct>(string readerMthName)
+        where TStruct:struct
+        {
+            var type = typeof(TStruct);
+            _dictionary.Add(type, readerMthName);
+            _dictionary.Add(typeof(Nullable<>).MakeGenericType(type), readerMthName);
+            return this;
+        }
+        public string this[Type type]
         {
             get { return _dictionary[type]; }
         }

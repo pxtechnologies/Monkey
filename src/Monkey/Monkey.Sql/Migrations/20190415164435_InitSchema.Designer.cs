@@ -10,7 +10,7 @@ using Monkey.Sql.Model;
 namespace Monkey.Sql.Migrations
 {
     [DbContext(typeof(MonkeyDbContext))]
-    [Migration("20190415065449_InitSchema")]
+    [Migration("20190415164435_InitSchema")]
     partial class InitSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -301,13 +301,13 @@ namespace Monkey.Sql.Migrations
 
             modelBuilder.Entity("Monkey.Sql.Model.ProcedureResultColumnBinding", b =>
                 {
-                    b.Property<long>("ResultColumnColumnId");
+                    b.Property<long>("ResultColumnId");
 
-                    b.Property<long>("ObjectPropertyId");
+                    b.Property<long>("PropertyId");
 
-                    b.HasKey("ResultColumnColumnId", "ObjectPropertyId");
+                    b.HasKey("ResultColumnId", "PropertyId");
 
-                    b.HasIndex("ObjectPropertyId");
+                    b.HasIndex("PropertyId");
 
                     b.ToTable("ProcedureResultColumnBindings");
                 });
@@ -463,15 +463,15 @@ namespace Monkey.Sql.Migrations
 
             modelBuilder.Entity("Monkey.Sql.Model.ProcedureResultColumnBinding", b =>
                 {
-                    b.HasOne("Monkey.Sql.Model.ObjectProperty", "ObjectProperty")
+                    b.HasOne("Monkey.Sql.Model.ObjectProperty", "Property")
                         .WithMany()
-                        .HasForeignKey("ObjectPropertyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Monkey.Sql.Model.ProcedureResultColumn", "ResultColumnColumn")
+                    b.HasOne("Monkey.Sql.Model.ProcedureResultColumn", "ResultColumn")
                         .WithMany()
-                        .HasForeignKey("ResultColumnColumnId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ResultColumnId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Monkey.Sql.Model.SqlObjectTypeMapping", b =>
