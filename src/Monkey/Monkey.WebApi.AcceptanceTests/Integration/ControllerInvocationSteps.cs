@@ -10,6 +10,7 @@ using Monkey.Builder;
 using Monkey.Compilation;
 using Monkey.Cqrs;
 using Monkey.Generator;
+using Monkey.PubSub;
 using Monkey.WebApi.AcceptanceTests.Assertion;
 using Monkey.WebApi.AcceptanceTests.Configuration;
 using Monkey.WebApi.AcceptanceTests.Integration.Bindings;
@@ -115,7 +116,7 @@ namespace Monkey.WebApi.AcceptanceTests.Integration
                     assembly = pool.Merge(result);
                 else
                 {
-                    assembly = new DynamicAssembly();
+                    assembly = new DynamicAssembly(NSubstitute.Substitute.For<IEventHub>());
                     pool.Add(assembly);
                     assembly.AppendSourceUnits(result);
                     assembly.AddWebApiReferences();

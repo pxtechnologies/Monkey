@@ -23,7 +23,7 @@ namespace Monkey.Sql.Model
 
         public string SrcName()
         {
-            if (IsPrimitive) return Alias;
+            if (IsPrimitive && Alias != null) return Alias;
             return FullName();
         }
 

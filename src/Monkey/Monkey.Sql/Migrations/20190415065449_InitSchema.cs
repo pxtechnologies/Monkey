@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Monkey.Sql.Migrations
 {
-    public partial class Init : Migration
+    public partial class InitSchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,8 +13,30 @@ namespace Monkey.Sql.Migrations
             migrationBuilder.CreateSequence(
                 name: "HiLo",
                 schema: "dbo",
-                startValue: 1000,
+                startValue: 1000L,
                 incrementBy: 100);
+
+            migrationBuilder.CreateTable(
+                name: "Compilations",
+                schema: "dbo",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false),
+                    Version = table.Column<int>(nullable: false),
+                    CompiledAt = table.Column<DateTimeOffset>(nullable: false),
+                    CompilationDuration = table.Column<TimeSpan>(nullable: false),
+                    Hash = table.Column<Guid>(nullable: false),
+                    Source = table.Column<string>(nullable: true),
+                    Purpose = table.Column<int>(nullable: false),
+                    Assembly = table.Column<byte[]>(nullable: true),
+                    Classes = table.Column<string>(nullable: true),
+                    ServerName = table.Column<string>(maxLength: 255, nullable: true),
+                    Errors = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Compilations", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Controllers",
@@ -38,6 +60,7 @@ namespace Monkey.Sql.Migrations
                     Id = table.Column<long>(nullable: false),
                     Name = table.Column<string>(maxLength: 255, nullable: false),
                     Namespace = table.Column<string>(maxLength: 255, nullable: true),
+                    Alias = table.Column<string>(maxLength: 32, nullable: true),
                     IsPrimitive = table.Column<bool>(nullable: false),
                     IsVoid = table.Column<bool>(nullable: false),
                     IsDynamic = table.Column<bool>(nullable: false),
@@ -127,12 +150,36 @@ namespace Monkey.Sql.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SqlObjectTypeMappings",
+                schema: "dbo",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false),
+                    ObjectTypeId = table.Column<long>(nullable: false),
+                    SqlType = table.Column<string>(maxLength: 255, nullable: true),
+                    IsNullable = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SqlObjectTypeMappings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SqlObjectTypeMappings_ObjectTypes_ObjectTypeId",
+                        column: x => x.ObjectTypeId,
+                        principalSchema: "dbo",
+                        principalTable: "ObjectTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProcedureBindings",
                 schema: "dbo",
                 columns: table => new
                 {
                     ProcedureId = table.Column<long>(nullable: false),
                     ResultId = table.Column<long>(nullable: false),
+                    Name = table.Column<string>(maxLength: 255, nullable: false),
+                    RequestId = table.Column<long>(nullable: false),
                     IsResultCollection = table.Column<bool>(nullable: false),
                     Mode = table.Column<int>(nullable: false)
                 },
@@ -147,12 +194,19 @@ namespace Monkey.Sql.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+                        name: "FK_ProcedureBindings_ObjectTypes_RequestId",
+                        column: x => x.RequestId,
+                        principalSchema: "dbo",
+                        principalTable: "ObjectTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_ProcedureBindings_ObjectTypes_ResultId",
                         column: x => x.ResultId,
                         principalSchema: "dbo",
                         principalTable: "ObjectTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -161,6 +215,7 @@ namespace Monkey.Sql.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false),
+                    Order = table.Column<byte>(nullable: false),
                     Name = table.Column<string>(maxLength: 255, nullable: false),
                     Type = table.Column<string>(maxLength: 255, nullable: false),
                     ProcedureId = table.Column<long>(nullable: false)
@@ -183,6 +238,7 @@ namespace Monkey.Sql.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false),
+                    Order = table.Column<byte>(nullable: false),
                     Name = table.Column<string>(maxLength: 255, nullable: false),
                     Type = table.Column<string>(maxLength: 255, nullable: false),
                     ProcedureId = table.Column<long>(nullable: false)
@@ -237,26 +293,25 @@ namespace Monkey.Sql.Migrations
                 columns: table => new
                 {
                     ParameterId = table.Column<long>(nullable: false),
-                    PropertyId = table.Column<long>(nullable: false),
-                    ObjectPropertyId = table.Column<long>(nullable: true)
+                    PropertyId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProcedureParameterBindings", x => new { x.ParameterId, x.PropertyId });
-                    table.ForeignKey(
-                        name: "FK_ProcedureParameterBindings_ObjectProperties_ObjectPropertyId",
-                        column: x => x.ObjectPropertyId,
-                        principalSchema: "dbo",
-                        principalTable: "ObjectProperties",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ProcedureParameterBindings_ProcedureParameterDescriptors_ParameterId",
                         column: x => x.ParameterId,
                         principalSchema: "dbo",
                         principalTable: "ProcedureParameterDescriptors",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProcedureParameterBindings_ObjectProperties_PropertyId",
+                        column: x => x.PropertyId,
+                        principalSchema: "dbo",
+                        principalTable: "ObjectProperties",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -265,19 +320,18 @@ namespace Monkey.Sql.Migrations
                 columns: table => new
                 {
                     ResultColumnColumnId = table.Column<long>(nullable: false),
-                    PropertyId = table.Column<long>(nullable: false),
-                    ObjectPropertyId = table.Column<long>(nullable: true)
+                    ObjectPropertyId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProcedureResultColumnBindings", x => new { x.ResultColumnColumnId, x.PropertyId });
+                    table.PrimaryKey("PK_ProcedureResultColumnBindings", x => new { x.ResultColumnColumnId, x.ObjectPropertyId });
                     table.ForeignKey(
                         name: "FK_ProcedureResultColumnBindings_ObjectProperties_ObjectPropertyId",
                         column: x => x.ObjectPropertyId,
                         principalSchema: "dbo",
                         principalTable: "ObjectProperties",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ProcedureResultColumnBindings_ProcedureResultDescriptors_ResultColumnColumnId",
                         column: x => x.ResultColumnColumnId,
@@ -318,16 +372,22 @@ namespace Monkey.Sql.Migrations
                 column: "PropertyTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProcedureBindings_RequestId",
+                schema: "dbo",
+                table: "ProcedureBindings",
+                column: "RequestId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProcedureBindings_ResultId",
                 schema: "dbo",
                 table: "ProcedureBindings",
                 column: "ResultId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProcedureParameterBindings_ObjectPropertyId",
+                name: "IX_ProcedureParameterBindings_PropertyId",
                 schema: "dbo",
                 table: "ProcedureParameterBindings",
-                column: "ObjectPropertyId");
+                column: "PropertyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProcedureParameterDescriptors_ProcedureId",
@@ -347,13 +407,29 @@ namespace Monkey.Sql.Migrations
                 table: "ProcedureResultDescriptors",
                 column: "ProcedureId");
 
-            
+            migrationBuilder.CreateIndex(
+                name: "IX_SqlObjectTypeMappings_ObjectTypeId",
+                schema: "dbo",
+                table: "SqlObjectTypeMappings",
+                column: "ObjectTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SqlObjectTypeMappings_SqlType_IsNullable",
+                schema: "dbo",
+                table: "SqlObjectTypeMappings",
+                columns: new[] { "SqlType", "IsNullable" },
+                unique: true,
+                filter: "[SqlType] IS NOT NULL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "ActionParameterBindings",
+                schema: "dbo");
+
+            migrationBuilder.DropTable(
+                name: "Compilations",
                 schema: "dbo");
 
             migrationBuilder.DropTable(
@@ -366,6 +442,10 @@ namespace Monkey.Sql.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProcedureResultColumnBindings",
+                schema: "dbo");
+
+            migrationBuilder.DropTable(
+                name: "SqlObjectTypeMappings",
                 schema: "dbo");
 
             migrationBuilder.DropTable(

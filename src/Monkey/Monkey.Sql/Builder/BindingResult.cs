@@ -1,13 +1,15 @@
+using Monkey.Builder;
+
 namespace Monkey.Sql.Builder
 {
     public class BindingResult
     {
         public string Path { get; set; }
-        public string PropertyType { get; set; }
+        public FullTypeNameInfo PropertyType { get; set; }
 
         public bool IsPropertyNullable
         {
-            get { return PropertyType.EndsWith("?"); }
+            get { return PropertyType.IsNullable; }
         }
 
         

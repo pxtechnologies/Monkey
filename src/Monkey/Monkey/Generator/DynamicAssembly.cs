@@ -2,10 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 
 using Monkey.Compilation;
+using Monkey.PubSub;
 
 namespace Monkey.Generator
 {
@@ -69,7 +72,10 @@ namespace Monkey.Generator
         {
             return GetEnumerator();
         }
-        
+        public Guid SrcHash
+        {
+            get { return string.Concat(this.Select(x => x.CodeHash.ToString())).ComputeMd5(); }
+        }
         public void Append(SourceUnitCollection collection)
         {
             foreach (var i in collection)
@@ -113,8 +119,9 @@ namespace Monkey.Generator
                 _references.Add(assembly);
         }
 
-        public DynamicAssembly()
+        public DynamicAssembly(IEventHub eventHub)
         {
+            _eventHub = eventHub;
             _sourceUnits = new SourceUnitCollection();
             _references = new List<Assembly>();
         }
@@ -147,8 +154,31 @@ namespace Monkey.Generator
             s.Stop();
             CompilationDate = DateTimeOffset.Now;
             CompilationDuration = s.Elapsed;
+
+            _eventHub.Publish(new AssemblyCompiledEvent()
+            {
+                Assembly = _assembly,
+                Duration = CompilationDuration,
+                SourceCode = _sourceUnits,
+                When = CompilationDate,
+                Purpose = this.Purpose,
+                Data = File.ReadAllBytes(_assembly.Location)
+            });
             return this;
         }
+
+        private IEventHub _eventHub;
+    }
+
+    public class AssemblyCompiledEvent
+    {
+        public SourceUnitCollection SourceCode { get; set; }
+        public Assembly Assembly { get; set; }
+        public DateTimeOffset When { get; set; }
+        public TimeSpan Duration { get; set; }
+        public AssemblyPurpose Purpose { get; set; }
+        public byte[] Data { get; set; }
+        public string Errors { get; set; }
     }
     [Flags]
     public enum AssemblyPurpose

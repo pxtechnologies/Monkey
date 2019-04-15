@@ -102,7 +102,7 @@ namespace Monkey.WebApi.Generator
 
                 ArgumentCollection arguments = new ArgumentCollection();
 
-                var idArg = arguments.Add(prop.PropertyType.ToString(), prop.Name.StartLower(), "FromQuery");
+                var idArg = arguments.Add(prop.PropertyType.ToString(), prop.Name.StartLower());
                 var cmdArg = arguments.Add(handler.RequestType.Name.EndsWithSingleSuffix("Request", "Command"), "request", "FromBody");
                 // this is update action
                 // lets check if this put or post. 

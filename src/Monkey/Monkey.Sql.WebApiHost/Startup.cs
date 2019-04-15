@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Monkey.PubSub;
 using Monkey.SimpleInjector;
+using Monkey.Sql.Extensions;
 using Monkey.Sql.Services;
 using Monkey.Sql.SimpleInjector;
 using Monkey.Sql.WebApiHost.Configuration;
@@ -28,6 +29,7 @@ using SimpleInjector.Advanced;
 using SimpleInjector.Integration.AspNetCore.Mvc;
 using SimpleInjector.Lifestyles;
 using Swashbuckle.AspNetCore.Swagger;
+using SimpleInjectorControllerActivator = Monkey.WebApi.SimpleInjector.SimpleInjectorControllerActivator;
 
 namespace Monkey.Sql.WebApiHost
 {
@@ -72,9 +74,10 @@ namespace Monkey.Sql.WebApiHost
             services.AddSingleton<IControllerActivator>(new SimpleInjectorControllerActivator(_container));
             services.AddSingleton<IViewComponentActivator>(new SimpleInjectorViewComponentActivator(_container));
 
+            
             services.EnableSimpleInjectorCrossWiring(_container);
             services.UseSimpleInjectorAspNetRequestScoping(_container);
-            services.Add(new ServiceDescriptor(typeof(ContainerAccessor), x => new ContainerAccessor(_container), ServiceLifetime.Singleton));
+            //services.Add(new ServiceDescriptor(typeof(ContainerAccessor), x => new ContainerAccessor(_container), ServiceLifetime.Singleton));
         }
         private void CreateContainer()
         {
@@ -85,17 +88,21 @@ namespace Monkey.Sql.WebApiHost
 
         }
 
-        private Assembly[] _assemblyCatalog;
+        private IEnumerable<Assembly> PackageCatalog
+        {
+            get
+            {
+                yield return typeof(HostPackage).Assembly;
+                yield return typeof(MonkeyPackage).Assembly;
+                yield return typeof(WebApiPackage).Assembly;
+                yield return typeof(SqlPackage).Assembly;
+            }
+        }
+
+        
         private void InitializeContainer(IApplicationBuilder app)
         {
-            _assemblyCatalog = new Assembly[]
-            {
-                typeof(HostPackage).Assembly,
-                typeof(MonkeyPackage).Assembly,
-                typeof(WebApiPackage).Assembly,
-                typeof(SqlPackage).Assembly
-            };
-            _container.RegisterPackages(_assemblyCatalog);
+            _container.RegisterPackages(PackageCatalog);
             // Add application presentation components:
             _container.RegisterMvcControllers(app);
             _container.RegisterMvcViewComponents(app);
@@ -124,7 +131,9 @@ namespace Monkey.Sql.WebApiHost
 
             app.UseMvc();
             _isReady = true;
-            _container.GetInstance<IEventHub>().WireEvents(_assemblyCatalog);
+            _container.GetInstance<IEventHub>()
+                .WireWebApiEvents()
+                .WireSql();
             _container.GetInstance<IDbChangeListener>().Start();
         }
     }

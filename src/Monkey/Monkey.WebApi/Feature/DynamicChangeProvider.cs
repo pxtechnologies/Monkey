@@ -31,7 +31,7 @@ namespace Monkey.WebApi.Feature
             }
         }
 
-        public async Task Handle<TEvent>()
+        public async Task Handle(ServiceMadatadaChangedEvent ev)
         {
             Instance.Changed();
         }

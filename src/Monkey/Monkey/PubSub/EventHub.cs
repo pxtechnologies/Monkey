@@ -11,13 +11,13 @@ namespace Monkey.PubSub
     {
         public static void WireEvents(this IEventHub hub, params Assembly[] assemblies)
         {
-            var registrations = assemblies.SelectMany(x => x.GetTypes())
-                .Where(x => x.IsClass && !x.IsInterface && !x.IsAbstract)
+            var registrations = assemblies.SelectMany(x => x.GetExportedTypes())
+                .Where(x => x.IsClass && !x.IsAbstract)
                 .Where(x => typeof(IEventSubscriber).IsAssignableFrom(x))
                 .Select(x => new
                 {
                     ServiceType = x, Interfaces = x.GetInterfaces()
-                        .Where(i => i.IsGenericType && !x.IsGenericTypeDefinition && i.GetGenericTypeDefinition() == typeof(IEventSubscriber<>)).ToArray()
+                        .Where(i => i.IsGenericType &&  i.GetGenericTypeDefinition() == typeof(IEventSubscriber<>)).ToArray()
                 })
                 .Where(x => x.Interfaces.Any())
                 .ToArray();
@@ -34,9 +34,9 @@ namespace Monkey.PubSub
     /// Markup interface
     /// </summary>
     public interface IEventSubscriber { }
-    public interface IEventSubscriber<TEvent> : IEventSubscriber
+    public interface IEventSubscriber<in TEvent> : IEventSubscriber
     {
-        Task Handle<TEvent>();
+        Task Handle(TEvent e);
     }
 
     public interface IEventHub
@@ -62,14 +62,16 @@ namespace Monkey.PubSub
         public async Task Publish<TEvent>(TEvent e)
         {
             if(_subscribers.TryGetValue(typeof(TEvent), out List<Type> subscribers))
+            {
                 foreach (var s in subscribers)
                 {
                     using (_serviceProvider.Scope())
                     {
-                        dynamic subscriber = _serviceProvider.GetService(s);
-                        subscriber.Handle(e);
+                        var subscriber = (IEventSubscriber < TEvent > )_serviceProvider.GetService(s);
+                        await subscriber.Handle(e);
                     }
                 }
+            }
         }
 
         public void Subscribe<TSubscriber, TEvent>()

@@ -5,7 +5,7 @@ namespace Monkey.Sql.Model
     public class ProcedureParameterDescriptor
     {
         public long Id { get; set; }
-
+        public byte Order { get; set; }
         [Required, MaxLength(255)]
         public string Name { get; set; }
 
@@ -19,7 +19,7 @@ namespace Monkey.Sql.Model
     public class ProcedureResultColumn
     {
         public long Id { get; set; }
-
+        public byte Order { get; set; }
         [Required, MaxLength(255)]
         public string Name { get; set; }
 

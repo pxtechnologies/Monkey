@@ -19,6 +19,18 @@ Scenario: I can invoke create command handler on dynamic controller
 	Then CommandHandler is invoked with corresponding 'CreateUser' argument
 	And 'UserEntityResponse' that corresponds to 'UserEntity' is returned
 
+Scenario: I can invoke create command handler on dynamic controller with suffixes
+	Given I have written command 'CreateUserCommand' and result as:
+	| Line | Code                                                                                     |
+	| 1    | public class CreateUserCommand { public string Name { get;set; }}                               |
+	| 2    | public class UserEntity { public Guid Id { get; set; } public string Name { get; set; }} |
+	And I have written command-handler that accepts 'CreateUserCommand' and returns 'UserEntity'
+	When I invoke 'UserController' with 'Post' method and 'CreateUserRequest' argument:
+	| Line | Json               |
+	| 1    | { "Name": "John" } |
+	Then CommandHandler is invoked with corresponding 'CreateUserCommand' argument
+	And 'UserEntityResponse' that corresponds to 'UserEntity' is returned
+
 Scenario: I can invoke custom command handler on dynamic controller with no resource id
 	Given I have written command 'ActivateUser' and result as:
 	| Line | Code                                                                                     |

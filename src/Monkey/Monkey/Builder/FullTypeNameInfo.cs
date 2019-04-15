@@ -11,28 +11,81 @@ namespace Monkey.Builder
     // A very simple structure for storing simple type information.
     public class FullTypeNameInfo
     {
+        public static readonly Dictionary<Type, string> Aliases =
+            new Dictionary<Type, string>()
+            {
+                { typeof(byte), "byte" },
+                { typeof(sbyte), "sbyte" },
+                { typeof(short), "short" },
+                { typeof(ushort), "ushort" },
+                { typeof(int), "int" },
+                { typeof(uint), "uint" },
+                { typeof(long), "long" },
+                { typeof(ulong), "ulong" },
+                { typeof(float), "float" },
+                { typeof(double), "double" },
+                { typeof(decimal), "decimal" },
+                { typeof(object), "object" },
+                { typeof(bool), "bool" },
+                { typeof(char), "char" },
+                { typeof(string), "string" },
+                { typeof(void), "void" }
+            };
+        
         private string _namespace;
         private string _name;
         private bool _isGeneric;
         public override string ToString()
         {
             if (!IsGeneric)
+            {
+                if (Namespace == "System")
+                {
+                    //TODO clean up
+                    var alias = Aliases.Where(x => x.Key.Name == _name)
+                        .Select(x=>x.Value)
+                        .FirstOrDefault();
+
+                    if (alias != null)
+                        return alias;
+
+                }
                 return _name;
+            }
             else
             {
+                if (IsNullable)
+                    return $"{_genericArguments[0]}?";
                 return $"{_name}<{string.Join(", ", _genericArguments)}>";
             }
         }
 
+        public string FullName
+        {
+            get { return $"{_namespace}.{ToString()}"; }
+        }
         private List<FullTypeNameInfo> _genericArguments;
 
         protected FullTypeNameInfo()
         {
             _genericArguments = new List<FullTypeNameInfo>();
         }
+        public static explicit operator FullTypeNameInfo(Type t)
+        {
+            return FullTypeNameInfo.Parse(t.FullName);
+        }
+        public static implicit operator FullTypeNameInfo(string t)
+        {
+            return FullTypeNameInfo.Parse(t);
+        }
         public IEnumerable<FullTypeNameInfo> GenericArguments => _genericArguments;
         public string Name => _name;
         public string Namespace => _namespace;
+
+        public bool IsNullable
+        {
+            get { return Name == "Nullable";  }
+        }
         public bool IsNamespaceDefined => !string.IsNullOrWhiteSpace(Namespace);
 
         public bool IsGeneric

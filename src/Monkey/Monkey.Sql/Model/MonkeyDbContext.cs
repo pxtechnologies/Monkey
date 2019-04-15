@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Monkey.Sql.Model.Core;
 
 namespace Monkey.Sql.Model
 {
@@ -31,7 +33,8 @@ namespace Monkey.Sql.Model
         public DbSet<ControllerDescriptor> Controllers { get; set; }
         public DbSet<ControllerActionDescriptor> ControllerActions { get; set; }
         public DbSet<ActionParameterBinding> ActionParameterBindings { get; set; }
-
+        public DbSet<Compilation> Compilations { get; set; }
+        public DbSet<SqlObjectTypeMapping> SqlObjectTypeMappings { get; set; }
         public MonkeyDbContext(DbContextOptions<MonkeyDbContext> options) : base(options)
         {
             _schemaName = "dbo";
@@ -51,62 +54,19 @@ namespace Monkey.Sql.Model
         {
            
             mb.HasSequence<long>("HiLo")
-                .StartsAt(1).IncrementsBy(100);
+                .StartsAt(1000).IncrementsBy(100);
             mb.ForSqlServerUseSequenceHiLo("HiLo");
-            mb.Entity<ProcedureParameterBinding>(x => x.HasKey(e => new
+
+            var m = typeof(MonkeyDbContext).Assembly.GetTypes()
+                .Where(x => x.IsClass && !x.IsAbstract && typeof(IEntityMapping).IsAssignableFrom(x))
+                .Select(x => Activator.CreateInstance(x))
+                .OfType<IEntityMapping>()
+                .ToArray();
+
+            foreach (var mapping in m)
             {
-                e.ParameterId,
-                e.PropertyId
-            }));
-            mb.Entity<ProcedureResultColumnBinding>(x => x.HasKey(e => new
-            {
-                e.ResultColumnColumnId,
-                e.ObjectPropertyId
-            }));
-            mb.Entity<ProcedureBinding>(x => x.HasKey(e => new
-            {
-                e.ProcedureId,
-                e.ResultId
-            }));
-            mb.Entity<ActionParameterBinding>(x => x.HasKey(e =>
-                new
-                {
-                    e.ActionId,
-                    e.RequestId
-                }));
-
-            mb.Entity<ObjectProperty>().HasOne(x => x.DeclaringType)
-                .WithMany(x => x.Properties)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            mb.Entity<ObjectProperty>().HasOne(x => x.PropertyType)
-                .WithMany()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            mb.Entity<ProcedureBinding>()
-                .HasOne(x => x.Request)
-                .WithMany()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            mb.Entity<ProcedureBinding>()
-                .HasOne(x => x.Result)
-                .WithMany()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            mb.Entity<ObjectType>().HasDiscriminator<string>("Usage")
-                .HasValue<Query>("Query")
-                .HasValue<Command>("Command")
-                .HasValue<Result>("Result")
-                .HasValue<ControllerRequest>("Request")
-                .HasValue<ControllerResponse>("Response")
-                .HasValue<PrimitiveObject>("Primitive");
-
-            mb.Entity<ObjectType>()
-                .Property("Usage")
-                .HasMaxLength(16);
-
-            
-            mb.Entity<ObjectType>().ToTable("ObjectTypes");
+                mapping.Configure(mb);
+            }
 
             mb.HasDefaultSchema(_schemaName);
             base.OnModelCreating(mb);

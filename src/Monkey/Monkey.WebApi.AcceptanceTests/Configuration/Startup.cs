@@ -13,6 +13,7 @@ using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using SimpleInjector.Integration.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using SimpleInjectorControllerActivator = Monkey.WebApi.SimpleInjector.SimpleInjectorControllerActivator;
 
 namespace Monkey.WebApi.AcceptanceTests.Configuration
 {

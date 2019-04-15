@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Monkey.Compilation;
 using Monkey.Cqrs;
 using Monkey.Generator;
+using Monkey.PubSub;
 using Monkey.SimpleInjector;
 using Monkey.Sql.AcceptanceTests.Configuration;
 using Monkey.Sql.Extensions;
@@ -85,6 +86,7 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
                 await repo.Add(r);
                 _context["resultId"] = r.Id;
 
+                byte j = 1;
                 foreach (var m in mappings)
                 {
                     var property = new ObjectProperty()
@@ -93,7 +95,7 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
                         IsCollection = false,
                         Name = m.PropertyName,
                         PropertyType = await repo.Query<ObjectType>()
-                            .FirstAsync(x => x.Alias == m.PropertyType && x.IsPrimitive)
+                            .FirstAsync(x => (x.Alias == m.PropertyType || x.Name==m.PropertyType ) && x.IsPrimitive)
                     };
                     r.Properties.Add(property);
 
@@ -108,7 +110,8 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
                         {
                             Name = m.SqlColumnName,
                             Procedure = await repo.Query<ProcedureDescriptor>().FirstAsync(x => x.Name == procName),
-                            Type = m.SqlColumnType
+                            Type = m.SqlColumnType,
+                            Order = j++
                         };
                     }
 
@@ -126,7 +129,7 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
         {
             var result = await this._applicationExecutor.ExecuteAsync<ISqlCqrsGenerator,SourceUnitCollection>( x => x.Generate(0) );
             
-            DynamicAssembly assembly = new DynamicAssembly();
+            DynamicAssembly assembly = new DynamicAssembly(NSubstitute.Substitute.For<IEventHub>());
             assembly.AppendSourceUnits(result);
             assembly.AddDefaultReferences();
             
@@ -180,6 +183,7 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
                 };
                 await repo.Add(command);
                 _context["commandId"] = command.Id;
+                byte j = 1;
                 foreach (var m in mappings)
                 {
                     
@@ -189,14 +193,14 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
                         IsCollection = false,
                         Name = m.PropertyName,
                         PropertyType = await repo.Query<ObjectType>()
-                            .FirstAsync(x => x.Alias == m.PropertyType && x.IsPrimitive)
+                            .FirstAsync(x => (x.Alias == m.PropertyType || x.Name==m.PropertyType ) && x.IsPrimitive)
                     };
                     command.Properties.Add(property);
                     
                     await repo.CommitChanges();
 
                     var binding = new ProcedureParameterBinding();
-                    binding.ObjectProperty = property;
+                    binding.Property = property;
                     binding.Parameter = await repo.Query<ProcedureParameterDescriptor>()
                         .FirstOrDefaultAsync(x => x.Procedure.Name == procName && x.Name == m.SqlParameterName);
 
@@ -206,7 +210,8 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
                         {
                             Name = m.SqlParameterName,
                             Procedure = proc,
-                            Type = m.SqlType
+                            Type = m.SqlType,
+                            Order = j++
                         };
                     }
                     

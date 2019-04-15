@@ -87,7 +87,7 @@ namespace Monkey.Sql.Generator
             var paramBindings = await _repo.Query<ProcedureParameterBinding>()
                 .Where(x => x.Parameter.ProcedureId == proc.Id)
                 .Include(x => x.Parameter)
-                .Include(x => x.ObjectProperty)
+                .Include(x => x.Property)
                 .ToArrayAsync();
 
             var resultBindings = await _repo.Query<ProcedureResultColumnBinding>()
@@ -109,7 +109,7 @@ namespace Monkey.Sql.Generator
 
             foreach (var p in paramBindings)
             {
-                handlerBuilder.BindParameter(p.ObjectProperty.Name, p.Parameter.Name);
+                handlerBuilder.BindParameter(p.Property.Name, p.Parameter.Name);
             }
 
             foreach (var rCol in resultBindings)

@@ -17,7 +17,7 @@ namespace Monkey.Generator
                 var sn = info.HandlerIType.GetCustomAttribute<ServiceNameAttribute>();
                 if (sn != null)
                     return sn.ServiceName;
-                string text = info.RequestType.Name.Replace("CommandHandler", "");
+                string text = info.RequestType.Name.RemoveSuffixWords("Command","Request");
                 var words = text.ToWords().ToList();
                 if (CommandVerbs.Any(x => x == words[0]))
                 {
