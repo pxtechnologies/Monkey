@@ -45,7 +45,7 @@ namespace Monkey.Sql.Services
                     _logger.Error(ex, "Compilation failed: {message}", ex.Message);
                 }
 
-                await Task.Delay(TimeSpan.FromSeconds(20));
+                await Task.Delay(TimeSpan.FromSeconds(10));
             }
         }
 

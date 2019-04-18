@@ -10,7 +10,7 @@ using Monkey.Sql.Model;
 namespace Monkey.Sql.Migrations
 {
     [DbContext(typeof(MonkeyDbContext))]
-    [Migration("20190415164435_InitSchema")]
+    [Migration("20190418154914_InitSchema")]
     partial class InitSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,6 +67,8 @@ namespace Monkey.Sql.Migrations
 
                     b.Property<Guid>("Hash");
 
+                    b.Property<DateTimeOffset>("LoadedAt");
+
                     b.Property<int>("Purpose");
 
                     b.Property<string>("ServerName")
@@ -76,7 +78,11 @@ namespace Monkey.Sql.Migrations
 
                     b.Property<int>("Version");
 
+                    b.Property<long?>("WorkspaceId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("WorkspaceId");
 
                     b.ToTable("Compilations");
                 });
@@ -336,6 +342,31 @@ namespace Monkey.Sql.Migrations
                     b.ToTable("SqlObjectTypeMappings");
                 });
 
+            modelBuilder.Entity("Monkey.Sql.Model.Workspace", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
+
+                    b.Property<DateTimeOffset>("Created");
+
+                    b.Property<DateTimeOffset>("HeartBeat");
+
+                    b.Property<bool>("IsDisabled");
+
+                    b.Property<string>("NodeName");
+
+                    b.Property<int>("Status");
+
+                    b.Property<Guid>("VersionSignature");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("Workspace");
+                });
+
             modelBuilder.Entity("Monkey.Sql.Model.Command", b =>
                 {
                     b.HasBaseType("Monkey.Sql.Model.ObjectType");
@@ -388,6 +419,13 @@ namespace Monkey.Sql.Migrations
                     b.HasOne("Monkey.Sql.Model.ControllerRequest", "ControllerRequest")
                         .WithMany()
                         .HasForeignKey("ControllerRequestId");
+                });
+
+            modelBuilder.Entity("Monkey.Sql.Model.Compilation", b =>
+                {
+                    b.HasOne("Monkey.Sql.Model.Workspace", "Workspace")
+                        .WithMany("Compilations")
+                        .HasForeignKey("WorkspaceId");
                 });
 
             modelBuilder.Entity("Monkey.Sql.Model.ControllerActionDescriptor", b =>

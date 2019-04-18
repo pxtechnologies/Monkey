@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Monkey.Sql.Model.Core;
 
 namespace Monkey.Sql.Model
@@ -18,6 +19,9 @@ namespace Monkey.Sql.Model
             HasOne(x => x.Result)
                 .WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
+
+            //Property(x => x.Mode)
+            //    .HasConversion<EnumToStringConverter<Mode>>();
         }
     }
 }

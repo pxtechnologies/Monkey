@@ -101,6 +101,7 @@ namespace Monkey.Compilation
         {
             try
             {
+               
                 if (string.IsNullOrWhiteSpace(x.Location))
                 {
                     return null;   

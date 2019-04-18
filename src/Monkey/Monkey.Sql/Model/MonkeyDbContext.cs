@@ -35,6 +35,7 @@ namespace Monkey.Sql.Model
         public DbSet<ActionParameterBinding> ActionParameterBindings { get; set; }
         public DbSet<Compilation> Compilations { get; set; }
         public DbSet<SqlObjectTypeMapping> SqlObjectTypeMappings { get; set; }
+        public DbSet<Workspace> Workspaces { get; set; }
         public MonkeyDbContext(DbContextOptions<MonkeyDbContext> options) : base(options)
         {
             _schemaName = "dbo";

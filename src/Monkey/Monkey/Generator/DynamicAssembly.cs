@@ -85,8 +85,12 @@ namespace Monkey.Generator
     public class DynamicAssembly
     {
         public AssemblyPurpose Purpose { get; set; }
+        private Guid? _srcHash;
         public Guid SrcHash {
-            get { return string.Concat(_sourceUnits.Select(x => x.CodeHash.ToString())).ComputeMd5(); }
+            get
+            {
+                return _srcHash ?? string.Concat(_sourceUnits.Select(x => x.CodeHash.ToString())).ComputeMd5();
+            }
         }
         private SourceUnitCollection _sourceUnits;
         private Assembly _assembly;
@@ -191,6 +195,15 @@ namespace Monkey.Generator
         }
 
         private IEventHub _eventHub;
+
+        public DynamicAssembly Load(byte[] assembly, Guid hash)
+        {
+            string path = Path.Combine(Path.GetTempPath(), hash.ToString().Replace("-", "") + ".dll");
+            File.WriteAllBytes(path, assembly);
+            this._assembly = Assembly.LoadFrom(path);
+            this._srcHash = hash;
+            return this;
+        }
     }
 
     public class AssemblyCompiledEvent

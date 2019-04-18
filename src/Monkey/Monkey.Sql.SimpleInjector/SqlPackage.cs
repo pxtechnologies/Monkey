@@ -14,6 +14,7 @@ namespace Monkey.Sql.SimpleInjector
     {
         public void RegisterServices(Container container)
         {
+            container.Register<INodeNameProvider, NodeNameProvider>(Lifestyle.Singleton);
             container.Register<ISqlCqrsGenerator, SqlCqrsGenerator>(Lifestyle.Scoped);
             container.Register<IServiceMatadataLoader, ServiceMatadataLoader>(Lifestyle.Scoped);
             container.Register<IDbChangeListener, DbChangeListener>(Lifestyle.Singleton);

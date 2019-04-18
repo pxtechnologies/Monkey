@@ -17,28 +17,6 @@ namespace Monkey.Sql.Migrations
                 incrementBy: 100);
 
             migrationBuilder.CreateTable(
-                name: "Compilations",
-                schema: "dbo",
-                columns: table => new
-                {
-                    Id = table.Column<long>(nullable: false),
-                    Version = table.Column<int>(nullable: false),
-                    CompiledAt = table.Column<DateTimeOffset>(nullable: false),
-                    CompilationDuration = table.Column<TimeSpan>(nullable: false),
-                    Hash = table.Column<Guid>(nullable: false),
-                    Source = table.Column<string>(nullable: true),
-                    Purpose = table.Column<int>(nullable: false),
-                    Assembly = table.Column<byte[]>(nullable: true),
-                    Classes = table.Column<string>(nullable: true),
-                    ServerName = table.Column<string>(maxLength: 255, nullable: true),
-                    Errors = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Compilations", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Controllers",
                 schema: "dbo",
                 columns: table => new
@@ -84,6 +62,24 @@ namespace Monkey.Sql.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProcedureDescriptors", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Workspace",
+                schema: "dbo",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false),
+                    IsDisabled = table.Column<bool>(nullable: false),
+                    VersionSignature = table.Column<Guid>(nullable: false),
+                    Status = table.Column<int>(nullable: false),
+                    HeartBeat = table.Column<DateTimeOffset>(nullable: false),
+                    Created = table.Column<DateTimeOffset>(nullable: false),
+                    NodeName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Workspace", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -256,6 +252,37 @@ namespace Monkey.Sql.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Compilations",
+                schema: "dbo",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false),
+                    Version = table.Column<int>(nullable: false),
+                    WorkspaceId = table.Column<long>(nullable: true),
+                    CompiledAt = table.Column<DateTimeOffset>(nullable: false),
+                    LoadedAt = table.Column<DateTimeOffset>(nullable: false),
+                    CompilationDuration = table.Column<TimeSpan>(nullable: false),
+                    Hash = table.Column<Guid>(nullable: false),
+                    Source = table.Column<string>(nullable: true),
+                    Purpose = table.Column<int>(nullable: false),
+                    Assembly = table.Column<byte[]>(nullable: true),
+                    Classes = table.Column<string>(nullable: true),
+                    ServerName = table.Column<string>(maxLength: 255, nullable: true),
+                    Errors = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Compilations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Compilations_Workspace_WorkspaceId",
+                        column: x => x.WorkspaceId,
+                        principalSchema: "dbo",
+                        principalTable: "Workspace",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ActionParameterBindings",
                 schema: "dbo",
                 columns: table => new
@@ -348,6 +375,12 @@ namespace Monkey.Sql.Migrations
                 column: "ControllerRequestId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Compilations_WorkspaceId",
+                schema: "dbo",
+                table: "Compilations",
+                column: "WorkspaceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ControllerActions_ControllerDescriptorId",
                 schema: "dbo",
                 table: "ControllerActions",
@@ -420,6 +453,12 @@ namespace Monkey.Sql.Migrations
                 columns: new[] { "SqlType", "IsNullable" },
                 unique: true,
                 filter: "[SqlType] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Workspace_Status",
+                schema: "dbo",
+                table: "Workspace",
+                column: "Status");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -450,6 +489,10 @@ namespace Monkey.Sql.Migrations
 
             migrationBuilder.DropTable(
                 name: "ControllerActions",
+                schema: "dbo");
+
+            migrationBuilder.DropTable(
+                name: "Workspace",
                 schema: "dbo");
 
             migrationBuilder.DropTable(

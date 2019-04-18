@@ -7,7 +7,7 @@ using Monkey.PubSub;
 namespace Monkey.Sql.Services
 {
     public class CompilationEventsListener
-        :IEventSubscriber<AssemblyCompiledEvent>
+        : IEventSubscriber<AssemblyCompiledEvent>
     {
         private readonly IRepository _repo;
 
@@ -18,19 +18,27 @@ namespace Monkey.Sql.Services
 
         public async Task Handle(AssemblyCompiledEvent e)
         {
-            await _repo.Add(new Model.Compilation()
+            var a = _repo.Query<Model.Compilation>()
+                .FirstOrDefault(x => x.Hash == e.SourceCode.SrcHash);
+            if (a == null)
             {
-                Assembly = e.Data,
-                Classes = string.Join(";",e.SourceCode.Select(x=>x.TypeName)),
-                Purpose = e.Purpose,
-                CompiledAt = e.When,
-                CompilationDuration = e.Duration,
-                Hash = e.SourceCode.SrcHash,
-                ServerName = Environment.MachineName,
-                Source = e.SourceCode.Code,
-                Version = (int)e.SourceCode.Version,
-                Errors = e.Errors
-            });
+                await _repo.Add(new Model.Compilation()
+                {
+                    Assembly = e.Data,
+                    Classes = string.Join(";", e.SourceCode.Select(x => x.TypeName)),
+                    Purpose = e.Purpose,
+                    CompiledAt = e.When,
+                    CompilationDuration = e.Duration,
+                    Hash = e.SourceCode.SrcHash,
+                    ServerName = Environment.MachineName,
+                    Source = e.SourceCode.Code,
+                    Version = (int) e.SourceCode.Version,
+                    Errors = e.Errors,
+                    LoadedAt = DateTimeOffset.Now
+                });
+            }
+            else a.LoadedAt = DateTimeOffset.Now;
+            
             await _repo.CommitChanges();
         }
     }
