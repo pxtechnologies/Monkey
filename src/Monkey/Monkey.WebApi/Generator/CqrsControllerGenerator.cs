@@ -82,7 +82,7 @@ namespace Monkey.WebApi.Generator
                     }
                     else if (h.IsQueryHandler)
                     {
-
+                        GenerateReadAction(unit, h, builder);
                     }
                 }
                 unit.Controller = new SourceUnit(builder.Namespace, builder.TypeName, builder.GenerateCode());
@@ -91,6 +91,22 @@ namespace Monkey.WebApi.Generator
             }
             else _logger.Warn("Cannot generate controller for service {serviceName}", service.Name);
             return new SourceUnit[0];
+        }
+
+        private void GenerateReadAction(ControllerSourceUnit unit, HandlerInfo handler, CqrsControllerBuilder builder)
+        {
+            if (handler.RequestType.GetProperties().Any(x => x.Name == "Id" || x.Name == $"{handler.Service.Name}Id"))
+            {
+                // this seems to be a query for one record
+                if (!handler.IsResponseCollection)
+                {
+
+                }
+            }
+            else
+            {
+                // this seems to be a query for many records.
+            }
         }
 
         private static void GenerateWriteAction(ControllerSourceUnit srcUnit, HandlerInfo handler, CqrsControllerBuilder builder)
