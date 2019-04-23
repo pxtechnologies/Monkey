@@ -53,15 +53,80 @@ namespace Monkey.Sql.Generator
                 return new SourceUnit[0];
             }
 
-            result[0] = await GenerateCommandHandler(proc, procBinding);
-            result[1] = await GenerateCommand(proc, procBinding.Mode, procBinding.Request);
+            if (procBinding.Mode == Mode.Command)
+            {
+                result[1] = await GenerateCommand(proc, procBinding.Mode, procBinding.Request);
+                result[0] = await GenerateCommandHandler(proc, procBinding);
+
+            }
+            else
+            {
+                result[1] = await GenerateQuery(proc, procBinding.Mode, procBinding.Request);
+                result[0] = await GenerateQueryHandler(proc, procBinding);
+            }
             result[2] = await GenerateResult(proc, procBinding.Result);
 
             return result;
         }
 
+        private async Task<SourceUnit> GenerateQueryHandler(ProcedureDescriptor proc, ProcedureBinding procBinding)
+        {
+            var paramBindings = await _repo.Query<ProcedureParameterBinding>()
+                .Where(x => x.Parameter.ProcedureId == proc.Id)
+                .Include(x => x.Parameter)
+                .Include(x => x.Property)
+                .ToArrayAsync();
+
+            var resultBindings = await _repo.Query<ProcedureResultColumnBinding>()
+                .Where(x => x.ResultColumn.ProcedureId == proc.Id)
+                .Include(x => x.ResultColumn)
+                .Include(x => x.Property)
+                .ToArrayAsync();
+
+            var handlerTypeName = $"{procBinding.Name}{procBinding.Mode.ToString()}Handler";
+            var handlerBuilder = new SqlQueryHandlerBuilder()
+                .InNamespace(proc.Schema)
+                .WithName(handlerTypeName)
+                .WithProcedureName(proc.Name, proc.ConnectionName)
+                .WithQueryTypeName(procBinding.Request.FullName())
+                .WithResultTypeName(procBinding.Result.FullName())
+                .AddDefaultUsings();
+
+            foreach (var p in paramBindings)
+            {
+                handlerBuilder.BindParameter(p.Property.Name, p.Parameter.Name);
+            }
+
+            foreach (var rCol in resultBindings)
+            {
+                handlerBuilder.BindColumnResult(rCol.Property.Name,
+                    rCol.Property.PropertyType.FullName(),
+                    rCol.ResultColumn.Name);
+            }
+
+            return new SourceUnit(proc.Schema,
+                handlerTypeName,
+                handlerBuilder.GenerateCode());
+        }
+
         private async Task<SourceUnit> GenerateResult(ProcedureDescriptor proc, Result obj)
         {
+            DataClassBuilder builder = new DataClassBuilder()
+                .InNamespace(obj.Namespace)
+                .WithName(obj.Name);
+
+            foreach (var p in obj.Properties)
+                builder.WithProperty(p.PropertyType.SrcName(), p.Name);
+
+            return new SourceUnit(obj.Namespace, obj.Name, builder.GenerateCode());
+        }
+        private async Task<SourceUnit> GenerateQuery(ProcedureDescriptor proc, Mode mode, ObjectType obj)
+        {
+            if (mode != Mode.Command && obj is Command)
+                throw new InvalidOperationException("Query mode cannot be used with command object.");
+            if (mode != Mode.Query && obj is Query)
+                throw new InvalidOperationException("Command mode cannot be used with query object.");
+
             DataClassBuilder builder = new DataClassBuilder()
                 .InNamespace(obj.Namespace)
                 .WithName(obj.Name);
@@ -102,8 +167,6 @@ namespace Monkey.Sql.Generator
                 .Include(x => x.ResultColumn)
                 .Include(x => x.Property)
                 .ToArrayAsync();
-
-            
 
             var handlerTypeName = $"{procBinding.Name}{procBinding.Mode.ToString()}Handler";
             var handlerBuilder = new SqlCommandHandlerBuilder()

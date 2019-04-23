@@ -102,10 +102,29 @@ namespace Monkey.WebApi.Generator
                 {
 
                 }
+                else
+                {
+                    // this is query for many records
+                }
             }
             else
             {
                 // this seems to be a query for many records.
+                if (!handler.IsResponseCollection)
+                {
+
+                }
+                else
+                {
+                    ArgumentCollection arguments = new ArgumentCollection();
+                    var queryArg = arguments.Add(handler.RequestType.Name.EndsWithSingleSuffix("Request", "Query"), "request", "FromUrl");
+
+                    // this is query for many records
+                    var responseType = handler.ResponseType.Name.EndsWithSingleSuffix("Response", "Result");
+                    builder.AppendAction(handler, "Get", responseType,
+                        HttpVerb.Get, handler.IsResponseCollection, $"api/{handler.Service.Name}",
+                        arguments.ToArray());
+                }
             }
         }
 

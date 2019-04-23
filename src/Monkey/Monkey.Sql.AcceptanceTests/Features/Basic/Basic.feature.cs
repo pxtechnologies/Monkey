@@ -79,11 +79,11 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("I can invoke stored procedure though command-handler")]
-        public virtual void ICanInvokeStoredProcedureThoughCommand_Handler()
+        [NUnit.Framework.DescriptionAttribute("I can invoke stored procedure though query-handler")]
+        public virtual void ICanInvokeStoredProcedureThoughQuery_Handler()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can invoke stored procedure though command-handler", null, ((string[])(null)));
-#line 11
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can invoke stored procedure though query-handler", null, ((string[])(null)));
+#line 10
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
 #line 7
@@ -92,20 +92,22 @@ this.FeatureBackground();
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
                         "Sql Line"});
             table1.AddRow(new string[] {
-                        "CREATE PROCEDURE AddUser @id int, @name nvarchar(255), @birthdate datetime"});
+                        "CREATE PROCEDURE GetUsers @id int, @name nvarchar(255), @birthdate datetime"});
             table1.AddRow(new string[] {
                         "AS"});
             table1.AddRow(new string[] {
                         "BEGIN"});
             table1.AddRow(new string[] {
-                        "SELECT @name + \'!\' as Name, @id+1 as Id, DATEADD(dd,1, @birthdate) as BirthDate"});
+                        "SELECT \'One\' as Name,  @id as Id, DATEADD(dd,1, @birthdate) as BirthDate"});
+            table1.AddRow(new string[] {
+                        "UNION ALL SELECT \'Two\',2, DATEADD(dd,2, @birthdate)"});
             table1.AddRow(new string[] {
                         "END"});
-#line 12
- testRunner.Given("I have a stored procedure with name \'AddUser\' in \'Test\' database", ((string)(null)), table1, "Given ");
+#line 11
+ testRunner.Given("I have a stored procedure with name \'GetUsers\' in \'Test\' database", ((string)(null)), table1, "Given ");
 #line 20
- testRunner.And("I have mapped \'AddUser\' procedure from \'Test\' database in apidatabase in schema \'" +
-                    "dbo\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I have mapped \'GetUsers\' procedure from \'Test\' database in apidatabase in schema " +
+                    "\'dbo\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
                         "SqlParameterName",
@@ -128,7 +130,7 @@ this.FeatureBackground();
                         "BirthDate",
                         "DateTime"});
 #line 21
- testRunner.And("I have mapped parameters to command \'AddUserCommand\'", ((string)(null)), table2, "And ");
+ testRunner.And("I have mapped parameters to query \'GetUsers\'", ((string)(null)), table2, "And ");
 #line hidden
             TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
                         "SqlColumnName",
@@ -153,13 +155,101 @@ this.FeatureBackground();
 #line 27
  testRunner.And("I have mapped resultset \'UserEntity\'", ((string)(null)), table3, "And ");
 #line 33
- testRunner.And("I bind that procedure", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I bind that read procedure", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 34
- testRunner.When("a commandhandler is generated as \'AddUserCommandHandler\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("a queryhandler is generated as \'GetUsersQueryHandler\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 35
+ testRunner.And("It is executed with query \'{ \"Id\": 1, \"Name\": \"John\", \"BirthDate\": \"2019-04-01\" }" +
+                    "\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 36
+ testRunner.Then("result is: \'[{ \"Id\": 1, \"Name\": \"One\", \"BirthDate\": \"2019-04-02\" },{ \"Id\": 2, \"Na" +
+                    "me\": \"Two\", \"BirthDate\": \"2019-04-03\" }]\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("I can invoke stored procedure though command-handler")]
+        public virtual void ICanInvokeStoredProcedureThoughCommand_Handler()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can invoke stored procedure though command-handler", null, ((string[])(null)));
+#line 38
+this.ScenarioInitialize(scenarioInfo);
+            this.ScenarioStart();
+#line 7
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Sql Line"});
+            table4.AddRow(new string[] {
+                        "CREATE PROCEDURE AddUser @id int, @name nvarchar(255), @birthdate datetime"});
+            table4.AddRow(new string[] {
+                        "AS"});
+            table4.AddRow(new string[] {
+                        "BEGIN"});
+            table4.AddRow(new string[] {
+                        "SELECT @name + \'!\' as Name, @id+1 as Id, DATEADD(dd,1, @birthdate) as BirthDate"});
+            table4.AddRow(new string[] {
+                        "END"});
+#line 39
+ testRunner.Given("I have a stored procedure with name \'AddUser\' in \'Test\' database", ((string)(null)), table4, "Given ");
+#line 47
+ testRunner.And("I have mapped \'AddUser\' procedure from \'Test\' database in apidatabase in schema \'" +
+                    "dbo\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
+                        "SqlParameterName",
+                        "SqlType",
+                        "PropertyName",
+                        "PropertyType"});
+            table5.AddRow(new string[] {
+                        "@id",
+                        "int",
+                        "Id",
+                        "int"});
+            table5.AddRow(new string[] {
+                        "@name",
+                        "nvarchar",
+                        "Name",
+                        "string"});
+            table5.AddRow(new string[] {
+                        "@birthdate",
+                        "datetime",
+                        "BirthDate",
+                        "DateTime"});
+#line 48
+ testRunner.And("I have mapped parameters to command \'AddUserCommand\'", ((string)(null)), table5, "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+                        "SqlColumnName",
+                        "SqlColumnType",
+                        "PropertyName",
+                        "PropertyType"});
+            table6.AddRow(new string[] {
+                        "Id",
+                        "int",
+                        "Id",
+                        "int"});
+            table6.AddRow(new string[] {
+                        "Name",
+                        "nvarchar",
+                        "Name",
+                        "string"});
+            table6.AddRow(new string[] {
+                        "BirthDate",
+                        "datetime",
+                        "BirthDate",
+                        "DateTime"});
+#line 54
+ testRunner.And("I have mapped resultset \'UserEntity\'", ((string)(null)), table6, "And ");
+#line 60
+ testRunner.And("I bind that write procedure", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 61
+ testRunner.When("a commandhandler is generated as \'AddUserCommandHandler\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 62
  testRunner.And("It is executed with command \'{ \"Id\": 1, \"Name\": \"John\", \"BirthDate\": \"2019-04-01\"" +
                     " }\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 36
+#line 63
  testRunner.Then("result is: \'{ \"Id\": 2, \"Name\": \"John!\", \"BirthDate\": \"2019-04-02\" }\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();

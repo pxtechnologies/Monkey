@@ -48,20 +48,32 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
             });
             _context["procName"] = procedureName;
         }
-        [Given(@"I bind that procedure")]
+
+        [Given(@"I bind that read procedure")]
+        public async Task GivenIBindThatReadProcedure()
+        {
+            await BindProcedure(Mode.Query, true, "queryId", "GetUsers");
+        }
+
+        [Given(@"I bind that write procedure")]
         public async Task GivenIBindThatProcedure()
         {
+            await BindProcedure(Mode.Command, false, "commandId", "AddUser");
+        }
+
+        private async Task BindProcedure(Mode mode, bool isCollection, string key, string handlerName)
+        {
             var procName = _context["procName"].ToString();
-            var commadId = (long)_context["commandId"];
+            var commadId = (long)_context[key];
             var resultId = (long) _context["resultId"];
 
             await _applicationExecutor.ExecuteAsync<IRepository>(async repo =>
                 {
                 var procBinding = new ProcedureBinding()
                 {
-                    IsResultCollection = false,
-                    Mode = Mode.Command,
-                    Name = "AddUser",
+                    IsResultCollection = isCollection,
+                    Mode = mode,
+                    Name = handlerName,
                     Procedure = await repo.Query<ProcedureDescriptor>()
                         .FirstAsync(x=>x.Name == procName),
                     RequestId = commadId,
@@ -95,7 +107,7 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
                         IsCollection = false,
                         Name = m.PropertyName,
                         PropertyType = await repo.Query<ObjectType>()
-                            .FirstAsync(x => (x.Alias == m.PropertyType || x.Name==m.PropertyType ) && x.IsPrimitive)
+                            .FirstAsync(x => (x.Alias.EndsWith(m.PropertyType) || x.Name.EndsWith(m.PropertyType)) && x.IsPrimitive)
                     };
                     r.Properties.Add(property);
 
@@ -121,9 +133,9 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
                 await repo.CommitChanges();
             });
         }
-        
-        
 
+        
+        [When(@"a queryhandler is generated as '(.*)'")]
         [When(@"a commandhandler is generated as '(.*)'")]
         public async Task WhenACommandhandlerIsGenerated(string handlerName)
         {
@@ -138,64 +150,87 @@ namespace Monkey.Sql.AcceptanceTests.Features.Basic
 
             assembly.Assembly.GetTypes().Should().Contain(x => x.Name == handlerName);
         }
+        [When(@"It is executed with query '(.*)'")]
+        public async Task WhenItIsExecutedWithQuery(string json)
+        {
+            await WhenHandlerIsExecuted(json, "GetUsers", "GetUsersQueryHandler");
+        }
+
+        private async Task WhenHandlerIsExecuted(string json, string requestTypeName, string handlerName)
+        {
+            DynamicAssembly assembly = (DynamicAssembly)_context["assembly"];
+            var type = assembly.Load("Basic", requestTypeName);
+            dynamic arg = JsonConvert.DeserializeObject(json, type);
+
+            var handlerType = assembly.Load("dbo", handlerName);
+            await _applicationExecutor.ExecuteAsync<IServiceProvider>(async conteiner =>
+            {
+                dynamic handler = conteiner.GetService(handlerType);
+                _context["result"] = await handler.Execute(arg);
+            });
+        }
+
         [When(@"It is executed with command '(.*)'")]
         public async Task ThenOnceItIsExecutedWithCommand(string json)
         {
-            DynamicAssembly assembly = (DynamicAssembly)_context["assembly"];
-            var type = assembly.Load("Basic", "AddUserCommand");
-            dynamic arg = JsonConvert.DeserializeObject(json, type);
-
-            var commandHandlerType = assembly.Load("dbo", "AddUserCommandHandler");
-            await _applicationExecutor.ExecuteAsync<IServiceProvider>(async conteiner =>
-            {
-                dynamic commandHandler = conteiner.GetService(commandHandlerType);
-                _context["result"] = await commandHandler.Execute(arg);
-            });
+            await WhenHandlerIsExecuted(json, "AddUserCommand", "AddUserCommandHandler");
         }
         [Then(@"result is: '(.*)'")]
         public void ThenResultIs(string json)
         {
             DynamicAssembly assembly = (DynamicAssembly)_context["assembly"];
             var type = assembly.Load("Basic", "UserEntity");
+            if (json.Trim().StartsWith("["))
+                type = type.MakeArrayType();
             object expected = JsonConvert.DeserializeObject(json, type);
             object actual = _context["result"];
 
             actual.Should().BeEquivalentTo(expected);
         }
 
+        [Given(@"I have mapped parameters to query '(.*)'")]
+        public async Task GivenIHaveMappedParametersToQuery(string queryName, Table table)
+        {
+            await MapProcToRequest<Query>("queryId", queryName, table.CreateSet<CommandParameter>());
+        }
 
 
         [Given(@"I have mapped parameters to command '(.*)'")]
         public async Task GivenIHaveMappedParametersToCommand(string commandName, Table table)
         {
-            var mappings = table.CreateSet<CommandParameter>();
+            await MapProcToRequest<Command>("commandId", commandName, table.CreateSet<CommandParameter>());
+        }
+        private async Task MapProcToRequest<TRequest>(string reqKey, string requestName, IEnumerable<CommandParameter> mappings)
+            where TRequest:ObjectType,new()
+        {
             var procName = _context["procName"].ToString();
 
             await _applicationExecutor.ExecuteAsync<IRepository>(async repo =>
             {
                 var proc = await repo.Query<ProcedureDescriptor>().FirstAsync(x => x.Name == procName);
-                var command = new Command()
+                var req = new TRequest()
                 {
-                    Name = commandName,
+                    Name = requestName,
                     IsDynamic = true,
                     IsPrimitive = false,
                     Namespace = "Basic"
                 };
-                await repo.Add(command);
-                _context["commandId"] = command.Id;
+                await repo.Add(req);
+                _context[reqKey] = req.Id;
+
                 byte j = 1;
                 foreach (var m in mappings)
                 {
                     
                     var property = new ObjectProperty()
                     {
-                        DeclaringType = command,
+                        DeclaringType = req,
                         IsCollection = false,
                         Name = m.PropertyName,
                         PropertyType = await repo.Query<ObjectType>()
-                            .FirstAsync(x => (x.Alias == m.PropertyType || x.Name==m.PropertyType ) && x.IsPrimitive)
+                            .FirstAsync(x => (x.Alias.EndsWith(m.PropertyType) || x.Name.EndsWith(m.PropertyType) ) && x.IsPrimitive)
                     };
-                    command.Properties.Add(property);
+                    req.Properties.Add(property);
                     
                     await repo.CommitChanges();
 

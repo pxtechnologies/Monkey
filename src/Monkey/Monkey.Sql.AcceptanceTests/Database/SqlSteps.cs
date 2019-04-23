@@ -58,10 +58,10 @@ namespace Monkey.Sql.AcceptanceTests.Database
             {
                 await masterConnection.OpenAsync();
 
-                var db = await masterConnection.QueryFirstOrDefaultAsync<string>("select name from sys.databases where name=@dbName", new { dbName});
+                var db = await masterConnection.QueryFirstOrDefaultAsync<string>("SELECT name FROM sys.databases WHERE name=@dbName", new { dbName});
                 if (db != null)
-                    await masterConnection.ExecuteScalarAsync($"drop database [{db}];");
-                await masterConnection.ExecuteScalarAsync("create database " + dbName);
+                    await masterConnection.ExecuteScalarAsync($"ALTER DATABASE [{db}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{db}];");
+                await masterConnection.ExecuteScalarAsync("CREATE DATABASE " + dbName);
             }
         }
         
