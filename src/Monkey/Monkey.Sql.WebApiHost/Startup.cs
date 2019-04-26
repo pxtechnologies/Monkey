@@ -17,6 +17,7 @@ using Microsoft.Extensions.Options;
 using Monkey.PubSub;
 using Monkey.SimpleInjector;
 using Monkey.Sql.Extensions;
+using Monkey.Sql.Scripts;
 using Monkey.Sql.Services;
 using Monkey.Sql.SimpleInjector;
 using Monkey.Sql.WebApiHost.Configuration;
@@ -77,7 +78,7 @@ namespace Monkey.Sql.WebApiHost
             
             services.EnableSimpleInjectorCrossWiring(_container);
             services.UseSimpleInjectorAspNetRequestScoping(_container);
-            //services.Add(new ServiceDescriptor(typeof(ContainerAccessor), x => new ContainerAccessor(_container), ServiceLifetime.Singleton));
+            services.Add(new ServiceDescriptor(typeof(ContainerAccessor), x => new ContainerAccessor(_container), ServiceLifetime.Singleton));
         }
         private void CreateContainer()
         {
@@ -130,11 +131,16 @@ namespace Monkey.Sql.WebApiHost
             });
 
             app.UseMvc();
+            _container.GetInstance<IScriptManager>().InstallMonkey()
+                .GetAwaiter()
+                .GetResult();
+
             _isReady = true;
             _container.GetInstance<IEventHub>()
                 .WireWebApiEvents()
                 .WireSql();
             _container.GetInstance<IDbChangeListener>().Start();
+            
         }
     }
 }

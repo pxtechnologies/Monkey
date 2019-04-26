@@ -13,19 +13,25 @@ using SimpleInjector.Packaging;
 
 namespace Monkey.Sql.WebApiHost.Configuration
 {
-    public class HostPackage : IPackage
-    {
-        public void RegisterServices(Container container)
+    public static class ConfigurationFactory {
+        public static IConfigurationRoot Load()
         {
             ConfigurationBuilder builder = new ConfigurationBuilder();
             builder.AddEnvironmentVariables()
                 .AddJsonFile("appsettings.json");
-
+            var config = builder.Build();
+            return config;
+        }
+    }
+    public class HostPackage : IPackage
+    {
+        public void RegisterServices(Container container)
+        {
             var logger = LoggerConfig.Default().CreateLogger();
             container.RegisterInstance<Serilog.ILogger>(logger);
             MonkeyPackage.LoggerFactory = () => new SerilogAdapter(logger);
 
-            var config = builder.Build();
+            var config = ConfigurationFactory.Load();
             container.RegisterInstance<IConfigurationRoot>(config);
             container.RegisterInstance<IConfiguration>(config);
             container.Register<IServiceProvider>(() => container, Lifestyle.Singleton);

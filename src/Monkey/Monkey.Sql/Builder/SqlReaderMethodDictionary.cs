@@ -23,7 +23,7 @@ namespace Monkey.Sql.Builder
             AddStruct<Decimal>( nameof(SqlDataReader.GetDecimal));
             AddStruct<TimeSpan>( nameof(SqlDataReader.GetTimeSpan));
             AddStruct<Double>( nameof(SqlDataReader.GetDouble));
-
+            AddStruct<Guid>(nameof(SqlDataReader.GetGuid));
         }
 
         private SqlReaderMethodDictionary AddStruct<TStruct>(string readerMthName)

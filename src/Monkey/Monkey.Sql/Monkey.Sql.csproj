@@ -5,25 +5,23 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="Data\Class1.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Remove="Scripts\20190404001.sql" />
       <None Remove="Scripts\20190418001.sql" />
       <None Remove="Scripts\20190418002.sql" />
       <None Remove="Scripts\20190418003.sql" />
+      <None Remove="Scripts\External\201904231945_udf_StoredProcParameters.sql" />
+      <None Remove="Scripts\External\201904231949_sp_WebApi_AddStoredProc.sql" />
+      <None Remove="Scripts\Monkey\201904251001_fn_MakePropertyName.sql" />
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="Scripts\20190418003.sql" />
-      <EmbeddedResource Include="Scripts\20190418002.sql" />
-      <EmbeddedResource Include="Scripts\20190418001.sql" />
-      <EmbeddedResource Include="Scripts\20190404001.sql" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Include="Data\Class1.cs" />
+      <EmbeddedResource Include="Scripts\External\201904231949_sp_WebApi_AddStoredProc.sql" />
+      <EmbeddedResource Include="Scripts\External\201904231945_udf_StoredProcParameters.sql" />
+      <EmbeddedResource Include="Scripts\Monkey\201904251001_fn_MakePropertyName.sql" />
+      <EmbeddedResource Include="Scripts\Monkey\20190418003_fn_WebApi_NormalizeSqlTypeName.sql" />
+      <EmbeddedResource Include="Scripts\Monkey\20190418002_udf_TableStats.sql" />
+      <EmbeddedResource Include="Scripts\Monkey\20190418001_sp_WebApi_Cleanup.sql" />
+      <EmbeddedResource Include="Scripts\Monkey\20190404001_sp_WebApi_Publish.sql" />
     </ItemGroup>
 
     <ItemGroup>
@@ -47,6 +45,10 @@
     <ItemGroup>
       <ProjectReference Include="..\Monkey.Cqrs\Monkey.Cqrs.csproj" />
       <ProjectReference Include="..\Monkey\Monkey.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Scripts\Versioning\" />
     </ItemGroup>
 
 </Project>

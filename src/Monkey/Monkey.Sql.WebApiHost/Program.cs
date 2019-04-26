@@ -7,6 +7,8 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Monkey.Sql.WebApiHost.Configuration;
+using Monkey.WebApi;
 
 namespace Monkey.Sql.WebApiHost
 {
@@ -17,8 +19,14 @@ namespace Monkey.Sql.WebApiHost
             CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        {
+            var config = ConfigurationFactory.Load();
+            var applicationUrls = config.GetApplicationUrls();
+
+            return WebHost.CreateDefaultBuilder(args)
+                .UseUrls(applicationUrls)
                 .UseStartup<Startup>();
+        }
     }
 }

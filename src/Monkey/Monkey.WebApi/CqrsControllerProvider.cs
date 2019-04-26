@@ -2,12 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Monkey.Generator;
 using Monkey.PubSub;
 using Monkey.WebApi.Generator;
 
 namespace Monkey.WebApi
 {
+    public static class ConfigurationExtensions
+    {
+        public static string[] GetApplicationUrls(this IConfiguration config)
+        {
+            return config["ApplicationUrls"].Split(';');
+        }
+    }
     public class CqrsControllerProvider : ICqrsControllerProvider
     {
         private readonly IDynamicTypePool _dynamicPool;

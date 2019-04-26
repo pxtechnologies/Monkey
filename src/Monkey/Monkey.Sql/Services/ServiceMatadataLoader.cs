@@ -108,29 +108,38 @@ namespace Monkey.Sql.Services
         private async Task CompileAndLoad(Workspace[] workspaces)
         {
             var myWorksSpace = await FindOrCreate(workspaces);
-            var result = await _sqlCqrsGenerator.Generate(0);
-            if (result.Any())
+            try
             {
-                if (_dynamicPool.All(x => x.SourceUnits.SrcHash != result.SrcHash))
+                var result = await _sqlCqrsGenerator.Generate(0);
+                if (result.Any())
                 {
-                    _logger.Info("New metadata model loaded from database with {hash} hash.", result.SrcHash);
+                    if (_dynamicPool.All(x => x.SourceUnits.SrcHash != result.SrcHash))
+                    {
+                        _logger.Info("New metadata model loaded from database with {hash} hash.", result.SrcHash);
 
-                    DynamicAssembly assembly = new DynamicAssembly(_eventHub);
-                    assembly.AddDefaultReferences();
-                    assembly.AppendSourceUnits(result);
-                    assembly.Compile();
+                        DynamicAssembly assembly = new DynamicAssembly(_eventHub);
+                        assembly.AddDefaultReferences();
+                        assembly.AppendSourceUnits(result);
+                        assembly.Compile();
 
-                    _dynamicPool.AddOrReplace(assembly);
-                    _metadataProvider.Clear();
-                    _metadataProvider.Discover(assembly.Assembly);
+                        _dynamicPool.AddOrReplace(assembly);
+                        _metadataProvider.Clear();
+                        _metadataProvider.Discover(assembly.Assembly);
 
-                    var c = await _repo.Query<Model.Compilation>()
-                        .FirstAsync(x => x.Hash == assembly.SrcHash);
-                    c.Workspace = myWorksSpace;
-                    myWorksSpace.Status = WorkspaceStatus.Running;
-                    c.LoadedAt = DateTimeOffset.Now;
-                    await _repo.CommitChanges();
+                        var c = await _repo.Query<Model.Compilation>()
+                            .FirstAsync(x => x.Hash == assembly.SrcHash);
+                        c.Workspace = myWorksSpace;
+                        myWorksSpace.Status = WorkspaceStatus.Running;
+                        c.LoadedAt = DateTimeOffset.Now;
+                        await _repo.CommitChanges();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                myWorksSpace.Status = WorkspaceStatus.Error;
+                myWorksSpace.Error = ex.Message;
+                await _repo.CommitChanges();
             }
         }
 

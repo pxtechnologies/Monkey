@@ -46,7 +46,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{EBB4050F-7
 		..\..\README.md = ..\..\README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monkey.Sql.UnitTests", "Monkey.Sql.UnitTests\Monkey.Sql.UnitTests.csproj", "{AFCC8A61-153C-409C-B06B-FAD626A2A4AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monkey.Sql.UnitTests", "Monkey.Sql.UnitTests\Monkey.Sql.UnitTests.csproj", "{AFCC8A61-153C-409C-B06B-FAD626A2A4AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monkey.Sql.WebApiHost.AcceptanceTests", "Monkey.Sql.WebApiHost.AcceptanceTests\Monkey.Sql.WebApiHost.AcceptanceTests.csproj", "{0E51103A-57B9-4130-B8DD-60FE64AAE3D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -114,6 +116,10 @@ Global
 		{AFCC8A61-153C-409C-B06B-FAD626A2A4AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFCC8A61-153C-409C-B06B-FAD626A2A4AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFCC8A61-153C-409C-B06B-FAD626A2A4AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E51103A-57B9-4130-B8DD-60FE64AAE3D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E51103A-57B9-4130-B8DD-60FE64AAE3D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E51103A-57B9-4130-B8DD-60FE64AAE3D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E51103A-57B9-4130-B8DD-60FE64AAE3D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -131,6 +137,7 @@ Global
 		{5590A24B-7A4D-4222-A2C6-CD8B03C718DC} = {6CDC3976-D205-4E50-965E-881DAD466499}
 		{01DDAA04-76D7-4589-BB69-AE6091F80E25} = {03DDC688-1113-479D-BC2E-8D757CACC7A6}
 		{AFCC8A61-153C-409C-B06B-FAD626A2A4AB} = {4A5911B4-4CDC-4BF9-A810-78CF7085A83E}
+		{0E51103A-57B9-4130-B8DD-60FE64AAE3D6} = {03DDC688-1113-479D-BC2E-8D757CACC7A6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8FC7FC1E-BD28-47AE-BD03-583D23AE89E1}

@@ -1,8 +1,8 @@
-﻿create function TableStats (@minId bigint=0)
+﻿create function udf_TableStats (@minId bigint=0)
 RETURNS TABLE
 as
 return
-select '__EFMigrationsHistory' as [TableName], count(*) as [Count], null as MaxId from  [dbo].[__EFMigrationsHistory]
+select '_migrations' as [TableName], count(*) as [Count], null as MaxId from  [dbo].[_migrations]
 union all select 'Compilations', count(*), max(Id) from  [dbo].[Compilations] where Id > @minId
 union all select 'Controllers', count(*), max(Id) from  [dbo].[Controllers] where Id > @minId
 union all select 'ObjectTypes', count(*), max(Id) from  [dbo].[ObjectTypes] where Id > @minId

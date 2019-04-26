@@ -122,7 +122,7 @@ namespace Monkey.Builder
 
         public string FullName
         {
-            get { return $"{_namespace}.{ToString(false)}"; }
+            get { return ToString(false,true); }
         }
 
         private List<FullTypeNameInfo> _genericArguments;

@@ -94,7 +94,7 @@ namespace Monkey.Sql.Generator
 
             foreach (var p in paramBindings)
             {
-                handlerBuilder.BindParameter(p.Property.Name, p.Parameter.Name);
+                handlerBuilder.BindParameter(p.Property.Name, p.Parameter.Name, p.Property.PropertyType.FullName());
             }
 
             foreach (var rCol in resultBindings)
@@ -179,7 +179,7 @@ namespace Monkey.Sql.Generator
 
             foreach (var p in paramBindings)
             {
-                handlerBuilder.BindParameter(p.Property.Name, p.Parameter.Name);
+                handlerBuilder.BindParameter(p.Property.Name, p.Parameter.Name, p.Property.PropertyType.FullName());
             }
 
             foreach (var rCol in resultBindings)

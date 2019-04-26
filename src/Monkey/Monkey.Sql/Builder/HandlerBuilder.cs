@@ -30,12 +30,13 @@ namespace Monkey.Sql.Builder
             return (TBuilder)this;
         }
 
-        public TBuilder BindParameter(string path, string paramName)
+        public TBuilder BindParameter(string path, string paramName, FullTypeNameInfo paramType)
         {
             _parameterBindings.Add(new BindingParameter()
             {
                 Path = path,
-                ParameterName = paramName
+                ParameterName = paramName,
+                ParameterType = paramType
             });
             return (TBuilder)this;
         }
@@ -199,9 +200,20 @@ namespace Monkey.Sql.Builder
             sb.AppendLine("await connection.OpenAsync();");
             sb.AppendLine($"using(var command = connection.CreateCommand())").OpenBlock();
             sb.AppendLine($"command.CommandType = CommandType.StoredProcedure;");
-            sb.AppendLine($"command.CommandText = _procName;");
+            sb.AppendLine($"command.CommandText = _procName;").AppendLine();
+            sb.AppendLine($"var parameters = command.Parameters;").AppendLine();
             foreach (var p in this.ParameterBindings)
-                sb.AppendLine($"command.Parameters.AddWithValue({p.ParameterName.DblQuoted()}, {MethodArg()}.{p.Path});");
+            {
+                var pname = p.ParameterName.DblQuoted();
+
+                if (p.ParameterType.IsNullable || p.ParameterType.FullName == "System.String")
+                {
+                    sb.AppendLine($"if({MethodArg()}.{p.Path} != null) parameters.AddWithValue({pname}, {MethodArg()}.{p.Path});");
+                    sb.AppendLine($"else parameters.AddWithValue({pname}, DBNull.Value);");
+                }
+                else
+                    sb.AppendLine($"parameters.AddWithValue({pname}, {MethodArg()}.{p.Path});");
+            }
             sb.AppendLine();
 
             sb.AppendLine($"using(var rd = await command.ExecuteReaderAsync())").OpenBlock();

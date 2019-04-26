@@ -9,11 +9,11 @@ namespace Monkey.Sql.Model
 {
     public enum WorkspaceStatus
     {
-        Created,
-        Error,
-        Compiled,
-        Loaded,
-        Running
+        Created = 0,
+        Error = -1,
+        Compiled = 1,
+        Loaded = 2,
+        Running = 3
     }
 
     public class Workspace
@@ -33,6 +33,7 @@ namespace Monkey.Sql.Model
         public DateTimeOffset HeartBeat { get; set; }
         public DateTimeOffset Created { get; set; }
         public string NodeName { get; set; }
+        public string Error { get; set; }
         public virtual ICollection<Compilation> Compilations { get; set; }
     }
     public class Compilation

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Monkey.Sql.Generator;
 using Monkey.Sql.Model;
+using Monkey.Sql.Scripts;
 using Monkey.Sql.Services;
 using SimpleInjector;
 using SimpleInjector.Packaging;
@@ -19,6 +20,7 @@ namespace Monkey.Sql.SimpleInjector
             container.Register<IServiceMatadataLoader, ServiceMatadataLoader>(Lifestyle.Scoped);
             container.Register<IDbChangeListener, DbChangeListener>(Lifestyle.Singleton);
             container.Register<IRepository>(()=> SqlPackage.OnCreate(container), Lifestyle.Scoped);
+            container.Register<IScriptManager, ScriptManager>(Lifestyle.Singleton);
             container.Register<IMonkeyDatabase>(() => new MonkeyDatabase(SqlPackage.OnCreate(container).Database));
         }
 
@@ -26,7 +28,7 @@ namespace Monkey.Sql.SimpleInjector
         {
             var config = container.GetInstance<IConfiguration>();
             DbContextOptionsBuilder<MonkeyDbContext> builder = new DbContextOptionsBuilder<MonkeyDbContext>();
-            builder.UseSqlServer(config.GetConnectionString("Monkey"));
+            builder.UseSqlServer(config.GetConnectionString("Monkey"), x => x.MigrationsHistoryTable("_migrations"));
             return new MonkeyDbContext(builder.Options, config.GetValue<string>("DefaultSchema"));
         }
     }
