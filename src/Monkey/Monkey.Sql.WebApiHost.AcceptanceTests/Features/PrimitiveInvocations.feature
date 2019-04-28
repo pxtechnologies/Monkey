@@ -122,5 +122,5 @@ Given I executed a script against 'Test' database:
 	| SqlLine                 |
 	| EXEC sp_WebApi_Publish; |
 
-	And I invoke WebApi with 'GET' request on 'api/Product' with data '{"name":"tv"}'
+	And I invoke WebApi with 'GET' request on 'api/Product?name=tv'
 	Then I expect a response from url 'api/Product' with data '[{"name":"tv"},{"name":"Two"}]'

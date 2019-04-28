@@ -297,7 +297,7 @@ testRunner.Given("I executed a script against \'Test\' database:", ((string)(nul
 #line 121
  testRunner.When("I publish WebApi on \'Monkey\' database with sql statement:", ((string)(null)), table12, "When ");
 #line 125
- testRunner.And("I invoke WebApi with \'GET\' request on \'api/Product\' with data \'{\"name\":\"tv\"}\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I invoke WebApi with \'GET\' request on \'api/Product?name=tv\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 126
  testRunner.Then("I expect a response from url \'api/Product\' with data \'[{\"name\":\"tv\"},{\"name\":\"Two" +
                     "\"}]\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");

@@ -84,6 +84,7 @@ namespace Monkey.WebApi.SimpleInjector
             container.RegisterInstance(DynamicChangeProvider.Instance);
             container.Register<DynamicApiFeature>(Lifestyle.Singleton);
             container.Register<ICommandHandlerRegister, CommandHandlerRegister>(Lifestyle.Singleton);
+            container.Register<IQueryHandlerRegister, QueryHandlerRegister>(Lifestyle.Singleton);
             container.Register<IWebApiGenerator, WebApiCqrsGenerator>(Lifestyle.Singleton);
             container.Register<ICqrsControllerProvider, CqrsControllerProvider>(Lifestyle.Singleton);
             container.Register<ICqrsControllerGenerator, CqrsControllerGenerator>(Lifestyle.Singleton);

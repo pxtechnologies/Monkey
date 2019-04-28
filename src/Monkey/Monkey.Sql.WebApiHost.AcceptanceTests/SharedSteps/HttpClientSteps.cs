@@ -29,6 +29,12 @@ namespace Monkey.Sql.WebApiHost.AcceptanceTests.SharedSteps
             _client = new HttpClient();
         }
 
+        [When(@"I invoke WebApi with '(.*)' request on '(.*)'")]
+        public async Task WhenIInvokeWebApiWithRequestOn(HttpVerb verb, string url)
+        {
+            await WhenIInvokeWebApiWithRequestOnWithData(verb, url, null);
+        }
+
         [When(@"I invoke WebApi with '(.*)' request on '(.*)' with data '(.*)'")]
         public async Task WhenIInvokeWebApiWithRequestOnWithData(HttpVerb verb, string url, string json)
         {
@@ -45,8 +51,19 @@ namespace Monkey.Sql.WebApiHost.AcceptanceTests.SharedSteps
                 _sceneario[url] = result;
 
             }
+            else if (verb == HttpVerb.GET)
+            {
+                var serviceUrl = $"{_baseUrl}{url}";
+                var result = await _client.GetAsync(serviceUrl);
+                int ix = url.IndexOf('?');
+                if(ix > 0)
+                    _sceneario[url.Remove(ix)] = result;
+                else
+                    _sceneario[url] = result;
+            }
             else
             {
+                
                 throw new NotImplementedException();
             }
         }

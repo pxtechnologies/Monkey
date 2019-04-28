@@ -93,7 +93,7 @@ namespace Monkey.WebApi.Generator
             return new SourceUnit[0];
         }
 
-        private void GenerateReadAction(ControllerSourceUnit unit, HandlerInfo handler, CqrsControllerBuilder builder)
+        private void GenerateReadAction(ControllerSourceUnit srcUnit, HandlerInfo handler, CqrsControllerBuilder builder)
         {
             if (handler.RequestType.GetProperties().Any(x => x.Name == "Id" || x.Name == $"{handler.Service.Name}Id"))
             {
@@ -117,13 +117,23 @@ namespace Monkey.WebApi.Generator
                 else
                 {
                     ArgumentCollection arguments = new ArgumentCollection();
-                    var queryArg = arguments.Add(handler.RequestType.Name.EndsWithSingleSuffix("Request", "Query"), "request", "FromUrl");
+                    var queryArg = arguments.Add(handler.RequestType.Name.EndsWithSingleSuffix("Request", "Query"), "request", "FromQuery");
 
                     // this is query for many records
                     var responseType = handler.ResponseType.Name.EndsWithSingleSuffix("Response", "Result");
                     builder.AppendAction(handler, "Get", responseType,
                         HttpVerb.Get, handler.IsResponseCollection, $"api/{handler.Service.Name}",
                         arguments.ToArray());
+
+                    srcUnit.Responses.Append(GenerateResponseType(responseType, handler.ResponseType));
+                    srcUnit.ResultToResponseMappers.Append(GenerateResultToResponseMapper(responseType, handler.ResponseType));
+                    srcUnit.Requests.Append(GenerateRequestType(queryArg.Type, handler.RequestType));
+                    srcUnit.RequestToCommandMappers.Append(GenerateRequestToCommandMapper(queryArg.Type, handler.RequestType));
+
+                    builder.AddUsing(handler.ResponseType.Namespace + ".WebApi");
+                    builder.AddUsing(handler.RequestType.Namespace + ".WebApi");
+                    builder.AddUsing(handler.ResponseType.Namespace);
+                    builder.AddUsing(handler.RequestType.Namespace);
                 }
             }
         }

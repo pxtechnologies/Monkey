@@ -59,6 +59,7 @@ namespace Monkey.WebApi.Builder
             AddUsing("System")
                 .AddUsing("System.Configuration")
                 .AddUsing("System.Data")
+                .AddUsing("System.Linq")
                 .AddUsing("System.Threading")
                 .AddUsing("System.Threading.Tasks")
                 .AddUsing("Monkey.Cqrs")
@@ -97,7 +98,10 @@ namespace Monkey.WebApi.Builder
                 a.WriteAttributes(sb);
                 var args = a.RequestArguments.ToString();
                 
-                sb.AppendLine($"public async Task<{a.ResponseType}> {a.Name}({args})");
+                if(a.IsResponseCollection)
+                    sb.AppendLine($"public async Task<{a.ResponseType}[]> {a.Name}({args})");
+                else
+                    sb.AppendLine($"public async Task<{a.ResponseType}> {a.Name}({args})");
                 sb.OpenBlock();
 
                 sb.AppendLine($"{a.HandlerRequestType.Name} arg = new {a.HandlerRequestType.Name}();");
@@ -107,8 +111,11 @@ namespace Monkey.WebApi.Builder
                     sb.AppendLine($"this._mapper.Map({arg.Name}, arg);");
                 }
 
-                sb.AppendLine($"{a.HandlerReturnType.Name} result = await _{a.Name.StartLower()}Handler.Execute(arg);");
-                sb.AppendLine($"return _mapper.Map<{a.ResponseType}>(result);");
+                sb.AppendLine($"var result = await _{a.Name.StartLower()}Handler.Execute(arg);");
+                if(a.IsResponseCollection)
+                    sb.AppendLine($"return result.Select(x => _mapper.Map<{a.ResponseType}>(x)).ToArray();");
+                else
+                    sb.AppendLine($"return _mapper.Map<{a.ResponseType}>(result);");
                 sb.CloseBlock().AppendLine();
             }
 

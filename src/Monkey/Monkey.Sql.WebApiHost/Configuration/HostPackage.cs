@@ -37,6 +37,7 @@ namespace Monkey.Sql.WebApiHost.Configuration
             container.Register<IServiceProvider>(() => container, Lifestyle.Singleton);
             
             container.Register(typeof(ICommandHandler<,>), typeof(DispatchingCommandHandler<,>), Lifestyle.Singleton);
+            container.Register(typeof(IQueryHandler<,>), typeof(DispatchingQueryHandler<,>), Lifestyle.Singleton);
         }
     }
 }

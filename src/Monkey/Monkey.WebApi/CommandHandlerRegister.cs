@@ -10,11 +10,13 @@ namespace Monkey.WebApi
 {
     public class CommandHandlerRegisterListener : IEventSubscriber<AssemblyCompiledEvent>
     {
-        private ICommandHandlerRegister _commandHandlerRegister;
-
-        public CommandHandlerRegisterListener(ICommandHandlerRegister commandHandlerRegister)
+        private readonly ICommandHandlerRegister _commandHandlerRegister;
+        private readonly IQueryHandlerRegister _queryHandlerRegister;
+        public CommandHandlerRegisterListener(ICommandHandlerRegister commandHandlerRegister, 
+            IQueryHandlerRegister queryHandlerRegister)
         {
             _commandHandlerRegister = commandHandlerRegister;
+            _queryHandlerRegister = queryHandlerRegister;
         }
 
         public async Task Handle(AssemblyCompiledEvent e)
@@ -25,44 +27,51 @@ namespace Monkey.WebApi
                     .Select(x => new
                     {
                         ServiceType = x,
-                        ImplementedHandlers = x.GetInterfaces()
-                            .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommandHandler<,>))
+                        ImplementedCommandHandlers = x.GetInterfaces()
+                            .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommandHandler<,>)),
+                        ImplementedQueryHandlers = x.GetInterfaces()
+                            .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IQueryHandler<,>))
 
                     }).ToArray();
                 foreach (var h in handlers)
                 {
-                    foreach (var i in h.ImplementedHandlers)
-                    {
+                    foreach (var i in h.ImplementedCommandHandlers)
                         _commandHandlerRegister.Register(i.GetGenericArguments()[0], h.ServiceType);
-                    }
+
+                    foreach (var i in h.ImplementedQueryHandlers)
+                        _queryHandlerRegister.Register(i.GetGenericArguments()[0], h.ServiceType);
                 }
 
 
             }
         }
     }
-    public interface ICommandHandlerRegister
+    public interface IQueryHandlerRegister : IRequestHandlerRegister { }
+    public interface ICommandHandlerRegister : IRequestHandlerRegister { }
+    public interface IRequestHandlerRegister
     {
         Type this[Type type] { get; }
         void Register(Type commandType, Type handlerType);
     }
-    public class CommandHandlerRegister : ICommandHandlerRegister
+    public class QueryHandlerRegister : HandlerRegister, IQueryHandlerRegister { }
+    public class CommandHandlerRegister : HandlerRegister, ICommandHandlerRegister { }
+    public abstract class HandlerRegister : IRequestHandlerRegister
     {
-        private readonly Dictionary<Type, Type> _commandHandlerByCommandType;
+        private readonly Dictionary<Type, Type> _dict;
 
-        public CommandHandlerRegister()
+        public HandlerRegister()
         {
-            _commandHandlerByCommandType = new Dictionary<Type, Type>();
+            _dict = new Dictionary<Type, Type>();
         }
 
         public Type this[Type type]
         {
-            get { return _commandHandlerByCommandType[type]; }
+            get { return _dict[type]; }
         }
 
         public void Register(Type commandType, Type handlerType)
         {
-            _commandHandlerByCommandType.Add(commandType, handlerType);
+            _dict.Add(commandType, handlerType);
         }
     }
 }

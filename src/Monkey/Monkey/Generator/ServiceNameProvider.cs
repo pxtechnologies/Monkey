@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using Humanizer;
 
 namespace Monkey.Generator
 {
@@ -35,7 +36,7 @@ namespace Monkey.Generator
                 if (sn != null)
                     return sn.ServiceName;
 
-                string text = info.RequestType.Name.Replace("QueryHandler", "");
+                string text = info.RequestType.Name.RemoveSuffixWords("Query", "Request");
                 var words = text.ToWords().ToList();
 
                 if (words.Count > 3)
@@ -45,12 +46,16 @@ namespace Monkey.Generator
                 }
 
                 if (words[0] == "Get")
-                    return string.Concat(words.Skip(1));
+                {
+                    var array = words.Skip(1).ToArray();
+                    array[0] = array[0].Singularize();
+                    return string.Concat(array);
+                } 
                 return string.Concat(words);
             }
             throw new InvalidOperationException();
         }
         
-        private string[] CommandVerbs = new string[] {"Add", "Update","Delete", "Remove", "Insert", "Create"};
+        private string[] CommandVerbs = new string[] {"Add", "Update","Delete", "Remove", "Insert", "Create", "Modify","Edit", "Insert"};
     }
 }

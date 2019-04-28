@@ -66,11 +66,11 @@ begin try
 	-- Creating command
 	declare @requestId bigint = @ids ;
 	insert into [Monkey].[dbo].[ObjectTypes](Id, IsDynamic, IsPrimitive, IsVoid, [Name], [Namespace], Usage)
-	values (@requestId, 1, 0, 0, @commandName, @schema, case when @isReadOnly = 1 then 'Query' else 'Command' end)
+	values (@requestId, 1, 0, 0, case when @isReadOnly = 1 then @queryName else @commandName end, @schema, case when @isReadOnly = 1 then 'Query' else 'Command' end)
 
-	-- Filling Properties of Command
+	-- Filling Properties of Command or Query
 	insert into [Monkey].[dbo].ObjectProperties(Id, [Name], [PropertyTypeId], IsCollection, DeclaringTypeId)
-	select @ids + c.[Order], [Monkey].dbo.fn_WebApi_MakePropertyName(c.[Name]), s.ObjectTypeId, case when @isReadOnly = 1 then 1 else 0 end, @requestId
+	select @ids + c.[Order], [Monkey].dbo.fn_WebApi_MakePropertyName(c.[Name]), s.ObjectTypeId, 0, @requestId
 	from [Monkey].dbo.ProcedureParameterDescriptors c
 	inner join [Monkey].dbo.SqlObjectTypeMappings s on s.SqlType = c.[Type]
 	where s.IsNullable = 1 and c.ProcedureId = @ids
@@ -79,7 +79,7 @@ begin try
 	if @c != (select count(*) from[Monkey].dbo.ProcedureParameterDescriptors c where c.ProcedureId = @ids)
 		throw 51000, 'One parameter for request cannot be matched', 0; 
 
-	-- Binding command Properties with parameters
+	-- Binding command/query Properties with parameters
 	insert into [Monkey].dbo.ProcedureParameterBindings(PropertyId, ParameterId)
 	select @ids + c.[Order], c.Id
 	from [Monkey].dbo.ProcedureParameterDescriptors c
@@ -124,7 +124,7 @@ begin try
 		end
 	end
 	insert into [Monkey].dbo.ProcedureBindings(ProcedureId, RequestId, ResultId, [Name], [Mode], IsResultCollection)
-	values (@procId, @requestId, @resultId, @name, 2,0)
+	values (@procId, @requestId, @resultId, @name, case when @isReadOnly = 1 then 4 else 2 end, @isReadOnly)
 
 	commit tran WebApi_AddStoredProc
 	print 'Stored procedure added to API'

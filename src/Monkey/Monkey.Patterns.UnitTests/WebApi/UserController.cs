@@ -127,7 +127,7 @@ namespace Monkey.Patterns.UnitTests.WebApi
             var result = await _postHandler.Execute(cmd); // Must
             return _mapper.Map<UserResource>(result); // Optional if result != response
         }
-
+        
         public async Task<UserResource> Put(Guid id, UpdateUserRequest request)
         {
             UpdateUserCommand cmd = new UpdateUserCommand();

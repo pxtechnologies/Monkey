@@ -53,20 +53,20 @@ namespace Monkey.Sql.Generator
                 return new SourceUnit[0];
             }
 
-            if (procBinding.Mode == Mode.Command)
-            {
-                result[1] = await GenerateCommand(proc, procBinding.Mode, procBinding.Request);
-                result[0] = await GenerateCommandHandler(proc, procBinding);
-
-            }
-            else
-            {
-                result[1] = await GenerateQuery(proc, procBinding.Mode, procBinding.Request);
-                result[0] = await GenerateQueryHandler(proc, procBinding);
-            }
+            result[0] = await GenerateHandler(proc, procBinding);
+            result[1] = await GenerateRequest(proc, procBinding.Mode, procBinding.Request);
             result[2] = await GenerateResult(proc, procBinding.Result);
 
             return result;
+        }
+
+        private async Task<SourceUnit> GenerateHandler(ProcedureDescriptor proc, ProcedureBinding procBinding)
+        {
+            if (procBinding.Mode == Mode.Command)
+                return await GenerateCommandHandler(proc, procBinding);
+            else if (procBinding.Mode == Mode.Query)
+                return await GenerateQueryHandler(proc, procBinding);
+            else throw new NotSupportedException("This mode is not supported");
         }
 
         private async Task<SourceUnit> GenerateQueryHandler(ProcedureDescriptor proc, ProcedureBinding procBinding)
@@ -120,13 +120,22 @@ namespace Monkey.Sql.Generator
 
             return new SourceUnit(obj.Namespace, obj.Name, builder.GenerateCode());
         }
-        private async Task<SourceUnit> GenerateQuery(ProcedureDescriptor proc, Mode mode, ObjectType obj)
+
+        private async Task<SourceUnit> GenerateRequest(ProcedureDescriptor proc, Mode mode, ObjectType obj)
         {
             if (mode != Mode.Command && obj is Command)
                 throw new InvalidOperationException("Query mode cannot be used with command object.");
             if (mode != Mode.Query && obj is Query)
                 throw new InvalidOperationException("Command mode cannot be used with query object.");
 
+            if (mode == Mode.Command)
+                return await GenerateCommand(proc, obj);
+            else if (mode == Mode.Query)
+                return await GenerateQuery(proc, obj);
+            else throw new NotSupportedException("This mode is not supported");
+        }
+        private async Task<SourceUnit> GenerateQuery(ProcedureDescriptor proc, ObjectType obj)
+        {
             DataClassBuilder builder = new DataClassBuilder()
                 .InNamespace(obj.Namespace)
                 .WithName(obj.Name);
@@ -137,13 +146,8 @@ namespace Monkey.Sql.Generator
             return new SourceUnit(obj.Namespace, obj.Name, builder.GenerateCode());
         }
 
-        private async Task<SourceUnit> GenerateCommand(ProcedureDescriptor proc, Mode mode, ObjectType obj)
+        private async Task<SourceUnit> GenerateCommand(ProcedureDescriptor proc, ObjectType obj)
         {
-            if(mode != Mode.Command && obj is Command)
-                throw new InvalidOperationException("Query mode cannot be used with command object.");
-            if(mode != Mode.Query && obj is Query)
-                throw new InvalidOperationException("Command mode cannot be used with query object.");
-
             DataClassBuilder builder = new DataClassBuilder()
                 .InNamespace(obj.Namespace )
                 .WithName(obj.Name);
