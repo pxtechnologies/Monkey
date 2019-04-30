@@ -69,6 +69,7 @@ namespace Monkey.Sql.Services
         public void Dispose()
         {
             var t = _worker;
+            AppDomain.CurrentDomain.ClearDynamicWorkspace();
             if (t != null && t.ThreadState != ThreadState.Unstarted)
             {
                 _isDisposing = true;

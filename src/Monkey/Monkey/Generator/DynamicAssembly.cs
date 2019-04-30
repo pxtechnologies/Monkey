@@ -171,6 +171,7 @@ namespace Monkey.Generator
                     Purpose = this.Purpose,
                     Data = File.ReadAllBytes(_assembly.Location)
                 });
+                
             }
             catch (Exception ex)
             {
@@ -206,8 +207,17 @@ namespace Monkey.Generator
         }
     }
 
+    public class AssemblyLoadedEvent
+    {
+        public Assembly Assembly { get; set; }
+        public AssemblyPurpose Purpose { get; set; }
+    }
     public class AssemblyCompiledEvent
     {
+        public AssemblyCompiledEvent()
+        {
+            
+        }
         public SourceUnitCollection SourceCode { get; set; }
         public Assembly Assembly { get; set; }
         public DateTimeOffset When { get; set; }

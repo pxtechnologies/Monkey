@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Monkey.Sql.WebApiHost.AcceptanceTests.Configuration;
 using TechTalk.SpecFlow;
@@ -27,6 +28,7 @@ namespace Monkey.Sql.WebApiHost.AcceptanceTests.SharedSteps
         {
             _app.Stop();
             _app.Run();
+            Thread.Sleep(2000);
         }
 
     }

@@ -8,7 +8,8 @@ using Monkey.PubSub;
 
 namespace Monkey.WebApi
 {
-    public class CommandHandlerRegisterListener : IEventSubscriber<AssemblyCompiledEvent>
+
+    public class CommandHandlerRegisterListener : IEventSubscriber<AssemblyLoadedEvent>
     {
         private readonly ICommandHandlerRegister _commandHandlerRegister;
         private readonly IQueryHandlerRegister _queryHandlerRegister;
@@ -19,9 +20,9 @@ namespace Monkey.WebApi
             _queryHandlerRegister = queryHandlerRegister;
         }
 
-        public async Task Handle(AssemblyCompiledEvent e)
+        public async Task Handle(AssemblyLoadedEvent e)
         {
-            if (e.IsSuccess && (e.Purpose & AssemblyPurpose.Handlers) > 0)
+            if ((e.Purpose & AssemblyPurpose.Handlers) > 0)
             {
                 var handlers = e.Assembly.GetExportedTypes()
                     .Select(x => new

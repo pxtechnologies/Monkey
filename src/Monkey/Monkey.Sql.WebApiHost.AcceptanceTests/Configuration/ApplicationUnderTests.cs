@@ -30,8 +30,9 @@ namespace Monkey.Sql.WebApiHost.AcceptanceTests.Configuration
             if (_webHost != null)
             {
                 _webHost.StopAsync().GetAwaiter().GetResult();
-
+                
                 _executor.Execute<ContainerAccessor>(c => c.Container.Dispose());
+                _executor.Clear();
                 _webHost.Dispose();
             }
         }

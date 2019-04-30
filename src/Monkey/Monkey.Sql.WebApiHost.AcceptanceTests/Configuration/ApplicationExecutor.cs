@@ -12,6 +12,7 @@ namespace Monkey.Sql.WebApiHost.AcceptanceTests.Configuration
         TResult Execute<TService, TResult>(Func<TService, TResult> method);
         Task<TResult> ExecuteAsync<TService, TResult>(Func<TService, Task<TResult>> method);
         Task ExecuteAsync<TService>(Func<TService, Task> method);
+        void Clear();
     }
 
     public sealed class ApplicationExecutor : IApplicationExecutor
@@ -69,6 +70,11 @@ namespace Monkey.Sql.WebApiHost.AcceptanceTests.Configuration
                 var service = (TService)scope.GetInstance(typeof(TService));
                 await method(service);
             }
+        }
+
+        public void Clear()
+        {
+            this._container = null;
         }
     }
 }

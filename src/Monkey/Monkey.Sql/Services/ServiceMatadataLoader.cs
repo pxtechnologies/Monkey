@@ -126,6 +126,9 @@ namespace Monkey.Sql.Services
                         _metadataProvider.Clear();
                         _metadataProvider.Discover(assembly.Assembly);
 
+                        // TODO: Refactor this and from Load
+                        await _eventHub.Publish(new AssemblyLoadedEvent() { Assembly = assembly.Assembly, Purpose = assembly.Purpose });
+
                         var c = await _repo.Query<Model.Compilation>()
                             .FirstAsync(x => x.Hash == assembly.SrcHash);
                         c.Workspace = myWorksSpace;
@@ -188,6 +191,16 @@ namespace Monkey.Sql.Services
             _metadataProvider.Clear();
             _metadataProvider.Discover(assembly.Assembly);
 
+            // TODO: Refactor this and from Load
+            await _eventHub.Publish(new AssemblyLoadedEvent() { Assembly = assembly.Assembly, Purpose = assembly.Purpose });
+
+
+            var w = await SetWorkspaceInfo(workspaces);
+            AppDomain.CurrentDomain.SetDynamicWorkspace(w.VersionSignature, w.Id);
+        }
+
+        private async Task<Workspace> SetWorkspaceInfo(Workspace[] workspaces)
+        {
             var w = workspaces.FirstOrDefault(x => x.NodeName == _nodeNameProvider.Name());
             if (w == null)
             {
@@ -207,7 +220,8 @@ namespace Monkey.Sql.Services
                 w.Status = WorkspaceStatus.Running;
                 await _repo.CommitChanges();
             }
-            AppDomain.CurrentDomain.SetDynamicWorkspace(w.VersionSignature, w.Id);
+
+            return w;
         }
 
         private async Task Cleanup()
@@ -220,6 +234,8 @@ namespace Monkey.Sql.Services
             foreach (var w in workspaces) w.Status = WorkspaceStatus.Compiled;
             await _repo.CommitChanges();
         }
+
+        
     }
 
     public interface INodeNameProvider
@@ -292,6 +308,10 @@ namespace Monkey.Sql.Services
         {
             DynamicWorkspace w = new DynamicWorkspace() {CurrentWorkspaceId = workspaceId, Signature = signature};
             domain.SetData(typeof(DynamicWorkspace).FullName, w);
+        }
+        public static void ClearDynamicWorkspace(this AppDomain domain)
+        {
+            domain.SetData(typeof(DynamicWorkspace).FullName, null);
         }
     }
     public class DynamicWorkspace

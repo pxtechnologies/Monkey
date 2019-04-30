@@ -69,18 +69,19 @@ namespace Monkey.DocBuilder
                     sb.AppendLine(s.Description);
                 foreach (var step in s.Steps)
                 {
-                    GeWriteStep(sb, step);
+                    WriteStep(sb, step);
                 }
             }
 
             foreach (var s in feature.Children.OfType<Scenario>())
             {
                 sb.AppendLine($"## {s.Name}");
-                sb.AppendLine(s.Description);
+                if(s.Description != null)
+                    sb.AppendLine(s.Description);
 
                 foreach (var step in s.Steps)
                 {
-                    GeWriteStep(sb, step);
+                    WriteStep(sb, step);
                 }
 
                 if (s.Examples.Any())
@@ -88,21 +89,7 @@ namespace Monkey.DocBuilder
                     sb.AppendLine("### Examples:");
                     foreach (var e in s.Examples)
                     {
-                        sb.Append("| ");
-                        sb.Append(string.Join(" | ", e.TableHeader.Cells.Select(x => x.Value.Humanize())));
-                        sb.Append("| ");
-                        sb.AppendLine();
-                        sb.Append("| ");
-                        sb.Append(string.Join(" | ", e.TableHeader.Cells.Select(x => "---")));
-                        sb.Append("| ");
-                        sb.AppendLine();
-                        foreach (var r in e.TableBody)
-                        {
-                            sb.Append("| ");
-                            sb.Append(string.Join(" | ", r.Cells.Select(x => x.Value.ToMarkup())));
-                            sb.Append("| ");
-                            sb.AppendLine();
-                        }
+                        WriteExample(sb, e);
                     }
                 }
             }
@@ -116,7 +103,26 @@ namespace Monkey.DocBuilder
                 File.WriteAllText(dstFile, sb.ToString());
         }
 
-        private static StringBuilder GeWriteStep(StringBuilder sb, Step step)
+        private static void WriteExample(StringBuilder sb, Examples e)
+        {
+            sb.Append("| ");
+            sb.Append(string.Join(" | ", e.TableHeader.Cells.Select(x => x.Value.Humanize())));
+            sb.Append("| ");
+            sb.AppendLine();
+            sb.Append("| ");
+            sb.Append(string.Join(" | ", e.TableHeader.Cells.Select(x => "---")));
+            sb.Append("| ");
+            sb.AppendLine();
+            foreach (var r in e.TableBody)
+            {
+                sb.Append("| ");
+                sb.Append(string.Join(" | ", r.Cells.Select(x => x.Value.ToMarkup())));
+                sb.Append("| ");
+                sb.AppendLine();
+            }
+        }
+
+        private static StringBuilder WriteStep(StringBuilder sb, Step step)
         {
             sb.AppendLine($"**_{step.Keyword.TrimEnd(' ')}_** {step.Text.ToMarkup()}<br />");
             if (step.Argument is DataTable)

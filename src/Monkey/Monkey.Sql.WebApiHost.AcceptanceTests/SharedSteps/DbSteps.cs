@@ -48,6 +48,7 @@ namespace Monkey.Sql.WebApiHost.AcceptanceTests.SharedSteps
         [When(@"I publish WebApi on '(.*)' database with sql statement:")]
         [Given(@"I expose the procedure with sql statement on '(.*)' database:")]
         [Given(@"I executed a script against '(.*)' database:")]
+        [Given(@"I publish WebApi on '(.*)' database with sql statement:")]
         public async Task GivenIExecutedAScriptAgainstDatabase(string dbName, Table table)
         {
             StringBuilder sb = new StringBuilder();
