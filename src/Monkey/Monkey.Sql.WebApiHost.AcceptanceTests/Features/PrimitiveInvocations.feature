@@ -11,7 +11,7 @@ Background:
 
 Scenario Outline: I want to invoke stored procedure with different primitive parameters
 	Given I executed a script against 'Test' database:
-	| SqlLine                                                      |
+	| Sql                                                      |
 	| CREATE OR ALTER PROC <ProcedureName> <ParamName> <ParamType> |
 	| AS                                                           |
 	| BEGIN                                                        |
@@ -19,11 +19,11 @@ Scenario Outline: I want to invoke stored procedure with different primitive par
 	| END                                                          |
 
 	And I expose the procedure with sql statement on 'Test' database:
-	| SqlLine                                              |
+	| Sql                                              |
 	| EXEC webapi_BindStoredProc '<ProcedureName>','Test'; |
 
 	When I publish WebApi on 'Test' database with sql statement:
-	| SqlLine              |
+	| Sql              |
 	| EXEC webapi_Publish; |
 
 	And I invoke WebApi with '<HttpMethod>' request on '<Url>' with data '<RequestPayload>'
@@ -55,7 +55,7 @@ Examples:
 
 Scenario Outline: I want to map stored procedure according to REST conventions
 	Given I executed a script against 'Test' database:
-	| SqlLine                                                                                 |
+	| Sql                                                                                 |
 	| CREATE OR ALTER PROC <ProcedureName> <ParamName> <ParamType>, <ParamName2> <ParamType2> |
 	| AS                                                                                      |
 	| BEGIN                                                                                   |
@@ -63,11 +63,11 @@ Scenario Outline: I want to map stored procedure according to REST conventions
 	| END                                                                                     |
 
 	And I expose the procedure with sql statement on 'Test' database:
-	| SqlLine                                                |
+	| Sql                                                |
 	| EXEC webapi_BindStoredProc '<ProcedureName>','Test'; |
 
 	When I publish WebApi on 'Test' database with sql statement:
-	| SqlLine                 |
+	| Sql                 |
 	| EXEC webapi_Publish; |
 
 	And I invoke WebApi with '<HttpMethod>' request on '<Url>' with data '<RequestPayload>'
@@ -85,7 +85,7 @@ Examples:
 
 Scenario: I want to pass nulls and retrive nulls
 	Given I executed a script against 'Test' database:
-	| SqlLine                                                 |
+	| Sql                                                 |
 	| CREATE OR ALTER PROC AddProduct @name nvarchar(255)     |
 	| AS                                                      |
 	| BEGIN                                                   |
@@ -94,11 +94,11 @@ Scenario: I want to pass nulls and retrive nulls
 	| END                                                     |
 
 	And I expose the procedure with sql statement on 'Test' database:
-	| SqlLine                                         |
+	| Sql                                         |
 	| EXEC webapi_BindStoredProc 'AddProduct','Test'; |
 
 	When I publish WebApi on 'Test' database with sql statement:
-	| SqlLine              |
+	| Sql              |
 	| EXEC webapi_Publish; |
 
 	And I invoke WebApi with 'POST' request on 'api/Product' with data '{}'
@@ -106,7 +106,7 @@ Scenario: I want to pass nulls and retrive nulls
 
 Scenario: I want to retrive many records from procedure execution
 Given I executed a script against 'Test' database:
-	| SqlLine                                              |
+	| Sql                                              |
 	| CREATE OR ALTER PROC GetProducts @name nvarchar(255) |
 	| AS                                                   |
 	| BEGIN                                                |
@@ -115,11 +115,11 @@ Given I executed a script against 'Test' database:
 	| END                                                  |
 
 	And I expose the procedure with sql statement on 'Test' database:
-	| SqlLine                                          |
+	| Sql                                          |
 	| EXEC webapi_BindStoredProc 'GetProducts','Test'; |
 
 	When I publish WebApi on 'Monkey' database with sql statement:
-	| SqlLine       |
+	| Sql       |
 	| EXEC Publish; |
 
 	And I invoke WebApi with 'GET' request on 'api/Product?name=tv' without data

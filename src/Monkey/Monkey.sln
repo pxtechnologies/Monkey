@@ -43,12 +43,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monkey.Sql.WebApiHost", "Mo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{EBB4050F-7000-4717-B99E-4191267C0568}"
 	ProjectSection(SolutionItems) = preProject
+		Docs\Bootstrapping.md = Docs\Bootstrapping.md
+		Docs\PrimitiveInvocations.md = Docs\PrimitiveInvocations.md
 		..\..\README.md = ..\..\README.md
+		Docs\SqlConfigurationInterface.md = Docs\SqlConfigurationInterface.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monkey.Sql.UnitTests", "Monkey.Sql.UnitTests\Monkey.Sql.UnitTests.csproj", "{AFCC8A61-153C-409C-B06B-FAD626A2A4AB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monkey.Sql.WebApiHost.AcceptanceTests", "Monkey.Sql.WebApiHost.AcceptanceTests\Monkey.Sql.WebApiHost.AcceptanceTests.csproj", "{0E51103A-57B9-4130-B8DD-60FE64AAE3D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monkey.DocBuilder", "Monkey.DocBuilder\Monkey.DocBuilder.csproj", "{06480B7F-B341-4608-8215-70F66B9329D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -120,6 +125,10 @@ Global
 		{0E51103A-57B9-4130-B8DD-60FE64AAE3D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E51103A-57B9-4130-B8DD-60FE64AAE3D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E51103A-57B9-4130-B8DD-60FE64AAE3D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06480B7F-B341-4608-8215-70F66B9329D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06480B7F-B341-4608-8215-70F66B9329D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06480B7F-B341-4608-8215-70F66B9329D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06480B7F-B341-4608-8215-70F66B9329D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -138,6 +147,7 @@ Global
 		{01DDAA04-76D7-4589-BB69-AE6091F80E25} = {03DDC688-1113-479D-BC2E-8D757CACC7A6}
 		{AFCC8A61-153C-409C-B06B-FAD626A2A4AB} = {4A5911B4-4CDC-4BF9-A810-78CF7085A83E}
 		{0E51103A-57B9-4130-B8DD-60FE64AAE3D6} = {03DDC688-1113-479D-BC2E-8D757CACC7A6}
+		{06480B7F-B341-4608-8215-70F66B9329D7} = {EBB4050F-7000-4717-B99E-4191267C0568}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8FC7FC1E-BD28-47AE-BD03-583D23AE89E1}

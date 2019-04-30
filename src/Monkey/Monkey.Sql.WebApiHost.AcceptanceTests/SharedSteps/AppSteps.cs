@@ -22,6 +22,12 @@ namespace Monkey.Sql.WebApiHost.AcceptanceTests.SharedSteps
         {
             _app.Run();
         }
+        [When(@"I restart WebApiHost")]
+        public void WhenIRestartWebApiHost()
+        {
+            _app.Stop();
+            _app.Run();
+        }
 
     }
 }

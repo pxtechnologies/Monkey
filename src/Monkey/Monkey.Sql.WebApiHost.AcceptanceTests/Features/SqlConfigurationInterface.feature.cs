@@ -101,34 +101,34 @@ this.ScenarioInitialize(scenarioInfo);
 #line 6
 this.FeatureBackground();
 #line hidden
-            TechTalk.SpecFlow.Table table13 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table16 = new TechTalk.SpecFlow.Table(new string[] {
                         "SqlLine"});
-            table13.AddRow(new string[] {
+            table16.AddRow(new string[] {
                         string.Format("CREATE OR ALTER PROC Ping {0} {1}, {2} {3}", paramName, paramType, paramName2, paramType2)});
-            table13.AddRow(new string[] {
+            table16.AddRow(new string[] {
                         "AS"});
-            table13.AddRow(new string[] {
+            table16.AddRow(new string[] {
                         "BEGIN"});
-            table13.AddRow(new string[] {
+            table16.AddRow(new string[] {
                         string.Format("SELECT {0} as {1}, {2} as {3};", paramName, resultColumnName, paramName2, resultColumnName2)});
-            table13.AddRow(new string[] {
+            table16.AddRow(new string[] {
                         "END"});
 #line 13
- testRunner.Given("I executed a script against \'Test\' database:", ((string)(null)), table13, "Given ");
+ testRunner.Given("I executed a script against \'Test\' database:", ((string)(null)), table16, "Given ");
 #line hidden
-            TechTalk.SpecFlow.Table table14 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table17 = new TechTalk.SpecFlow.Table(new string[] {
                         "SqlLine"});
-            table14.AddRow(new string[] {
+            table17.AddRow(new string[] {
                         string.Format("EXEC webapi_BindStoredProc \'Ping\',\'Test\',\'dbo\',\'{0}\';", handlerName)});
 #line 21
- testRunner.And("I expose the procedure with sql statement on \'Test\' database:", ((string)(null)), table14, "And ");
+ testRunner.And("I expose the procedure with sql statement on \'Test\' database:", ((string)(null)), table17, "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table15 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table18 = new TechTalk.SpecFlow.Table(new string[] {
                         "SqlLine"});
-            table15.AddRow(new string[] {
+            table18.AddRow(new string[] {
                         "EXEC webapi_Publish;"});
 #line 25
- testRunner.When("I publish WebApi on \'Test\' database with sql statement:", ((string)(null)), table15, "When ");
+ testRunner.When("I publish WebApi on \'Test\' database with sql statement:", ((string)(null)), table18, "When ");
 #line 29
  testRunner.And(string.Format("I invoke WebApi with \'{0}\' request on \'{1}\' with data \'{2}\'", httpMethod, url, requestPayload), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 30
@@ -154,41 +154,41 @@ this.ScenarioInitialize(scenarioInfo);
 #line 6
 this.FeatureBackground();
 #line hidden
-            TechTalk.SpecFlow.Table table16 = new TechTalk.SpecFlow.Table(new string[] {
-                        "SqlLine"});
-            table16.AddRow(new string[] {
-                        string.Format("CREATE OR ALTER PROC Ping {0} {1}, {2} {3}", paramName, paramType, paramName2, paramType2)});
-            table16.AddRow(new string[] {
-                        "AS"});
-            table16.AddRow(new string[] {
-                        "BEGIN"});
-            table16.AddRow(new string[] {
-                        string.Format("SELECT {0} as {1}, {2} as {3};", paramName, resultColumnName, paramName2, resultColumnName2)});
-            table16.AddRow(new string[] {
-                        "END"});
-#line 42
- testRunner.Given("I executed a script against \'Test\' database:", ((string)(null)), table16, "Given ");
-#line hidden
-            TechTalk.SpecFlow.Table table17 = new TechTalk.SpecFlow.Table(new string[] {
-                        "SqlLine"});
-            table17.AddRow(new string[] {
-                        "EXEC webapi_BindStoredProc \'Ping\',\'Test\'"});
-#line 50
- testRunner.And("I expose the procedure with sql statement on \'Test\' database:", ((string)(null)), table17, "And ");
-#line hidden
-            TechTalk.SpecFlow.Table table18 = new TechTalk.SpecFlow.Table(new string[] {
-                        "SqlLine"});
-            table18.AddRow(new string[] {
-                        string.Format("EXEC webapi_Rename \'Ping\',\'Test\',\'dbo\',\'handler\',\'{0}\'", handlerName)});
-#line 54
- testRunner.And("I rename the binding with sql statement on \'Test\' database:", ((string)(null)), table18, "And ");
-#line hidden
             TechTalk.SpecFlow.Table table19 = new TechTalk.SpecFlow.Table(new string[] {
                         "SqlLine"});
             table19.AddRow(new string[] {
+                        string.Format("CREATE OR ALTER PROC Ping {0} {1}, {2} {3}", paramName, paramType, paramName2, paramType2)});
+            table19.AddRow(new string[] {
+                        "AS"});
+            table19.AddRow(new string[] {
+                        "BEGIN"});
+            table19.AddRow(new string[] {
+                        string.Format("SELECT {0} as {1}, {2} as {3};", paramName, resultColumnName, paramName2, resultColumnName2)});
+            table19.AddRow(new string[] {
+                        "END"});
+#line 42
+ testRunner.Given("I executed a script against \'Test\' database:", ((string)(null)), table19, "Given ");
+#line hidden
+            TechTalk.SpecFlow.Table table20 = new TechTalk.SpecFlow.Table(new string[] {
+                        "SqlLine"});
+            table20.AddRow(new string[] {
+                        "EXEC webapi_BindStoredProc \'Ping\',\'Test\'"});
+#line 50
+ testRunner.And("I expose the procedure with sql statement on \'Test\' database:", ((string)(null)), table20, "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table21 = new TechTalk.SpecFlow.Table(new string[] {
+                        "SqlLine"});
+            table21.AddRow(new string[] {
+                        string.Format("EXEC webapi_Rename \'Ping\',\'Test\',\'dbo\',\'handler\',\'{0}\'", handlerName)});
+#line 54
+ testRunner.And("I rename the binding with sql statement on \'Test\' database:", ((string)(null)), table21, "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table22 = new TechTalk.SpecFlow.Table(new string[] {
+                        "SqlLine"});
+            table22.AddRow(new string[] {
                         "EXEC webapi_Publish;"});
 #line 58
- testRunner.When("I publish WebApi on \'Test\' database with sql statement:", ((string)(null)), table19, "When ");
+ testRunner.When("I publish WebApi on \'Test\' database with sql statement:", ((string)(null)), table22, "When ");
 #line 62
  testRunner.And(string.Format("I invoke WebApi with \'{0}\' request on \'{1}\' with data \'{2}\'", httpMethod, url, requestPayload), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 63

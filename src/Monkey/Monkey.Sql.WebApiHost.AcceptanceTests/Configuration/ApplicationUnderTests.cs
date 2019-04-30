@@ -22,17 +22,21 @@ namespace Monkey.Sql.WebApiHost.AcceptanceTests.Configuration
         [AfterScenario()]
         public void CleanUp()
         {
+            Stop();
+        }
+
+        public void Stop()
+        {
             if (_webHost != null)
             {
-               
                 _webHost.StopAsync().GetAwaiter().GetResult();
-                
+
                 _executor.Execute<ContainerAccessor>(c => c.Container.Dispose());
                 _webHost.Dispose();
             }
         }
 
-        
+
         public void Run()
         {
             _webHost = Program.CreateWebHostBuilder(new string[0])

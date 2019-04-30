@@ -72,7 +72,7 @@ namespace Monkey.Generator
                 if (words[0] == "Get")
                 {
                     var array = words.Skip(1).ToArray();
-                    array[0] = array[0].Singularize();
+                    
                     return string.Concat(array);
                 }
 
