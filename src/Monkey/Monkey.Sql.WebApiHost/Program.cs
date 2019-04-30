@@ -16,6 +16,17 @@ namespace Monkey.Sql.WebApiHost
     {
         public static void Main(string[] args)
         {
+            if (Environment.GetEnvironmentVariable("Debug") != null || args.Contains("Debug"))
+            {
+                var ens = Environment.GetEnvironmentVariables(EnvironmentVariableTarget.Process);
+                foreach (var e in ens.Keys)
+                {
+                    Console.WriteLine($"{e}={ens[e]}");
+                }
+
+                if(args.Length > 0)
+                    Console.WriteLine("Args: " + string.Join(' ',args));
+            }
             CreateWebHostBuilder(args).Build().Run();
         }
 
