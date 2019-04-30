@@ -1,4 +1,4 @@
-# SqlConfigurationInterface
+# Sql configuration interface
 
 ## I want to map renamed procedure according to REST conventions
 
@@ -20,7 +20,7 @@ EXEC webapi_Publish;
 ```
 _And_ I invoke WebApi with '<HttpMethod>' request on '<Url>' with data '<RequestPayload>'
 _Then_ I expect a response from url '<Url>' with data '<ResponsePayload>'
-###Examples:
+### Examples:
 | HandlerName | ParamType | ParamName | ParamName2 | ParamType2 | ResultColumnName | ResultColumnName2 | HttpMethod | Url | RequestPayload | ResponsePayload| 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---| 
 | AddProduct | nvarchar(255) | @name | @number | int | Name | Number | POST | api/Product | {"name":"pc","number":123} | {"name":"pc","number":123}| 
@@ -53,7 +53,7 @@ EXEC webapi_Publish;
 ```
 _And_ I invoke WebApi with '<HttpMethod>' request on '<Url>' with data '<RequestPayload>'
 _Then_ I expect a response from url '<Url>' with data '<ResponsePayload>'
-###Examples:
+### Examples:
 | HandlerName | ParamType | ParamName | ParamName2 | ParamType2 | ResultColumnName | ResultColumnName2 | HttpMethod | Url | RequestPayload | ResponsePayload| 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---| 
 | AddProduct | nvarchar(255) | @name | @number | int | Name | Number | POST | api/Product | {"name":"pc","number":123} | {"name":"pc","number":123}| 

@@ -1,4 +1,4 @@
-# PrimitiveInvocations
+# Primitive invocations
 
 ## I want to invoke stored procedure with different primitive parameters
 
@@ -20,7 +20,7 @@ EXEC webapi_Publish;
 ```
 _And_ I invoke WebApi with '<HttpMethod>' request on '<Url>' with data '<RequestPayload>'
 _Then_ I expect a response from url '<Url>' with data '<ResponsePayload>'
-###Examples:
+### Examples:
 | ProcedureName | ParamType | ParamName | ResultColumnName | HttpMethod | Url | RequestPayload | ResponsePayload| 
 | --- | --- | --- | --- | --- | --- | --- | ---| 
 | AddProduct | tinyint | @number | ResultNumber | POST | api/Product/ | {"number":123} | {"resultNumber":123}| 
@@ -64,7 +64,7 @@ EXEC webapi_Publish;
 ```
 _And_ I invoke WebApi with '<HttpMethod>' request on '<Url>' with data '<RequestPayload>'
 _Then_ I expect a response from url '<Url>' with data '<ResponsePayload>'
-###Examples:
+### Examples:
 | ProcedureName | ParamType | ParamName | ParamName2 | ParamType2 | ResultColumnName | ResultColumnName2 | HttpMethod | Url | RequestPayload | ResponsePayload| 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---| 
 | AddProduct | nvarchar(255) | @name | @number | int | Name | Number | POST | api/Product | {"name":"pc","number":123} | {"name":"pc","number":123}| 

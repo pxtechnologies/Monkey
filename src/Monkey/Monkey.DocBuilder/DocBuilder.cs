@@ -6,6 +6,7 @@ using System.Text;
 using Gherkin;
 using Gherkin.Ast;
 using Gherkin.Pickles;
+using Humanizer;
 using Xunit;
 
 namespace Monkey.DocBuilder
@@ -46,7 +47,7 @@ namespace Monkey.DocBuilder
         {
             var dstFile = Path.Combine(_dstPath, feature.Name + ".md");
             StringBuilder sb =  new StringBuilder();
-            sb.AppendLine($"# {feature.Name}");
+            sb.AppendLine($"# {feature.Name.Humanize()}");
             sb.AppendLine();
             foreach (var s in feature.Children.OfType<Scenario>())
             {
@@ -74,14 +75,14 @@ namespace Monkey.DocBuilder
                             {
                                 sb.Append("| ");
                                 sb.Append(string.Join(" | ", r.Cells.Select(x => x.Value)));
-                                sb.Append("| ");
+                                sb.Append(" |");
                                 sb.AppendLine();
                                 if (isHeader)
                                 {
                                     isHeader = false;
                                     sb.Append("| ");
                                     sb.Append(string.Join(" | ", r.Cells.Select(x => "---")));
-                                    sb.Append("| ");
+                                    sb.Append(" |");
                                 }
                             }
                         }
@@ -90,7 +91,7 @@ namespace Monkey.DocBuilder
 
                 if (s.Examples.Any())
                 {
-                    sb.AppendLine("###Examples:");
+                    sb.AppendLine("### Examples:");
                     foreach (var e in s.Examples)
                     {
                         sb.Append("| ");
