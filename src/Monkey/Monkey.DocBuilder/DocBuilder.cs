@@ -46,15 +46,15 @@ namespace Monkey.DocBuilder
         {
             var dstFile = Path.Combine(_dstPath, feature.Name + ".md");
             StringBuilder sb =  new StringBuilder();
-            sb.AppendLine($"#{feature.Name}");
+            sb.AppendLine($"# {feature.Name}");
             sb.AppendLine();
             foreach (var s in feature.Children.OfType<Scenario>())
             {
-                sb.AppendLine($"##{s.Name}");
+                sb.AppendLine($"## {s.Name}");
                 sb.AppendLine(s.Description);
                 foreach (var step in s.Steps)
                 {
-                    sb.AppendLine($"_{step.Keyword}_ {step.Text}");
+                    sb.AppendLine($"_{step.Keyword.TrimEnd(' ')}_ {step.Text}");
                     if (step.Argument is DataTable)
                     {
                         DataTable tArg = (DataTable) step.Argument;
