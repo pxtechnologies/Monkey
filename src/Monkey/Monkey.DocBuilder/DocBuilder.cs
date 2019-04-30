@@ -24,6 +24,14 @@ namespace Monkey.DocBuilder
         }
     }
 
+    static class StrExt
+    {
+        public static string ToMarkup(this string ghiernkin)
+        {
+            return ghiernkin.Replace("'<", "**\"")
+                .Replace(">'", "\"**");
+        }
+    }
     public class MarkupWriter
     {
         private readonly string _dstPath;
@@ -55,7 +63,7 @@ namespace Monkey.DocBuilder
                 sb.AppendLine(s.Description);
                 foreach (var step in s.Steps)
                 {
-                    sb.AppendLine($"_{step.Keyword.TrimEnd(' ')}_ {step.Text}");
+                    sb.AppendLine($"_{step.Keyword.TrimEnd(' ')}_ {step.Text.ToMarkup()}");
                     if (step.Argument is DataTable)
                     {
                         DataTable tArg = (DataTable) step.Argument;
@@ -74,7 +82,10 @@ namespace Monkey.DocBuilder
                             foreach (var r in tArg.Rows)
                             {
                                 sb.Append("| ");
-                                sb.Append(string.Join(" | ", r.Cells.Select(x => x.Value)));
+                                if(isHeader)
+                                    sb.Append(string.Join(" | ", r.Cells.Select(x => x.Value.Humanize())));
+                                else
+                                    sb.Append(string.Join(" | ", r.Cells.Select(x => x.Value.ToMarkup())));
                                 sb.Append(" |");
                                 sb.AppendLine();
                                 if (isHeader)
@@ -95,7 +106,7 @@ namespace Monkey.DocBuilder
                     foreach (var e in s.Examples)
                     {
                         sb.Append("| ");
-                        sb.Append(string.Join(" | ", e.TableHeader.Cells.Select(x => x.Value)));
+                        sb.Append(string.Join(" | ", e.TableHeader.Cells.Select(x => x.Value.Humanize())));
                         sb.Append("| ");
                         sb.AppendLine();
                         sb.Append("| ");
@@ -105,7 +116,7 @@ namespace Monkey.DocBuilder
                         foreach (var r in e.TableBody)
                         {
                             sb.Append("| ");
-                            sb.Append(string.Join(" | ", r.Cells.Select(x => x.Value)));
+                            sb.Append(string.Join(" | ", r.Cells.Select(x => x.Value.ToMarkup())));
                             sb.Append("| ");
                             sb.AppendLine();
                         }

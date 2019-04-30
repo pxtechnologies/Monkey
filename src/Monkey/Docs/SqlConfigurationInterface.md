@@ -18,10 +18,10 @@ _When_ I publish WebApi on 'Test' database with sql statement:
 ```SqlLine
 EXEC webapi_Publish;
 ```
-_And_ I invoke WebApi with '<HttpMethod>' request on '<Url>' with data '<RequestPayload>'
-_Then_ I expect a response from url '<Url>' with data '<ResponsePayload>'
+_And_ I invoke WebApi with **"HttpMethod"** request on **"Url"** with data **"RequestPayload"**
+_Then_ I expect a response from url **"Url"** with data **"ResponsePayload"**
 ### Examples:
-| HandlerName | ParamType | ParamName | ParamName2 | ParamType2 | ResultColumnName | ResultColumnName2 | HttpMethod | Url | RequestPayload | ResponsePayload| 
+| Handler name | Param type | Param name | Param name 2 | Param type 2 | Result column name | Result column name 2 | Http method | Url | Request payload | Response payload| 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---| 
 | AddProduct | nvarchar(255) | @name | @number | int | Name | Number | POST | api/Product | {"name":"pc","number":123} | {"name":"pc","number":123}| 
 | CreateProduct | nvarchar(255) | @name | @number | int | Name | Number | POST | api/Product | {"name":"pc","number":123} | {"name":"pc","number":123}| 
@@ -51,10 +51,10 @@ _When_ I publish WebApi on 'Test' database with sql statement:
 ```SqlLine
 EXEC webapi_Publish;
 ```
-_And_ I invoke WebApi with '<HttpMethod>' request on '<Url>' with data '<RequestPayload>'
-_Then_ I expect a response from url '<Url>' with data '<ResponsePayload>'
+_And_ I invoke WebApi with **"HttpMethod"** request on **"Url"** with data **"RequestPayload"**
+_Then_ I expect a response from url **"Url"** with data **"ResponsePayload"**
 ### Examples:
-| HandlerName | ParamType | ParamName | ParamName2 | ParamType2 | ResultColumnName | ResultColumnName2 | HttpMethod | Url | RequestPayload | ResponsePayload| 
+| Handler name | Param type | Param name | Param name 2 | Param type 2 | Result column name | Result column name 2 | Http method | Url | Request payload | Response payload| 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---| 
 | AddProduct | nvarchar(255) | @name | @number | int | Name | Number | POST | api/Product | {"name":"pc","number":123} | {"name":"pc","number":123}| 
 | CreateProduct | nvarchar(255) | @name | @number | int | Name | Number | POST | api/Product | {"name":"pc","number":123} | {"name":"pc","number":123}| 
