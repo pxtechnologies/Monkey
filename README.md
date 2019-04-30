@@ -11,4 +11,5 @@ Then you are at right place.
 
 ## Project TODOs:
 * Documentation
+* XML support in stored procedures
 * Handling Kafka events
