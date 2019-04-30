@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Transactions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Monkey.Logging;
 using Monkey.Sql.Model;
 
 namespace Monkey.Sql.Scripts
@@ -32,10 +33,11 @@ namespace Monkey.Sql.Scripts
         private const string ProductVersion = "Monkey-1.0.0.0";
 
         private readonly IConfiguration _config;
-
-        public ScriptManager(IConfiguration config)
+        private readonly ILogger _logger;
+        public ScriptManager(IConfiguration config, ILogger logger)
         {
             _config = config;
+            _logger = logger;
         }
 
         public async Task InstallExternal(string name)
@@ -50,6 +52,10 @@ namespace Monkey.Sql.Scripts
         public async Task InstallMonkey()
         {
             var connectionString = _config.GetConnectionString(SqlMonkeyCatalog);
+
+            SqlConnectionStringBuilder sb = new SqlConnectionStringBuilder(connectionString);
+            _logger.Info("Checking or installing Monkey Database {dbName} {server}", sb.InitialCatalog, sb.DataSource);
+
             var optionsBuilder = new DbContextOptionsBuilder<MonkeyDbContext>();
             optionsBuilder.UseSqlServer(connectionString, x => x.MigrationsHistoryTable(ScriptTable));
             var dbContext = new MonkeyDbContext(optionsBuilder.Options);

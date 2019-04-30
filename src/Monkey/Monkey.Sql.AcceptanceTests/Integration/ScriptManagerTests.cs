@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
+using Monkey.Logging;
 using Monkey.Sql.AcceptanceTests.Database;
 using Monkey.Sql.Model;
 using Monkey.Sql.Scripts;
@@ -15,7 +16,7 @@ namespace Monkey.Sql.AcceptanceTests.Integration
         private ScriptManager OnSutCreate()
         {
             var config = GetConfig();
-            ScriptManager sm = new ScriptManager(config);
+            ScriptManager sm = new ScriptManager(config, NSubstitute.Substitute.For<ILogger>());
             return sm;
         }
 
