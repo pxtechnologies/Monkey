@@ -11,9 +11,9 @@ docker run -p 8080:80 -e "ConnectionStrings__Monkey=Server=<Server>;Database=Mon
 					  -e "ConnectionStrings__Test=Server=<Server>;Database=Test;User=<User>;Password=<YourPassword>" \
 					  -e "ASPNETCORE_URLS=http://+:80" pxtechnologies/monkey
 ```
-<Server> is the name of SQL server <br/>
-<User> is SQL user<br/>
-<YourPassword> is password to SQL Server<br/>
+**Server** is the name of SQL server <br/>
+**User** is SQL user<br/>
+**YourPassword** is password to SQL Server<br/>
 2. Open brower and navigate to http://localhost:8080/swagger
 3. If you want to install utils procedures to your database make sure to add environment variable with connection string and then invoke Install action though swagger
 4. The name of the connection string is the sufix of envrionment variable name - in this example we have 'Monkey' and 'Test' connection strings.
