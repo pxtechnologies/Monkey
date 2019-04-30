@@ -18,7 +18,7 @@ _When_ I publish WebApi on 'Test' database with sql statement:
 ```Sql
 EXEC webapi_Publish;
 ```
-_And_ I invoke WebApi with '<HttpMethod>' request on '<Url>' with data '<RequestPayload>'
+_And_ I invoke WebApi with "HttpMethod" request on '<Url>' with data '<RequestPayload>'
 _Then_ I expect a response from url '<Url>' with data '<ResponsePayload>'
 ### Examples:
 | ProcedureName | ParamType | ParamName | ResultColumnName | HttpMethod | Url | RequestPayload | ResponsePayload| 
