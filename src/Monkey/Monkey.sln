@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monkey.Sql.WebApiHost.Accep
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monkey.DocBuilder", "Monkey.DocBuilder\Monkey.DocBuilder.csproj", "{06480B7F-B341-4608-8215-70F66B9329D7}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{85BF0359-9E76-4387-BD6E-4E4545AD9819}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -129,6 +131,10 @@ Global
 		{06480B7F-B341-4608-8215-70F66B9329D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06480B7F-B341-4608-8215-70F66B9329D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06480B7F-B341-4608-8215-70F66B9329D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85BF0359-9E76-4387-BD6E-4E4545AD9819}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85BF0359-9E76-4387-BD6E-4E4545AD9819}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85BF0359-9E76-4387-BD6E-4E4545AD9819}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85BF0359-9E76-4387-BD6E-4E4545AD9819}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

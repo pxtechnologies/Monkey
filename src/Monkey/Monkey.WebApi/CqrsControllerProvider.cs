@@ -13,7 +13,7 @@ namespace Monkey.WebApi
     {
         public static string[] GetApplicationUrls(this IConfiguration config)
         {
-            return config["ApplicationUrls"].Split(';');
+            return config["ASPNETCORE_URLS"].Split(';');
         }
     }
     public class CqrsControllerProvider : ICqrsControllerProvider

@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <UserSecretsId>1ed9f115-9f67-4a65-9669-afc274e6a851</UserSecretsId>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -43,10 +44,6 @@
     <ProjectReference Include="..\Monkey.WebApi.SimpleInjector\Monkey.WebApi.SimpleInjector.csproj" />
     <ProjectReference Include="..\Monkey.WebApi\Monkey.WebApi.csproj" />
     <ProjectReference Include="..\Monkey\Monkey.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

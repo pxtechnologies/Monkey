@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  monkey.sql.webapihost:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=44381
+      - ConnectionStrings__Monkey=Server=db;Database=Monkey;User=sa;Password=The_Password;
+      - ConnectionStrings__Test=Server=db;Database=Test;User=sa;Password=The_Password;
+    ports:
+      - "16924:80"
+      - "44384:443"
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro

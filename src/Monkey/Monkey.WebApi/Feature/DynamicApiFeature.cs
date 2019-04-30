@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Monkey.Compilation;
 using Monkey.Generator;
 using Monkey.WebApi.Generator;
 
@@ -12,9 +13,16 @@ namespace Monkey.WebApi.Feature
     {
         private readonly IServiceMetadataProvider _cqrsMetadataRegister;
         private readonly ICqrsControllerProvider _cqrsControllerProvider;
+        private readonly List<TypeInfo> _staticControllers;
+        private bool _isFirstRun = true;
         public void PopulateFeature(IEnumerable<ApplicationPart> parts,
             ControllerFeature feature)
         {
+            if (_isFirstRun)
+            {
+                _staticControllers.AddRange(feature.Controllers.Where(x=>x.Assembly.GetCustomAttribute<MonkeyGeneratedAttribute>() == null));
+                _isFirstRun = false;
+            }
             var services = _cqrsMetadataRegister.GetServices()
                 .ToArray();
 
@@ -22,6 +30,9 @@ namespace Monkey.WebApi.Feature
                 return;
 
             feature.Controllers.Clear();
+            foreach (var c in _staticControllers)
+                feature.Controllers.Add(c);
+
             var controllers = _cqrsControllerProvider.GetControllerTypes(services);
 
             foreach (var t in controllers)
@@ -31,6 +42,7 @@ namespace Monkey.WebApi.Feature
         {
             _cqrsMetadataRegister = cqrsMetadataRegister;
             _cqrsControllerProvider = cqrsControllerProvider;
+            _staticControllers = new List<TypeInfo>();
         }
     }
 }

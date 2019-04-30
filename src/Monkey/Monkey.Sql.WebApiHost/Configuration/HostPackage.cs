@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -17,8 +18,10 @@ namespace Monkey.Sql.WebApiHost.Configuration
         public static IConfigurationRoot Load()
         {
             ConfigurationBuilder builder = new ConfigurationBuilder();
-            builder.AddEnvironmentVariables()
-                .AddJsonFile("appsettings.json");
+            builder.AddJsonFile("appsettings.json")
+                .AddEnvironmentVariables()
+                .AddCommandLine(Environment.GetCommandLineArgs());
+                
             var config = builder.Build();
             return config;
         }

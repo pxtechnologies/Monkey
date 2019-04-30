@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+  monkey.sql.webapihost:
+    container_name: "WebApiHost"
+    image: ${DOCKER_REGISTRY-}monkeysqlwebapihost
+    build:
+      context: .
+      dockerfile: Monkey.Sql.WebApiHost/Dockerfile
+
+  db:
+    container_name: db
+    image: "microsoft/mssql-server-linux"
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "The_Password"
+      ACCEPT_EULA: "Y"
+      SERVICE_IGNORE: "yes"
+    volumes:
+      - sqlserverdata:/var/opt/mssql
+
+volumes:
+  sqlserverdata:
