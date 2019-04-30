@@ -2,7 +2,7 @@
 
 ##I want to invoke stored procedure with different primitive parameters
 
-_Given _ I executed a script against 'Test' database:
+_Given_ I executed a script against 'Test' database:
 ```Sql
 CREATE OR ALTER PROC <ProcedureName> <ParamName> <ParamType>
 AS
