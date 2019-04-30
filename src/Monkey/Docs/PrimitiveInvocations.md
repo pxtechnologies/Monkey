@@ -1,5 +1,11 @@
 # Primitive invocations
 
+## Background: 
+## 
+**_Given_** the 'Test' database is created<br />
+**_And_** the 'Monkey' database is created<br />
+**_And_** WebApiHost has started<br />
+**_And_** Monkey was installed in 'Test' database<br />
 ## I want to invoke stored procedure with different primitive parameters
 
 **_Given_** I executed a script against 'Test' database:<br />

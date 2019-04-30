@@ -57,47 +57,30 @@ namespace Monkey.DocBuilder
             StringBuilder sb =  new StringBuilder();
             sb.AppendLine($"# {feature.Name.Humanize()}");
             sb.AppendLine();
+
+            if (feature.Children.OfType<Background>().Any())
+                sb.AppendLine("## Background: ");
+
+            foreach (var s in feature.Children.OfType<Background>())
+            {
+                if(s.Name != null)
+                    sb.AppendLine($"## {s.Name}");
+                if(s.Description != null)
+                    sb.AppendLine(s.Description);
+                foreach (var step in s.Steps)
+                {
+                    GeWriteStep(sb, step);
+                }
+            }
+
             foreach (var s in feature.Children.OfType<Scenario>())
             {
                 sb.AppendLine($"## {s.Name}");
                 sb.AppendLine(s.Description);
+
                 foreach (var step in s.Steps)
                 {
-                    sb.AppendLine($"**_{step.Keyword.TrimEnd(' ')}_** {step.Text.ToMarkup()}<br />");
-                    if (step.Argument is DataTable)
-                    {
-                        DataTable tArg = (DataTable) step.Argument;
-                        if (tArg.Rows.First().Cells.Count() == 1)
-                        {
-                            // this should be code-snippet
-                            string lang = tArg.Rows.First().Cells.First().Value;
-                            sb.AppendLine($"```{lang}");
-                            foreach (var r in tArg.Rows.Skip(1))
-                                sb.AppendLine(r.Cells.First().Value);
-                            sb.AppendLine($"```");
-                        }
-                        else
-                        {
-                            bool isHeader = true;
-                            foreach (var r in tArg.Rows)
-                            {
-                                sb.Append("| ");
-                                if(isHeader)
-                                    sb.Append(string.Join(" | ", r.Cells.Select(x => x.Value.Humanize())));
-                                else
-                                    sb.Append(string.Join(" | ", r.Cells.Select(x => x.Value.ToMarkup())));
-                                sb.Append(" |");
-                                sb.AppendLine();
-                                if (isHeader)
-                                {
-                                    isHeader = false;
-                                    sb.Append("| ");
-                                    sb.Append(string.Join(" | ", r.Cells.Select(x => "---")));
-                                    sb.Append(" |");
-                                }
-                            }
-                        }
-                    }
+                    GeWriteStep(sb, step);
                 }
 
                 if (s.Examples.Any())
@@ -128,7 +111,55 @@ namespace Monkey.DocBuilder
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 
-            File.WriteAllText(dstFile, sb.ToString());
+            var prv = File.Exists(dstFile) ? File.ReadAllText(dstFile) : "";
+            if(prv != sb.ToString())
+                File.WriteAllText(dstFile, sb.ToString());
+        }
+
+        private static StringBuilder GeWriteStep(StringBuilder sb, Step step)
+        {
+            sb.AppendLine($"**_{step.Keyword.TrimEnd(' ')}_** {step.Text.ToMarkup()}<br />");
+            if (step.Argument is DataTable)
+            {
+                DataTable tArg = (DataTable) step.Argument;
+                if (tArg.Rows.First().Cells.Count() == 1)
+                {
+                    // this should be code-snippet
+                    string lang = tArg.Rows.First().Cells.First().Value;
+                    sb.AppendLine($"```{lang}");
+                    foreach (var r in tArg.Rows.Skip(1))
+                        sb.AppendLine(r.Cells.First().Value);
+                    sb.AppendLine($"```");
+                }
+                else
+                {
+                    bool isHeader = true;
+                    foreach (var r in tArg.Rows)
+                    {
+                        sb.Append("| ");
+                        if (isHeader)
+                            sb.Append(string.Join(" | ", r.Cells.Select(x => x.Value.Humanize())));
+                        else
+                            sb.Append(string.Join(" | ", r.Cells.Select(x => x.Value.ToMarkup())));
+                        sb.Append(" |");
+                        sb.AppendLine();
+                        if (isHeader)
+                        {
+                            isHeader = false;
+                            sb.Append("| ");
+                            sb.Append(string.Join(" | ", r.Cells.Select(x => "---")));
+                            sb.Append(" |");
+                        }
+                    }
+                }
+            }
+            else if (step.Argument is DocString)
+            {
+                DocString str = (DocString) step.Argument;
+                // we don't know
+            }
+
+            return sb;
         }
     }
     public class Solution

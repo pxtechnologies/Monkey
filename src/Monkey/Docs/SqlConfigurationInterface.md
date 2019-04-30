@@ -1,5 +1,11 @@
 # Sql configuration interface
 
+## Background: 
+## 
+**_Given_** the 'Test' database is created<br />
+**_And_** the 'Monkey' database is created<br />
+**_And_** WebApiHost has started<br />
+**_And_** Monkey was installed in 'Test' database<br />
 ## I want to map renamed procedure according to REST conventions
 
 **_Given_** I executed a script against 'Test' database:<br />
