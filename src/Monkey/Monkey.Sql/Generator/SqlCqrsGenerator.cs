@@ -17,9 +17,10 @@ namespace Monkey.Sql.Generator
     {
         private readonly IRepository _repo;
 
-        public SqlCqrsGenerator(IRepository repo)
+        public SqlCqrsGenerator(IRepository repo, ILogger logger)
         {
             _repo = repo;
+            _logger = logger;
         }
 
         public async Task<SourceUnitCollection> Generate(long version)
@@ -35,7 +36,7 @@ namespace Monkey.Sql.Generator
             return collection;
         }
 
-        private ILogger _logger;
+        private readonly ILogger _logger;
         private async Task<SourceUnit[]> GenerateCqrsHandlerForProcedure(ProcedureDescriptor proc)
         {
             SourceUnit[] result = new SourceUnit[3];
