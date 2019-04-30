@@ -63,7 +63,7 @@ namespace Monkey.DocBuilder
                 sb.AppendLine(s.Description);
                 foreach (var step in s.Steps)
                 {
-                    sb.AppendLine($"_{step.Keyword.TrimEnd(' ')}_ {step.Text.ToMarkup()}");
+                    sb.AppendLine($"**_{step.Keyword.TrimEnd(' ')}_** {step.Text.ToMarkup()}<br />");
                     if (step.Argument is DataTable)
                     {
                         DataTable tArg = (DataTable) step.Argument;

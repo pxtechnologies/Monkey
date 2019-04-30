@@ -2,7 +2,7 @@
 
 ## I want to invoke stored procedure with different primitive parameters
 
-_Given_ I executed a script against 'Test' database:
+**_Given_** I executed a script against 'Test' database:<br />
 ```Sql
 CREATE OR ALTER PROC <ProcedureName> <ParamName> <ParamType>
 AS
@@ -10,16 +10,16 @@ BEGIN
 SELECT <ParamName> as <ResultColumnName>;
 END
 ```
-_And_ I expose the procedure with sql statement on 'Test' database:
+**_And_** I expose the procedure with sql statement on 'Test' database:<br />
 ```Sql
 EXEC webapi_BindStoredProc '<ProcedureName>','Test';
 ```
-_When_ I publish WebApi on 'Test' database with sql statement:
+**_When_** I publish WebApi on 'Test' database with sql statement:<br />
 ```Sql
 EXEC webapi_Publish;
 ```
-_And_ I invoke WebApi with **"HttpMethod"** request on **"Url"** with data **"RequestPayload"**
-_Then_ I expect a response from url **"Url"** with data **"ResponsePayload"**
+**_And_** I invoke WebApi with **"HttpMethod"** request on **"Url"** with data **"RequestPayload"**<br />
+**_Then_** I expect a response from url **"Url"** with data **"ResponsePayload"**<br />
 ### Examples:
 | Procedure name | Param type | Param name | Result column name | Http method | Url | Request payload | Response payload| 
 | --- | --- | --- | --- | --- | --- | --- | ---| 
@@ -46,7 +46,7 @@ _Then_ I expect a response from url **"Url"** with data **"ResponsePayload"**
 | AddProduct | datetimeoffset | @date | ResultDate | POST | api/Product/ | {"date":"2019-04-01 11:22"} | {"resultDate":"2019-04-01T11:22:00+00:00"}| 
 ## I want to map stored procedure according to REST conventions
 
-_Given_ I executed a script against 'Test' database:
+**_Given_** I executed a script against 'Test' database:<br />
 ```Sql
 CREATE OR ALTER PROC <ProcedureName> <ParamName> <ParamType>, <ParamName2> <ParamType2>
 AS
@@ -54,16 +54,16 @@ BEGIN
 SELECT <ParamName> as <ResultColumnName>, <ParamName2> as <ResultColumnName2>;
 END
 ```
-_And_ I expose the procedure with sql statement on 'Test' database:
+**_And_** I expose the procedure with sql statement on 'Test' database:<br />
 ```Sql
 EXEC webapi_BindStoredProc '<ProcedureName>','Test';
 ```
-_When_ I publish WebApi on 'Test' database with sql statement:
+**_When_** I publish WebApi on 'Test' database with sql statement:<br />
 ```Sql
 EXEC webapi_Publish;
 ```
-_And_ I invoke WebApi with **"HttpMethod"** request on **"Url"** with data **"RequestPayload"**
-_Then_ I expect a response from url **"Url"** with data **"ResponsePayload"**
+**_And_** I invoke WebApi with **"HttpMethod"** request on **"Url"** with data **"RequestPayload"**<br />
+**_Then_** I expect a response from url **"Url"** with data **"ResponsePayload"**<br />
 ### Examples:
 | Procedure name | Param type | Param name | Param name 2 | Param type 2 | Result column name | Result column name 2 | Http method | Url | Request payload | Response payload| 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---| 
@@ -75,7 +75,7 @@ _Then_ I expect a response from url **"Url"** with data **"ResponsePayload"**
 | UpdateProduct | nvarchar(255) | @id | @number | int | Name | Number | PUT | api/Product/pc | {"number":123} | {"name":"pc","number":123}| 
 ## I want to pass nulls and retrive nulls
 
-_Given_ I executed a script against 'Test' database:
+**_Given_** I executed a script against 'Test' database:<br />
 ```Sql
 CREATE OR ALTER PROC AddProduct @name nvarchar(255)
 AS
@@ -84,19 +84,19 @@ if @name is not null throw 51000, 'name is not null',1;
 SELECT 'Tv' as Name, null as Company;
 END
 ```
-_And_ I expose the procedure with sql statement on 'Test' database:
+**_And_** I expose the procedure with sql statement on 'Test' database:<br />
 ```Sql
 EXEC webapi_BindStoredProc 'AddProduct','Test';
 ```
-_When_ I publish WebApi on 'Test' database with sql statement:
+**_When_** I publish WebApi on 'Test' database with sql statement:<br />
 ```Sql
 EXEC webapi_Publish;
 ```
-_And_ I invoke WebApi with 'POST' request on 'api/Product' with data '{}'
-_Then_ I expect a response from url 'api/Product' with data '{"name":"Tv","company":null}'
+**_And_** I invoke WebApi with 'POST' request on 'api/Product' with data '{}'<br />
+**_Then_** I expect a response from url 'api/Product' with data '{"name":"Tv","company":null}'<br />
 ## I want to retrive many records from procedure execution
 
-_Given_ I executed a script against 'Test' database:
+**_Given_** I executed a script against 'Test' database:<br />
 ```Sql
 CREATE OR ALTER PROC GetProducts @name nvarchar(255)
 AS
@@ -105,13 +105,13 @@ SELECT @name as Name
 UNION ALL SELECT 'Two'
 END
 ```
-_And_ I expose the procedure with sql statement on 'Test' database:
+**_And_** I expose the procedure with sql statement on 'Test' database:<br />
 ```Sql
 EXEC webapi_BindStoredProc 'GetProducts','Test';
 ```
-_When_ I publish WebApi on 'Monkey' database with sql statement:
+**_When_** I publish WebApi on 'Monkey' database with sql statement:<br />
 ```Sql
 EXEC Publish;
 ```
-_And_ I invoke WebApi with 'GET' request on 'api/Product?name=tv' without data
-_Then_ I expect a response from url 'api/Product' with data '[{"name":"tv"},{"name":"Two"}]'
+**_And_** I invoke WebApi with 'GET' request on 'api/Product?name=tv' without data<br />
+**_Then_** I expect a response from url 'api/Product' with data '[{"name":"tv"},{"name":"Two"}]'<br />
