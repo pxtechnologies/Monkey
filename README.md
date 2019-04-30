@@ -4,7 +4,11 @@ The purpose of the project is to automate API Development based on Handler Desig
 * You are developing **T-SQL stored procedures** in database and you want to automatically expose procedures by conventions with REST API
 Then you are at right place.
 
-## Monkey
+## Documentation by scenarios
 [Hosting Scenarios](https://github.com/pxtechnologies/Monkey/blob/master/src/Monkey/Docs/Bootstrapping.md)<br/>
 [SQL Configuration Interface Scenarios](https://github.com/pxtechnologies/Monkey/blob/master/src/Monkey/Docs/SqlConfigurationInterface.md)<br/>
 [Stored Procedure Primitive Type Bindings Scenarios](https://github.com/pxtechnologies/Monkey/blob/master/src/Monkey/Docs/PrimitiveInvocations.md)<br/>
+
+## Project TODOs:
+* Documentation
+* Handling Kafka events
