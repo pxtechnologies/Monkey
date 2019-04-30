@@ -7,7 +7,6 @@
 **_And_** WebApiHost has started<br />
 **_And_** Monkey was installed in 'Test' database<br />
 ## I want to invoke stored procedure with different primitive parameters
-
 **_Given_** I executed a script against 'Test' database:<br />
 ```Sql
 CREATE OR ALTER PROC <ProcedureName> <ParamName> <ParamType>
@@ -51,7 +50,6 @@ EXEC webapi_Publish;
 | AddProduct | datetime2 | @date | ResultDate | POST | api/Product/ | {"date":"2019-04-01 11:22"} | {"resultDate":"2019-04-01T11:22:00"}| 
 | AddProduct | datetimeoffset | @date | ResultDate | POST | api/Product/ | {"date":"2019-04-01 11:22"} | {"resultDate":"2019-04-01T11:22:00+00:00"}| 
 ## I want to map stored procedure according to REST conventions
-
 **_Given_** I executed a script against 'Test' database:<br />
 ```Sql
 CREATE OR ALTER PROC <ProcedureName> <ParamName> <ParamType>, <ParamName2> <ParamType2>
@@ -80,7 +78,6 @@ EXEC webapi_Publish;
 | EditProduct | nvarchar(255) | @id | @number | int | Name | Number | PUT | api/Product/pc | {"number":123} | {"name":"pc","number":123}| 
 | UpdateProduct | nvarchar(255) | @id | @number | int | Name | Number | PUT | api/Product/pc | {"number":123} | {"name":"pc","number":123}| 
 ## I want to pass nulls and retrive nulls
-
 **_Given_** I executed a script against 'Test' database:<br />
 ```Sql
 CREATE OR ALTER PROC AddProduct @name nvarchar(255)
@@ -101,7 +98,6 @@ EXEC webapi_Publish;
 **_And_** I invoke WebApi with 'POST' request on 'api/Product' with data '{}'<br />
 **_Then_** I expect a response from url 'api/Product' with data '{"name":"Tv","company":null}'<br />
 ## I want to retrive many records from procedure execution
-
 **_Given_** I executed a script against 'Test' database:<br />
 ```Sql
 CREATE OR ALTER PROC GetProducts @name nvarchar(255)

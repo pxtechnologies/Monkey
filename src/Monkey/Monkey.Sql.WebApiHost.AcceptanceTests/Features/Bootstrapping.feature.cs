@@ -70,22 +70,30 @@ namespace Monkey.Sql.WebApiHost.AcceptanceTests.Features
             testRunner.CollectScenarioErrors();
         }
         
+        public virtual void FeatureBackground()
+        {
+#line 6
+#line 7
+ testRunner.Given("the \'Test\' database is created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 8
+ testRunner.And("the \'Monkey\' database is created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 9
+ testRunner.And("WebApiHost has started", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 10
+ testRunner.And("Monkey was installed in \'Test\' database", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+        }
+        
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("I want to restart app and load assembly from database")]
         public virtual void IWantToRestartAppAndLoadAssemblyFromDatabase()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to restart app and load assembly from database", null, ((string[])(null)));
-#line 7
+#line 12
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
-#line 8
- testRunner.Given("the \'Test\' database is created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 9
- testRunner.And("the \'Monkey\' database is created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 10
- testRunner.And("WebApiHost has started", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 11
- testRunner.And("Monkey was installed in \'Test\' database", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 6
+this.FeatureBackground();
 #line hidden
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
                         "Sql"});
@@ -100,7 +108,7 @@ this.ScenarioInitialize(scenarioInfo);
             table1.AddRow(new string[] {
                         "END"});
 #line 13
- testRunner.And("I executed a script against \'Test\' database:", ((string)(null)), table1, "And ");
+ testRunner.Given("I executed a script against \'Test\' database:", ((string)(null)), table1, "Given ");
 #line hidden
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
                         "Sql"});
@@ -134,6 +142,71 @@ this.ScenarioInitialize(scenarioInfo);
 #line 34
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Sql"});
+            table4.AddRow(new string[] {
+                        "CREATE OR ALTER PROC AddProduct @name nvarchar(255)"});
+            table4.AddRow(new string[] {
+                        "AS"});
+            table4.AddRow(new string[] {
+                        "BEGIN"});
+            table4.AddRow(new string[] {
+                        "SELECT @name as [Name];"});
+            table4.AddRow(new string[] {
+                        "END"});
+#line 35
+ testRunner.Given("I executed a script against \'Test\' database:", ((string)(null)), table4, "Given ");
+#line hidden
+            TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Sql"});
+            table5.AddRow(new string[] {
+                        "EXEC webapi_BindStoredProc \'AddProduct\',\'Test\';"});
+#line 43
+ testRunner.And("I expose the procedure with sql statement on \'Test\' database:", ((string)(null)), table5, "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Sql"});
+            table6.AddRow(new string[] {
+                        "EXEC webapi_Publish;"});
+#line 47
+ testRunner.And("I publish WebApi on \'Test\' database with sql statement:", ((string)(null)), table6, "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Sql"});
+            table7.AddRow(new string[] {
+                        "CREATE OR ALTER PROC EditProduct @id int, @name nvarchar(255)"});
+            table7.AddRow(new string[] {
+                        "AS"});
+            table7.AddRow(new string[] {
+                        "BEGIN"});
+            table7.AddRow(new string[] {
+                        "SELECT @name as [Name];"});
+            table7.AddRow(new string[] {
+                        "END"});
+#line 51
+ testRunner.And("I executed a script against \'Test\' database:", ((string)(null)), table7, "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Sql"});
+            table8.AddRow(new string[] {
+                        "EXEC webapi_BindStoredProc \'EditProduct\',\'Test\';"});
+#line 59
+ testRunner.And("I expose the procedure with sql statement on \'Test\' database:", ((string)(null)), table8, "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Sql"});
+            table9.AddRow(new string[] {
+                        "EXEC webapi_Publish;"});
+#line 63
+ testRunner.When("I publish WebApi on \'Test\' database with sql statement:", ((string)(null)), table9, "When ");
+#line 67
+ testRunner.And("I invoke WebApi with \'PUT\' request on \'api/Product/123\' with data \'{\"name\":\"iPhon" +
+                    "e\"}\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 68
+ testRunner.Then("I expect a response from url \'api/Product/123\' with data \'{\"name\":\"iPhone\"}\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }

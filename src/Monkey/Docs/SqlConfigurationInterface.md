@@ -7,7 +7,6 @@
 **_And_** WebApiHost has started<br />
 **_And_** Monkey was installed in 'Test' database<br />
 ## I want to map renamed procedure according to REST conventions
-
 **_Given_** I executed a script against 'Test' database:<br />
 ```SqlLine
 CREATE OR ALTER PROC Ping <ParamName> <ParamType>, <ParamName2> <ParamType2>
@@ -36,7 +35,6 @@ EXEC webapi_Publish;
 | EditProduct | nvarchar(255) | @id | @number | int | Name | Number | PUT | api/Product/pc | {"number":123} | {"name":"pc","number":123}| 
 | UpdateProduct | nvarchar(255) | @id | @number | int | Name | Number | PUT | api/Product/pc | {"number":123} | {"name":"pc","number":123}| 
 ## I want to map and rename procedure according to REST conventions
-
 **_Given_** I executed a script against 'Test' database:<br />
 ```SqlLine
 CREATE OR ALTER PROC Ping <ParamName> <ParamType>, <ParamName2> <ParamType2>
