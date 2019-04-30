@@ -1,0 +1,10 @@
+﻿CREATE SYNONYM webapi_Rename for [Monkey].dbo.Rename;
+CREATE SYNONYM webapi_ChangeMode for [Monkey].dbo.ChangeMode;
+CREATE SYNONYM webapi_Publish for [Monkey].dbo.Publish;
+CREATE SYNONYM webapi_Cleanup for [Monkey].dbo.Cleanup;
+CREATE SYNONYM webapi_ProcBindings for [Monkey].dbo.ProcBindings;
+CREATE SYNONYM webapi_RequestInfo for [Monkey].dbo.RequestInfo;
+CREATE SYNONYM webapi_ResultInfo for [Monkey].dbo.ResultInfo;
+CREATE SYNONYM webapi_ProcInfo for [Monkey].dbo.ProcInfo;
+CREATE SYNONYM webapi_ChangeParamBindingName for [Monkey].dbo.ChangeParamBindingName;
+CREATE SYNONYM webapi_ChangeResultColBindingName for [Monkey].dbo.ChangeResultColBindingName;

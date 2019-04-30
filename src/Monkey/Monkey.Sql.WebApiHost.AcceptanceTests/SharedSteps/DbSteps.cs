@@ -44,7 +44,7 @@ namespace Monkey.Sql.WebApiHost.AcceptanceTests.SharedSteps
             }
         }
 
-
+        [Given(@"I rename the binding with sql statement on '(.*)' database:")]
         [When(@"I publish WebApi on '(.*)' database with sql statement:")]
         [Given(@"I expose the procedure with sql statement on '(.*)' database:")]
         [Given(@"I executed a script against '(.*)' database:")]

@@ -65,7 +65,7 @@ namespace Monkey.WebApi.Generator
 
                 CqrsControllerBuilder builder = new CqrsControllerBuilder()
                     .WithName(service.Name)
-                    .InNamespace(ToNamespace(service.Assembly.GetName().Name))
+                    .InNamespace(ToNamespace(service.Assembly.GetName().Name)) //TODO
                     .AddDefaultUsings()
                     .AddUsing("Microsoft.AspNetCore.Mvc")
                     .AddUsing("AutoMapper");

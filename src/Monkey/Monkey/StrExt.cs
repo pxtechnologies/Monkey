@@ -42,6 +42,17 @@ namespace Monkey
 
             return $"{str}{newSuffix}";
         }
+
+        public static string RemoveSuffixes(this string str, params string[] possibleSuffixes)
+        {
+            foreach (var s in possibleSuffixes)
+            {
+                if (str.EndsWith(s))
+                    return str.Remove(str.Length - s.Length);
+            }
+
+            return str;
+        }
         public static string RemoveSuffixWords(this string str, params string[] possibleSuffixes)
         {
             var words = str.ToWords().ToArray();

@@ -25,6 +25,11 @@ namespace Monkey.WebApi.Builder
         {
             if(_actions.Any(x=>x.Route == route && x.Verb == verb))
                 throw new ArgumentException("Route");
+            if (string.IsNullOrWhiteSpace(name))
+                name = verb.ToString();
+            if(string.IsNullOrWhiteSpace(responseType))
+                throw new ArgumentNullException("responseType");
+
             // TODO: add validation and UT
             _actions.Add(new ControllerAction(handler, name, responseType, verb, isResponseCollection, route, requestArguments));
         }

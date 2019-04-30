@@ -1,4 +1,4 @@
-﻿create function fn_WebApi_MakePropertyName(@parameterOrColumn sysname)
+﻿create function MakePropertyName(@parameterOrColumn sysname)
 returns sysname
 as 
 begin

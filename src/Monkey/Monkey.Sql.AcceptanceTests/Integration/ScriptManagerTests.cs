@@ -47,7 +47,7 @@ namespace Monkey.Sql.AcceptanceTests.Integration
 
             var migrations = await Sut.GetMigrations("Test");
 
-            migrations.Should().HaveCount(2);
+            migrations.Should().HaveCount(3);
         }
         [Test]
         public async Task ScriptManagerInstallsMonkeyScripts()
@@ -56,7 +56,7 @@ namespace Monkey.Sql.AcceptanceTests.Integration
 
             var migrations = await Sut.GetMigrations();
 
-            migrations.Should().HaveCount(4);
+            migrations.Should().HaveCount(14);
         }
     }
 }

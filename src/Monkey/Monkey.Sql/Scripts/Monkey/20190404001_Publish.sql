@@ -1,4 +1,4 @@
-﻿create procedure sp_WebApi_Publish
+﻿create procedure Publish
 as
 begin
 	declare @id bigint = next value for HiLo;

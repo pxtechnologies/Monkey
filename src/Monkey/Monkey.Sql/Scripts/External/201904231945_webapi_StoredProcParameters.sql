@@ -1,4 +1,4 @@
-﻿CREATE FUNCTION udf_StoredProcParameters (
+﻿CREATE FUNCTION webapi_StoredProcParameters (
     @dbName sysname,
 	@schema sysname,
 	@procName sysname

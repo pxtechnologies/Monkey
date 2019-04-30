@@ -19,12 +19,12 @@ Scenario Outline: I want to invoke stored procedure with different primitive par
 	| END                                                          |
 
 	And I expose the procedure with sql statement on 'Test' database:
-	| SqlLine                                                |
-	| EXEC sp_WebApi_AddStoredProc '<ProcedureName>','Test'; |
+	| SqlLine                                              |
+	| EXEC webapi_BindStoredProc '<ProcedureName>','Test'; |
 
-	When I publish WebApi on 'Monkey' database with sql statement:
-	| SqlLine                 |
-	| EXEC sp_WebApi_Publish; |
+	When I publish WebApi on 'Test' database with sql statement:
+	| SqlLine              |
+	| EXEC webapi_Publish; |
 
 	And I invoke WebApi with '<HttpMethod>' request on '<Url>' with data '<RequestPayload>'
 	Then I expect a response from url '<Url>' with data '<ResponsePayload>'
@@ -64,11 +64,11 @@ Scenario Outline: I want to map stored procedure according to REST conventions
 
 	And I expose the procedure with sql statement on 'Test' database:
 	| SqlLine                                                |
-	| EXEC sp_WebApi_AddStoredProc '<ProcedureName>','Test'; |
+	| EXEC webapi_BindStoredProc '<ProcedureName>','Test'; |
 
-	When I publish WebApi on 'Monkey' database with sql statement:
+	When I publish WebApi on 'Test' database with sql statement:
 	| SqlLine                 |
-	| EXEC sp_WebApi_Publish; |
+	| EXEC webapi_Publish; |
 
 	And I invoke WebApi with '<HttpMethod>' request on '<Url>' with data '<RequestPayload>'
 	Then I expect a response from url '<Url>' with data '<ResponsePayload>'
@@ -94,12 +94,12 @@ Scenario: I want to pass nulls and retrive nulls
 	| END                                                     |
 
 	And I expose the procedure with sql statement on 'Test' database:
-	| SqlLine                                           |
-	| EXEC sp_WebApi_AddStoredProc 'AddProduct','Test'; |
+	| SqlLine                                         |
+	| EXEC webapi_BindStoredProc 'AddProduct','Test'; |
 
-	When I publish WebApi on 'Monkey' database with sql statement:
-	| SqlLine                 |
-	| EXEC sp_WebApi_Publish; |
+	When I publish WebApi on 'Test' database with sql statement:
+	| SqlLine              |
+	| EXEC webapi_Publish; |
 
 	And I invoke WebApi with 'POST' request on 'api/Product' with data '{}'
 	Then I expect a response from url 'api/Product' with data '{"name":"Tv","company":null}'
@@ -115,12 +115,12 @@ Given I executed a script against 'Test' database:
 	| END                                                  |
 
 	And I expose the procedure with sql statement on 'Test' database:
-	| SqlLine                                            |
-	| EXEC sp_WebApi_AddStoredProc 'GetProducts','Test'; |
+	| SqlLine                                          |
+	| EXEC webapi_BindStoredProc 'GetProducts','Test'; |
 
 	When I publish WebApi on 'Monkey' database with sql statement:
-	| SqlLine                 |
-	| EXEC sp_WebApi_Publish; |
+	| SqlLine       |
+	| EXEC Publish; |
 
-	And I invoke WebApi with 'GET' request on 'api/Product?name=tv'
+	And I invoke WebApi with 'GET' request on 'api/Product?name=tv' without data
 	Then I expect a response from url 'api/Product' with data '[{"name":"tv"},{"name":"Two"}]'

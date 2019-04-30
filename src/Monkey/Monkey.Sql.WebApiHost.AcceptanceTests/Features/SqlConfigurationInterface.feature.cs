@@ -31,8 +31,8 @@ namespace Monkey.Sql.WebApiHost.AcceptanceTests.Features
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "SqlConfigurationInterface", "\tIn order to avoid silly mistakes\r\n\tAs a math idiot\r\n\tI want to be told the sum o" +
-                    "f two numbers", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "SqlConfigurationInterface", "\tIn order to avoid silly mistakes\r\n\tAs a SQL idiot\r\n\tI want to be told how to con" +
+                    "figure API", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -70,14 +70,129 @@ namespace Monkey.Sql.WebApiHost.AcceptanceTests.Features
             testRunner.CollectScenarioErrors();
         }
         
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("I want to change procedure binding configuration with sql")]
-        public virtual void IWantToChangeProcedureBindingConfigurationWithSql()
+        public virtual void FeatureBackground()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to change procedure binding configuration with sql", null, ((string[])(null)));
 #line 6
+#line 7
+ testRunner.Given("the \'Test\' database is created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 8
+ testRunner.And("the \'Monkey\' database is created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 9
+ testRunner.And("WebApiHost has started", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 10
+ testRunner.And("Monkey was installed in \'Test\' database", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("I want to map renamed procedure according to REST conventions")]
+        [NUnit.Framework.TestCaseAttribute("AddProduct", "nvarchar(255)", "@name", "@number", "int", "Name", "Number", "POST", "api/Product", "{\"name\":\"pc\",\"number\":123}", "{\"name\":\"pc\",\"number\":123}", null)]
+        [NUnit.Framework.TestCaseAttribute("CreateProduct", "nvarchar(255)", "@name", "@number", "int", "Name", "Number", "POST", "api/Product", "{\"name\":\"pc\",\"number\":123}", "{\"name\":\"pc\",\"number\":123}", null)]
+        [NUnit.Framework.TestCaseAttribute("InsertProduct", "nvarchar(255)", "@name", "@number", "int", "Name", "Number", "POST", "api/Product", "{\"name\":\"pc\",\"number\":123}", "{\"name\":\"pc\",\"number\":123}", null)]
+        [NUnit.Framework.TestCaseAttribute("ModifyProduct", "nvarchar(255)", "@id", "@number", "int", "Name", "Number", "PUT", "api/Product/pc", "{\"number\":123}", "{\"name\":\"pc\",\"number\":123}", null)]
+        [NUnit.Framework.TestCaseAttribute("EditProduct", "nvarchar(255)", "@id", "@number", "int", "Name", "Number", "PUT", "api/Product/pc", "{\"number\":123}", "{\"name\":\"pc\",\"number\":123}", null)]
+        [NUnit.Framework.TestCaseAttribute("UpdateProduct", "nvarchar(255)", "@id", "@number", "int", "Name", "Number", "PUT", "api/Product/pc", "{\"number\":123}", "{\"name\":\"pc\",\"number\":123}", null)]
+        public virtual void IWantToMapRenamedProcedureAccordingToRESTConventions(string handlerName, string paramType, string paramName, string paramName2, string paramType2, string resultColumnName, string resultColumnName2, string httpMethod, string url, string requestPayload, string responsePayload, string[] exampleTags)
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to map renamed procedure according to REST conventions", null, exampleTags);
+#line 12
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table13 = new TechTalk.SpecFlow.Table(new string[] {
+                        "SqlLine"});
+            table13.AddRow(new string[] {
+                        string.Format("CREATE OR ALTER PROC Ping {0} {1}, {2} {3}", paramName, paramType, paramName2, paramType2)});
+            table13.AddRow(new string[] {
+                        "AS"});
+            table13.AddRow(new string[] {
+                        "BEGIN"});
+            table13.AddRow(new string[] {
+                        string.Format("SELECT {0} as {1}, {2} as {3};", paramName, resultColumnName, paramName2, resultColumnName2)});
+            table13.AddRow(new string[] {
+                        "END"});
+#line 13
+ testRunner.Given("I executed a script against \'Test\' database:", ((string)(null)), table13, "Given ");
+#line hidden
+            TechTalk.SpecFlow.Table table14 = new TechTalk.SpecFlow.Table(new string[] {
+                        "SqlLine"});
+            table14.AddRow(new string[] {
+                        string.Format("EXEC webapi_BindStoredProc \'Ping\',\'Test\',\'dbo\',\'{0}\';", handlerName)});
+#line 21
+ testRunner.And("I expose the procedure with sql statement on \'Test\' database:", ((string)(null)), table14, "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table15 = new TechTalk.SpecFlow.Table(new string[] {
+                        "SqlLine"});
+            table15.AddRow(new string[] {
+                        "EXEC webapi_Publish;"});
+#line 25
+ testRunner.When("I publish WebApi on \'Test\' database with sql statement:", ((string)(null)), table15, "When ");
+#line 29
+ testRunner.And(string.Format("I invoke WebApi with \'{0}\' request on \'{1}\' with data \'{2}\'", httpMethod, url, requestPayload), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 30
+ testRunner.Then(string.Format("I expect a response from url \'{0}\' with data \'{1}\'", url, responsePayload), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("I want to map and rename procedure according to REST conventions")]
+        [NUnit.Framework.TestCaseAttribute("AddProduct", "nvarchar(255)", "@name", "@number", "int", "Name", "Number", "POST", "api/Product", "{\"name\":\"pc\",\"number\":123}", "{\"name\":\"pc\",\"number\":123}", null)]
+        [NUnit.Framework.TestCaseAttribute("CreateProduct", "nvarchar(255)", "@name", "@number", "int", "Name", "Number", "POST", "api/Product", "{\"name\":\"pc\",\"number\":123}", "{\"name\":\"pc\",\"number\":123}", null)]
+        [NUnit.Framework.TestCaseAttribute("InsertProduct", "nvarchar(255)", "@name", "@number", "int", "Name", "Number", "POST", "api/Product", "{\"name\":\"pc\",\"number\":123}", "{\"name\":\"pc\",\"number\":123}", null)]
+        [NUnit.Framework.TestCaseAttribute("ModifyProduct", "nvarchar(255)", "@id", "@number", "int", "Name", "Number", "PUT", "api/Product/pc", "{\"number\":123}", "{\"name\":\"pc\",\"number\":123}", null)]
+        [NUnit.Framework.TestCaseAttribute("EditProduct", "nvarchar(255)", "@id", "@number", "int", "Name", "Number", "PUT", "api/Product/pc", "{\"number\":123}", "{\"name\":\"pc\",\"number\":123}", null)]
+        [NUnit.Framework.TestCaseAttribute("UpdateProduct", "nvarchar(255)", "@id", "@number", "int", "Name", "Number", "PUT", "api/Product/pc", "{\"number\":123}", "{\"name\":\"pc\",\"number\":123}", null)]
+        public virtual void IWantToMapAndRenameProcedureAccordingToRESTConventions(string handlerName, string paramType, string paramName, string paramName2, string paramType2, string resultColumnName, string resultColumnName2, string httpMethod, string url, string requestPayload, string responsePayload, string[] exampleTags)
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to map and rename procedure according to REST conventions", null, exampleTags);
+#line 41
+this.ScenarioInitialize(scenarioInfo);
+            this.ScenarioStart();
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table16 = new TechTalk.SpecFlow.Table(new string[] {
+                        "SqlLine"});
+            table16.AddRow(new string[] {
+                        string.Format("CREATE OR ALTER PROC Ping {0} {1}, {2} {3}", paramName, paramType, paramName2, paramType2)});
+            table16.AddRow(new string[] {
+                        "AS"});
+            table16.AddRow(new string[] {
+                        "BEGIN"});
+            table16.AddRow(new string[] {
+                        string.Format("SELECT {0} as {1}, {2} as {3};", paramName, resultColumnName, paramName2, resultColumnName2)});
+            table16.AddRow(new string[] {
+                        "END"});
+#line 42
+ testRunner.Given("I executed a script against \'Test\' database:", ((string)(null)), table16, "Given ");
+#line hidden
+            TechTalk.SpecFlow.Table table17 = new TechTalk.SpecFlow.Table(new string[] {
+                        "SqlLine"});
+            table17.AddRow(new string[] {
+                        "EXEC webapi_BindStoredProc \'Ping\',\'Test\'"});
+#line 50
+ testRunner.And("I expose the procedure with sql statement on \'Test\' database:", ((string)(null)), table17, "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table18 = new TechTalk.SpecFlow.Table(new string[] {
+                        "SqlLine"});
+            table18.AddRow(new string[] {
+                        string.Format("EXEC webapi_Rename \'Ping\',\'Test\',\'dbo\',\'handler\',\'{0}\'", handlerName)});
+#line 54
+ testRunner.And("I rename the binding with sql statement on \'Test\' database:", ((string)(null)), table18, "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table19 = new TechTalk.SpecFlow.Table(new string[] {
+                        "SqlLine"});
+            table19.AddRow(new string[] {
+                        "EXEC webapi_Publish;"});
+#line 58
+ testRunner.When("I publish WebApi on \'Test\' database with sql statement:", ((string)(null)), table19, "When ");
+#line 62
+ testRunner.And(string.Format("I invoke WebApi with \'{0}\' request on \'{1}\' with data \'{2}\'", httpMethod, url, requestPayload), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 63
+ testRunner.Then(string.Format("I expect a response from url \'{0}\' with data \'{1}\'", url, responsePayload), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }

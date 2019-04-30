@@ -44,7 +44,7 @@ namespace Monkey.Patterns.UnitTests
                 .IgnoreAllUnmapped();
 
             CreateMap<UserEntity, UserResource>()
-                .ForAllOtherMembers(x => x.Ignore());
+                .ForMember(x => x.Name, opt => opt.MapFrom(src => src.Name));
         }
     }
     public class UsersControllerTests : TestFor<UsersController>

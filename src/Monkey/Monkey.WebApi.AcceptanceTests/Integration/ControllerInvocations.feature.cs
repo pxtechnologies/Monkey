@@ -302,10 +302,10 @@ this.FeatureBackground();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("I can have many actions on one dynamic controller")]
-        public virtual void ICanHaveManyActionsOnOneDynamicController()
+        [NUnit.Framework.DescriptionAttribute("I want to have many actions on one dynamic controller")]
+        public virtual void IWantToHaveManyActionsOnOneDynamicController()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can have many actions on one dynamic controller", null, ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to have many actions on one dynamic controller", null, ((string[])(null)));
 #line 73
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();

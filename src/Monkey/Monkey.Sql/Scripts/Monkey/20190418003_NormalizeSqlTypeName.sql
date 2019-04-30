@@ -1,4 +1,4 @@
-﻿create function fn_WebApi_NormalizeSqlTypeName(@nameWithPrecision sysname)
+﻿create function NormalizeSqlTypeName(@nameWithPrecision sysname)
 returns sysname
 as 
 begin

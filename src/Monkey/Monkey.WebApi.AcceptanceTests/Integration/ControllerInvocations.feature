@@ -70,7 +70,7 @@ Scenario: I can invoke custom command handler on dynamic controller
 	Then CommandHandler is invoked with corresponding 'ActivateUser' argument
 	And 'UserEntityResponse' that corresponds to 'UserEntity' is returned
 
-Scenario: I can have many actions on one dynamic controller
+Scenario: I want to have many actions on one dynamic controller
 	Given I have written command 'ActivateUser,ActivateUsers,UpdateUser,CreateUser' and result as:
 	| Line | Code                                                                                     |
 	| 1    | public class ActivateUser { public string Name { get;set; } public Guid Id {get; set; }} |

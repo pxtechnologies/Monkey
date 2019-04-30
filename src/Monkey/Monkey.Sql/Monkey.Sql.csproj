@@ -10,18 +10,39 @@
       <None Remove="Scripts\20190418002.sql" />
       <None Remove="Scripts\20190418003.sql" />
       <None Remove="Scripts\External\201904231945_udf_StoredProcParameters.sql" />
-      <None Remove="Scripts\External\201904231949_sp_WebApi_AddStoredProc.sql" />
-      <None Remove="Scripts\Monkey\201904251001_fn_MakePropertyName.sql" />
+      <None Remove="Scripts\External\201904231945_webapi_storedProcParameters.sql" />
+      <None Remove="Scripts\External\201904231949_webapi_BindStoredProc.sql" />
+      <None Remove="Scripts\External\201904290846_sp_WebApi_Rename.sql" />
+      <None Remove="Scripts\External\201904291847_sp_WebApi_ChangeMode.sql" />
+      <None Remove="Scripts\External\201904291906_webapi_synonyms.sql" />
+      <None Remove="Scripts\Monkey\201904231949_BindStoredProc.sql" />
+      <None Remove="Scripts\Monkey\201904251001_MakePropertyName.sql" />
+      <None Remove="Scripts\Monkey\201904292101_ProcBinding.sql" />
+      <None Remove="Scripts\Monkey\201904292116_RequestInfo.sql" />
+      <None Remove="Scripts\Monkey\201904292116_ResultInfo.sql" />
+      <None Remove="Scripts\Monkey\201904292127_ProcInfo.sql" />
+      <None Remove="Scripts\Monkey\201904300741_ChangeParamBindingName.sql" />
+      <None Remove="Scripts\Monkey\201904300741_ChangeResultColBindingName.sql" />
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="Scripts\External\201904231949_sp_WebApi_AddStoredProc.sql" />
-      <EmbeddedResource Include="Scripts\External\201904231945_udf_StoredProcParameters.sql" />
-      <EmbeddedResource Include="Scripts\Monkey\201904251001_fn_MakePropertyName.sql" />
-      <EmbeddedResource Include="Scripts\Monkey\20190418003_fn_WebApi_NormalizeSqlTypeName.sql" />
-      <EmbeddedResource Include="Scripts\Monkey\20190418002_udf_TableStats.sql" />
-      <EmbeddedResource Include="Scripts\Monkey\20190418001_sp_WebApi_Cleanup.sql" />
-      <EmbeddedResource Include="Scripts\Monkey\20190404001_sp_WebApi_Publish.sql" />
+      <EmbeddedResource Include="Scripts\External\201904231945_webapi_StoredProcParameters.sql" />
+      <EmbeddedResource Include="Scripts\External\201904291906_webapi_Synonyms.sql" />
+      <EmbeddedResource Include="Scripts\Monkey\201904231949_BindStoredProc.sql" />
+      <EmbeddedResource Include="Scripts\Monkey\201904292116_ResultInfo.sql" />
+      <EmbeddedResource Include="Scripts\Monkey\201904300741_ChangeParamBindingName.sql" />
+      <EmbeddedResource Include="Scripts\Monkey\201904300741_ChangeResultColBindingName.sql" />
+      <EmbeddedResource Include="Scripts\Monkey\201904292127_ProcInfo.sql" />
+      <EmbeddedResource Include="Scripts\Monkey\201904292116_RequestInfo.sql" />
+      <EmbeddedResource Include="Scripts\Monkey\201904292101_ProcBinding.sql" />
+      <EmbeddedResource Include="Scripts\Monkey\201904291847_ChangeMode.sql" />
+      <EmbeddedResource Include="Scripts\Monkey\201904290846_Rename.sql" />
+      <EmbeddedResource Include="Scripts\External\201904231949_webapi_BindStoredProc.sql" />
+      <EmbeddedResource Include="Scripts\Monkey\201904251001_MakePropertyName.sql" />
+      <EmbeddedResource Include="Scripts\Monkey\20190418003_NormalizeSqlTypeName.sql" />
+      <EmbeddedResource Include="Scripts\Monkey\20190418002_TableStats.sql" />
+      <EmbeddedResource Include="Scripts\Monkey\20190418001_Cleanup.sql" />
+      <EmbeddedResource Include="Scripts\Monkey\20190404001_Publish.sql" />
     </ItemGroup>
 
     <ItemGroup>

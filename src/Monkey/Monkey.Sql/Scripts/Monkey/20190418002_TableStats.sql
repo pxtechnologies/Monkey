@@ -1,4 +1,4 @@
-﻿create function udf_TableStats (@minId bigint=0)
+﻿create function TableStats (@minId bigint=0)
 RETURNS TABLE
 as
 return

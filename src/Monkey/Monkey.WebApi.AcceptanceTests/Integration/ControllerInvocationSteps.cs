@@ -126,7 +126,7 @@ namespace Monkey.WebApi.AcceptanceTests.Integration
             });
             
 
-            var controllerType = assembly.Load(assembly.SourceUnits.First(x => x.FullName.Contains("Controller")).FullName);
+            var controllerType = assembly.Load(assembly.SourceUnits.Single(x => x.FullName.Contains("Controller")).FullName);
             _applicationExecutor.Execute(controllerType, controller =>
             {
                 var createUserObj = JsonConvert.DeserializeObject(json, assembly.Load("Test.WebApi", requestType));

@@ -75,7 +75,7 @@ namespace Monkey.Generator
                         service.WithName(serviceName);
                         _services.Add(serviceName, service);
                     }
-
+                    
                     
                     service.AddHandler(handler);
                 }

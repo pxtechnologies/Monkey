@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Humanizer;
@@ -11,15 +13,35 @@ namespace Monkey.Generator
     }
     public class ServiceNameProvider : IServiceNameProvider
     {
+        private static void SingularizeLastWord(IList<string> words)
+        {
+            var last = words.Last();
+            var s = last.Singularize();
+            if (s != null && s != last)
+            {
+                words[words.Count - 1] = s;
+            }
+        }
         public string EvaluateHandler(HandlerInfo info)
         {
+            var sn = info.HandlerIType.GetCustomAttribute<ServiceNameAttribute>() ??
+                     info.HandlerType?.GetCustomAttribute<ServiceNameAttribute>();
+            if (sn != null)
+                return sn.ServiceName;
+
+            string text = null;
+
             if (info.IsCommandHandler)
             {
-                var sn = info.HandlerIType.GetCustomAttribute<ServiceNameAttribute>();
-                if (sn != null)
-                    return sn.ServiceName;
-                string text = info.RequestType.Name.RemoveSuffixWords("Command","Request");
+                if (info.HandlerType != null && !info.HandlerType.Name.Contains("ObjectProxy")) // Heuristic
+                    text = info.HandlerType.Name.RemoveSuffixes("CommandHandler", "Handler");
+                else
+                    text = info.RequestType.Name.RemoveSuffixWords("Command", "Request");
+
+
                 var words = text.ToWords().ToList();
+                SingularizeLastWord(words);
+
                 if (CommandVerbs.Any(x => x == words[0]))
                 {
                     words.RemoveAt(0);
@@ -29,15 +51,17 @@ namespace Monkey.Generator
                 if (words.Count > 1)
                     return string.Concat(words.Skip(1));
                 return string.Concat(words);
+
             }
             else if (info.IsQueryHandler)
             {
-                var sn = info.HandlerIType.GetCustomAttribute<ServiceNameAttribute>();
-                if (sn != null)
-                    return sn.ServiceName;
+                if (info.HandlerType != null && !info.HandlerType.Name.Contains("ObjectProxy")) // Heuristic
+                    text = info.HandlerType.Name.RemoveSuffixes("QueryHandler", "Handler");
+                else
+                    text = info.RequestType.Name.RemoveSuffixWords("Query", "Request");
 
-                string text = info.RequestType.Name.RemoveSuffixWords("Query", "Request");
                 var words = text.ToWords().ToList();
+                SingularizeLastWord(words);
 
                 if (words.Count > 3)
                 {
@@ -50,8 +74,10 @@ namespace Monkey.Generator
                     var array = words.Skip(1).ToArray();
                     array[0] = array[0].Singularize();
                     return string.Concat(array);
-                } 
+                }
+
                 return string.Concat(words);
+
             }
             throw new InvalidOperationException();
         }

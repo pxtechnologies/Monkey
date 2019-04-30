@@ -1,9 +1,9 @@
-﻿create procedure [dbo].[sp_WebApi_Cleanup]
+﻿create procedure [dbo].[Cleanup]
 as 
 begin
 	begin try
 
-	begin tran sp_WebApi_Cleanup
+	begin tran webapi_Cleanup
 		delete from ProcedureResultColumnBindings
 		delete from ProcedureParameterBindings
 		delete from ProcedureBindings
@@ -14,13 +14,13 @@ begin
 
 		delete from ObjectProperties
 		delete from ObjectTypes where Id >= 100
-	commit tran sp_WebApi_Cleanup
+	commit tran webapi_Cleanup
 
 	end try
 	begin catch
 	IF (@@TRANCOUNT > 0)
     BEGIN
-      rollback tran sp_WebApi_Cleanup
+      rollback tran webapi_Cleanup
       PRINT 'Error detected, all changes reversed'
     END 
     SELECT

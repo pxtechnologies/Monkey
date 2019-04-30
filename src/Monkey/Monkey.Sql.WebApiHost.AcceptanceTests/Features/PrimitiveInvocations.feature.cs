@@ -134,16 +134,16 @@ this.FeatureBackground();
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
                         "SqlLine"});
             table2.AddRow(new string[] {
-                        string.Format("EXEC sp_WebApi_AddStoredProc \'{0}\',\'Test\';", procedureName)});
+                        string.Format("EXEC webapi_BindStoredProc \'{0}\',\'Test\';", procedureName)});
 #line 21
  testRunner.And("I expose the procedure with sql statement on \'Test\' database:", ((string)(null)), table2, "And ");
 #line hidden
             TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
                         "SqlLine"});
             table3.AddRow(new string[] {
-                        "EXEC sp_WebApi_Publish;"});
+                        "EXEC webapi_Publish;"});
 #line 25
- testRunner.When("I publish WebApi on \'Monkey\' database with sql statement:", ((string)(null)), table3, "When ");
+ testRunner.When("I publish WebApi on \'Test\' database with sql statement:", ((string)(null)), table3, "When ");
 #line 29
  testRunner.And(string.Format("I invoke WebApi with \'{0}\' request on \'{1}\' with data \'{2}\'", httpMethod, url, requestPayload), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 30
@@ -187,16 +187,16 @@ this.FeatureBackground();
             TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
                         "SqlLine"});
             table5.AddRow(new string[] {
-                        string.Format("EXEC sp_WebApi_AddStoredProc \'{0}\',\'Test\';", procedureName)});
+                        string.Format("EXEC webapi_BindStoredProc \'{0}\',\'Test\';", procedureName)});
 #line 65
  testRunner.And("I expose the procedure with sql statement on \'Test\' database:", ((string)(null)), table5, "And ");
 #line hidden
             TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
                         "SqlLine"});
             table6.AddRow(new string[] {
-                        "EXEC sp_WebApi_Publish;"});
+                        "EXEC webapi_Publish;"});
 #line 69
- testRunner.When("I publish WebApi on \'Monkey\' database with sql statement:", ((string)(null)), table6, "When ");
+ testRunner.When("I publish WebApi on \'Test\' database with sql statement:", ((string)(null)), table6, "When ");
 #line 73
  testRunner.And(string.Format("I invoke WebApi with \'{0}\' request on \'{1}\' with data \'{2}\'", httpMethod, url, requestPayload), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 74
@@ -236,16 +236,16 @@ this.FeatureBackground();
             TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
                         "SqlLine"});
             table8.AddRow(new string[] {
-                        "EXEC sp_WebApi_AddStoredProc \'AddProduct\',\'Test\';"});
+                        "EXEC webapi_BindStoredProc \'AddProduct\',\'Test\';"});
 #line 96
  testRunner.And("I expose the procedure with sql statement on \'Test\' database:", ((string)(null)), table8, "And ");
 #line hidden
             TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
                         "SqlLine"});
             table9.AddRow(new string[] {
-                        "EXEC sp_WebApi_Publish;"});
+                        "EXEC webapi_Publish;"});
 #line 100
- testRunner.When("I publish WebApi on \'Monkey\' database with sql statement:", ((string)(null)), table9, "When ");
+ testRunner.When("I publish WebApi on \'Test\' database with sql statement:", ((string)(null)), table9, "When ");
 #line 104
  testRunner.And("I invoke WebApi with \'POST\' request on \'api/Product\' with data \'{}\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 105
@@ -286,18 +286,18 @@ testRunner.Given("I executed a script against \'Test\' database:", ((string)(nul
             TechTalk.SpecFlow.Table table11 = new TechTalk.SpecFlow.Table(new string[] {
                         "SqlLine"});
             table11.AddRow(new string[] {
-                        "EXEC sp_WebApi_AddStoredProc \'GetProducts\',\'Test\';"});
+                        "EXEC webapi_BindStoredProc \'GetProducts\',\'Test\';"});
 #line 117
  testRunner.And("I expose the procedure with sql statement on \'Test\' database:", ((string)(null)), table11, "And ");
 #line hidden
             TechTalk.SpecFlow.Table table12 = new TechTalk.SpecFlow.Table(new string[] {
                         "SqlLine"});
             table12.AddRow(new string[] {
-                        "EXEC sp_WebApi_Publish;"});
+                        "EXEC Publish;"});
 #line 121
  testRunner.When("I publish WebApi on \'Monkey\' database with sql statement:", ((string)(null)), table12, "When ");
 #line 125
- testRunner.And("I invoke WebApi with \'GET\' request on \'api/Product?name=tv\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I invoke WebApi with \'GET\' request on \'api/Product?name=tv\' without data", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 126
  testRunner.Then("I expect a response from url \'api/Product\' with data \'[{\"name\":\"tv\"},{\"name\":\"Two" +
                     "\"}]\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
