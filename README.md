@@ -28,7 +28,7 @@ docker run -p 8080:80 -e "ConnectionStrings__Monkey=Server=<Server>;Database=Mon
 4. The name of the connection string is the sufix of envrionment variable name - in this example we have 'Monkey' and 'Test' connection strings.
 
 ## Running standalone:
-1. Download [Monkey.zip]()
+1. Download [Monkey.zip](https://github.com/pxtechnologies/Monkey/blob/master/bundle/Monkey.Sql.WebApiHost.zip)
 2. Install [dotnet-core runtime 2.2 or sdk](https://dotnet.microsoft.com/download)
 3. Edit configuration file: **appsettings.json** - change connection-strings if needed.
 4. Run the app from command-line:
