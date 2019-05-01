@@ -9,6 +9,7 @@ Then you are at right place :)
 * You execute:
 ```sql
 	EXEC webapi_BindStoredProc 'AddProduct','Test';
+	EXEC webapi_Publish;
 ```
 * You have your REST api available under: http://localhost:8080/api/Product and you can invoke it with parameters and receive record(s).
 * Swagger is available under: http://localhost:8080/swagger
@@ -47,7 +48,11 @@ dotnet Monkey.Sql.WebApiHost
 		- Open swagger page: [http://localhost:8080/swagger](http://localhost:8080/swagger) 
 		- Invoke **Install** action on **Database** controller with appropriate payload.
 	2. Though curl: 
-
+	```cmd
+	curl -X POST "http://localhost:8080/api/Install?connectionStringName=**Name_Of_Your_Connection**" -H "accept: application/json"
+	```
+#### Node
+Installing SQL API stored procedures, creates synonyms, few stored procedures and functions. It does not create any tables. All metadata is stored in 'Monkey' database.
 
 ## Documentation by scenarios
 [Hosting Scenarios](https://github.com/pxtechnologies/Monkey/blob/master/src/Monkey/Docs/Bootstrapping.md)<br/>

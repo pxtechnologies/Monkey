@@ -1,5 +1,5 @@
 ﻿create procedure webapi_BindStoredProc @procName sysname,
-	@dbName sysname, 
+	@connectionName sysname, 
 	@schema sysname = 'dbo', 
 	@name nvarchar(255) = @procName, 
 	@commandName nvarchar(255) = null,
@@ -9,7 +9,7 @@
 as
 begin
 SET NOCOUNT ON;
-
+	declare @dbName sysname = db_name();
 	select p.[Order], p.ParamName [Name],  p.[Type] 
 	into #params
 	from dbo.webapi_StoredProcParameters(@dbName, @schema, @procName) p;
@@ -29,7 +29,7 @@ SET NOCOUNT ON;
 	into #resultSet
 	from @dfr
 
-	exec [Monkey].dbo.BindStoredProc @procName, @dbName, @schema, @name, @commandName, @queryName, @resultName, @isReadOnly;
+	exec [Monkey].dbo.BindStoredProc @procName, @connectionName, @schema, @name, @commandName, @queryName, @resultName, @isReadOnly;
 
 	drop table #params;
 	drop table #resultSet;

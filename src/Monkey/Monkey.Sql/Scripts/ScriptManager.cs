@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
@@ -19,7 +20,7 @@ namespace Monkey.Sql.Scripts
         Task<string[]> GetMigrations(string name);
         Task<string[]> GetMigrations(SqlConnection connection);
         Task InstallMigrations(SqlConnection connection);
-        Task ExecuteSqlScriptFromResourceCatalog(SqlConnection connection, string catalog);
+        Task ExecuteSqlScriptFromResourceCatalog(SqlConnection connection, string catalog, Func<string, string> scriptTransformation = null);
         Task InsertMigration(SqlConnection connection, string scriptName);
 
         Task ExecuteScript(SqlConnection connection, string scriptName, string sql,
@@ -42,10 +43,16 @@ namespace Monkey.Sql.Scripts
 
         public async Task InstallExternal(string name)
         {
+            var connectionString = _config.GetConnectionString(SqlMonkeyCatalog);
+
+            SqlConnectionStringBuilder sb = new SqlConnectionStringBuilder(connectionString);
+            string orgDbName = SqlMonkeyCatalog.SqlQuoted();
+            string dbName = sb.InitialCatalog.SqlQuoted();
+
             using (var connection = new SqlConnection(_config.GetConnectionString(name)))
             {
                 await connection.OpenAsync();
-                await ExecuteSqlScriptFromResourceCatalog(connection, "External");
+                await ExecuteSqlScriptFromResourceCatalog(connection, "External", x=> x.Replace(orgDbName,dbName));
             }
         }
 
@@ -62,6 +69,8 @@ namespace Monkey.Sql.Scripts
             
             if (dbContext.Database.GetPendingMigrations().Any())
                 await dbContext.Database.MigrateAsync();
+
+           
 
             using (var connection = new SqlConnection(connectionString))
             {
@@ -119,8 +128,10 @@ namespace Monkey.Sql.Scripts
         }
 
 
-        public async Task ExecuteSqlScriptFromResourceCatalog(SqlConnection connection, string catalog)
+        public async Task ExecuteSqlScriptFromResourceCatalog(SqlConnection connection, string catalog, Func<string,string> scriptTransformation = null)
         {
+            if (scriptTransformation == null)
+                scriptTransformation = x => x;
             var assembly = typeof(ScriptManager).Assembly;
             var scripts = assembly
                 .GetManifestResourceNames()
@@ -134,7 +145,8 @@ namespace Monkey.Sql.Scripts
                 {
                     using (var tx = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                     {
-                        await ExecuteScript(connection, scriptName, await sr.ReadToEndAsync());
+                        var sql = await sr.ReadToEndAsync();
+                        await ExecuteScript(connection, scriptName, scriptTransformation(sql));
                         await InsertMigration(connection, scriptName);
                         tx.Complete();
                     }
