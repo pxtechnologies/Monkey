@@ -52,7 +52,7 @@ dotnet Monkey.Sql.WebApiHost
 	curl -X POST "http://localhost:8080/api/Install?connectionStringName=**Name_Of_Your_Connection**" -H "accept: application/json"
 	```
 #### Node
-Installing SQL API stored procedures, creates synonyms, few stored procedures and functions. It does not create any tables. All metadata is stored in 'Monkey' database.
+Installing SQL API stored procedures, creates synonyms, few stored procedures and functions. It does not create any tables, except for script migrations. All metadata is stored in 'Monkey' database.
 
 ## Documentation by scenarios
 [Hosting Scenarios](https://github.com/pxtechnologies/Monkey/blob/master/src/Monkey/Docs/Bootstrapping.md)<br/>
