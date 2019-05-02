@@ -59,6 +59,7 @@ Installing SQL API stored procedures, creates synonyms, few stored procedures an
 [Hosting Scenarios](https://github.com/pxtechnologies/Monkey/blob/master/src/Monkey/Docs/Bootstrapping.md)<br/>
 [SQL Configuration Interface Scenarios](https://github.com/pxtechnologies/Monkey/blob/master/src/Monkey/Docs/SqlConfigurationInterface.md)<br/>
 [Stored Procedure Primitive Type Bindings Scenarios](https://github.com/pxtechnologies/Monkey/blob/master/src/Monkey/Docs/PrimitiveInvocations.md)<br/>
+[Error handling](https://github.com/pxtechnologies/Monkey/blob/master/src/Monkey/Docs/ErrorHandling.md)<br/>
 
 ## Project TODOs:
 * Documentation
