@@ -21,9 +21,9 @@ docker run -p 8080:80 -e "ConnectionStrings__Monkey=Server=<Server>;Database=Mon
 					  -e "ConnectionStrings__Test=Server=<Server>;Database=Test;User=<User>;Password=<YourPassword>" \
 					  -e "ASPNETCORE_URLS=http://+:80" pxtechnologies/monkey
 ```
-   **Server** is the name of SQL server <br/>
-   **User** is SQL user<br/>
-   **YourPassword** is password to SQL Server<br/><br/>
+   \<**Server**\> is the name of SQL server <br/>
+   \<**User**\> is SQL user<br/>
+   \<**YourPassword**\> is password to SQL Server<br/><br/>
 	
 2. Open brower and navigate to http://localhost:8080/swagger
 3. If you want to install utils procedures to your database make sure to add environment variable with connection string and then invoke Install action though swagger
@@ -41,8 +41,8 @@ dotnet Monkey.Sql.WebApiHost
 ## Installing SQL API stored procedures on your database.
 1. Add appropriate connection string to your database. You have 3 options to do it:
 	- Edit configuration file: appsettings.json
-	- Edit/Add environment variable: ConnectrionStrings__**Name_Of_Your_Connection**=**Connection String**
-	- Add command line arguments:  ConnectrionStrings__**Name_Of_Your_Connection**=**Connection String**
+	- Edit/Add environment variable: ConnectrionStrings__\<**Name_Of_Your_Connection**\>=\<**Connection_String**\>
+	- Add command line arguments:  ConnectrionStrings__\<**Name_Of_Your_Connection**\>=\<**Connection_String**\>
 2. Run WebApiHost
 3. Make HTTP **POST** to [http://localhost:8080/Database/Install](http://localhost:8080/Database/Install) with payload: **{"name":"Name_Of_Your_Connection"}**. For example:
 	1. Though swagger:
