@@ -27,10 +27,10 @@ EXEC webapi_BindStoredProc 'AddProduct','Test';
 EXEC webapi_Publish;
 ```
 **_And_** I invoke WebApi with 'POST' request on 'api/Product' with data '{"name":"iPhone"}'<br />
-**_Then_** I expect a response from url 'api/Product' with http-code **"HttpErrorCode"** and data **"PayloadResponse"**<br />
+**_Then_** I expect a response from url 'api/Product' with http-code '**\<HttpErrorCode\>**' and data '**\<PayloadResponse\>**'<br />
 ### Examples:
 | Error code | Error message | Error state | Payload response | Http error code| 
 | --- | --- | --- | --- | ---| 
 | 50401 | Funny message | 2 | {"code":2,"message":"Funny message"} | 401| 
 | 50402 | Another message | 1 | {"code":1,"message":"Another message"} | 402| 
-| 50401 | <custom>Hello</custom> | 255 | {"custom":"Hello"} | 401| 
+| 50401 | **\<custom\>**Hello**\</custom\>** | 255 | {"custom":"Hello"} | 401| 

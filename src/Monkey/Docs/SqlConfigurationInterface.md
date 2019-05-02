@@ -26,8 +26,8 @@ EXEC webapi_BindStoredProc 'Ping','Test','dbo','<HandlerName>';
 ```Sql
 EXEC webapi_Publish;
 ```
-**_And_** I invoke WebApi with **"HttpMethod"** request on **"Url"** with data **"RequestPayload"**<br />
-**_Then_** I expect a response from url **"Url"** with data **"ResponsePayload"**<br />
+**_And_** I invoke WebApi with '**\<HttpMethod\>**' request on '**\<Url\>**' with data '**\<RequestPayload\>**'<br />
+**_Then_** I expect a response from url '**\<Url\>**' with data '**\<ResponsePayload\>**'<br />
 ### Examples:
 | Handler name | Param type | Param name | Param name 2 | Param type 2 | Result column name | Result column name 2 | Http method | Url | Request payload | Response payload| 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---| 
@@ -58,8 +58,8 @@ EXEC webapi_Rename 'Ping','Test','dbo','handler','<HandlerName>'
 ```Sql
 EXEC webapi_Publish;
 ```
-**_And_** I invoke WebApi with **"HttpMethod"** request on **"Url"** with data **"RequestPayload"**<br />
-**_Then_** I expect a response from url **"Url"** with data **"ResponsePayload"**<br />
+**_And_** I invoke WebApi with '**\<HttpMethod\>**' request on '**\<Url\>**' with data '**\<RequestPayload\>**'<br />
+**_Then_** I expect a response from url '**\<Url\>**' with data '**\<ResponsePayload\>**'<br />
 ### Examples:
 | Handler name | Param type | Param name | Param name 2 | Param type 2 | Result column name | Result column name 2 | Http method | Url | Request payload | Response payload| 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---| 
