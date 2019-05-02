@@ -1,5 +1,8 @@
 # Bootstrapping
 
+	In order to avoid silly mistakes
+	As a admin idiot
+	I want to be told how the deployment works
 ## Background: 
 ## 
 **_Given_** the 'Test' database is created<br />

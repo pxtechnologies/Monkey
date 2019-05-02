@@ -61,6 +61,7 @@ namespace Monkey.Sql.Builder
                 .AddUsing("System.Collections.Generic")
                 .AddUsing("System.Data")
                 .AddUsing("System.Data.SqlClient")
+                .AddUsing("System.Xml.Linq")
                 .AddUsing("System.Threading")
                 .AddUsing("System.Threading.Tasks")
                 .AddUsing("System.Data.SqlClient")
@@ -216,9 +217,27 @@ namespace Monkey.Sql.Builder
             }
             sb.AppendLine();
 
+            sb.AppendLine("try").OpenBlock();
+            WriteMethod_ReaderBlock(sb).CloseBlock();
+            sb.AppendLine("catch(SqlException ex)").OpenBlock();
+            sb.AppendLine("if (ex.Number >= 50000 && ex.Number <= 51000)").OpenBlock();
+            sb.AppendLine("if (ex.State == 255) throw new XmlRequestException((ErrorCodeReason) (ex.Number - 50000), XDocument.Parse(ex.Message), ex);");
+            sb.AppendLine("throw new RequestException((ErrorCodeReason) (ex.Number - 50000), ex.Message, ex.State, ex);");
+            sb.CloseBlock(); // close if
+
+            sb.AppendLine("throw;");
+            sb.CloseBlock(); // close catch
+
+            sb.CloseBlock(); // command
+            sb.CloseBlock(); // connection
+        }
+
+        private SourceCodeBuilder WriteMethod_ReaderBlock(SourceCodeBuilder sb)
+        {
             sb.AppendLine($"using(var rd = await command.ExecuteReaderAsync())").OpenBlock();
 
-            sb.AppendLine($"var lz = new Lazy<int[]>(() => rd.GetIndexes({String.Join(", ", ResultBindings.Select(x => x.SqlColumnName.DblQuoted()))}), LazyThreadSafetyMode.None);");
+            sb.AppendLine(
+                $"var lz = new Lazy<int[]>(() => rd.GetIndexes({String.Join(", ", ResultBindings.Select(x => x.SqlColumnName.DblQuoted()))}), LazyThreadSafetyMode.None);");
 
             if (_isCollectionResult)
             {
@@ -242,9 +261,8 @@ namespace Monkey.Sql.Builder
                 sb.AppendLine("return null;");
             }
 
-            sb.CloseBlock();
-            sb.CloseBlock();
-            sb.CloseBlock();
+            sb.CloseBlock(); // reader
+            return sb;
         }
 
         public IEnumerable<BindingParameter> ParameterBindings

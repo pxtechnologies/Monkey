@@ -1,5 +1,8 @@
 # Primitive invocations
 
+	In order to avoid silly mistakes
+	As a SQL developer
+	I want to be told how to expose simple stored procedures as web-api
 ## Background: 
 ## 
 **_Given_** the 'Test' database is created<br />

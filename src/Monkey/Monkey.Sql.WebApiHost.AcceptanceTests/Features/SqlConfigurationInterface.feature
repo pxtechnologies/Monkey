@@ -1,7 +1,7 @@
 ﻿Feature: SqlConfigurationInterface
 	In order to avoid silly mistakes
-	As a SQL idiot
-	I want to be told how to configure API
+	As a SQL dev
+	I want to be told how to configure API in sql
 
 Background: 
 	Given the 'Test' database is created
@@ -11,7 +11,7 @@ Background:
 
 Scenario Outline: I want to map renamed procedure according to REST conventions
 	Given I executed a script against 'Test' database:
-	| SqlLine                                                                        |
+	| Sql                                                                        |
 	| CREATE OR ALTER PROC Ping <ParamName> <ParamType>, <ParamName2> <ParamType2>   |
 	| AS                                                                             |
 	| BEGIN                                                                          |
@@ -19,11 +19,11 @@ Scenario Outline: I want to map renamed procedure according to REST conventions
 	| END                                                                            |
 
 	And I expose the procedure with sql statement on 'Test' database:
-	| SqlLine                                                         |
+	| Sql                                                         |
 	| EXEC webapi_BindStoredProc 'Ping','Test','dbo','<HandlerName>'; |
 	
 	When I publish WebApi on 'Test' database with sql statement:
-	| SqlLine              |
+	| Sql              |
 	| EXEC webapi_Publish; |
 
 	And I invoke WebApi with '<HttpMethod>' request on '<Url>' with data '<RequestPayload>'
@@ -40,7 +40,7 @@ Examples:
 
 Scenario Outline: I want to map and rename procedure according to REST conventions
 	Given I executed a script against 'Test' database:
-	| SqlLine                                                                        |
+	| Sql                                                                        |
 	| CREATE OR ALTER PROC Ping <ParamName> <ParamType>, <ParamName2> <ParamType2>   |
 	| AS                                                                             |
 	| BEGIN                                                                          |
@@ -48,15 +48,15 @@ Scenario Outline: I want to map and rename procedure according to REST conventio
 	| END                                                                            |
 
 	And I expose the procedure with sql statement on 'Test' database:
-	| SqlLine                                     |
+	| Sql                                     |
 	| EXEC webapi_BindStoredProc 'Ping','Test' |
 
 	And I rename the binding with sql statement on 'Test' database:
-	| SqlLine                                     |
+	| Sql                                     |
 	| EXEC webapi_Rename 'Ping','Test','dbo','handler','<HandlerName>' |
 	
 	When I publish WebApi on 'Test' database with sql statement:
-	| SqlLine              |
+	| Sql              |
 	| EXEC webapi_Publish; |
 
 	And I invoke WebApi with '<HttpMethod>' request on '<Url>' with data '<RequestPayload>'

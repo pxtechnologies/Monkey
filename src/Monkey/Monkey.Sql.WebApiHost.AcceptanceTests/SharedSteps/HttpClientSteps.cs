@@ -25,7 +25,9 @@ namespace Monkey.Sql.WebApiHost.AcceptanceTests.SharedSteps
         public HttpClientSteps(ScenarioContext sceneario, IConfiguration config)
         {
             _sceneario = sceneario;
-            _baseUrl = config.GetApplicationUrls().First().Replace("*", "localhost");
+            _baseUrl = config.GetApplicationUrls().First()
+                .Replace("*", "localhost")
+                .Replace("+", "localhost");
             _client = new HttpClient();
         }
 
@@ -67,6 +69,18 @@ namespace Monkey.Sql.WebApiHost.AcceptanceTests.SharedSteps
                 throw new NotImplementedException();
             }
         }
+        [Then(@"I expect a response from url '(.*)' with http-code '(.*)' and data '(.*)'")]
+        public async Task ThenIExpectAResponseFromUrlWithHttp_CodeAndData(string url, int errorCode, string json)
+        {
+            HttpResponseMessage response = (HttpResponseMessage)_sceneario[url];
+            ((int) response.StatusCode).Should().Be(errorCode);
+            var str = await response.Content.ReadAsStringAsync();
+            str = str.RemoveWhiteSpaces();
+            str.Should().Be(json.RemoveWhiteSpaces());
+        }
+
+
+
         [Then(@"I expect a response from url '(.*)' with data '(.*)'")]
         public async Task ThenIExpectAResponseFromUrlWithData(string url, string json)
         {

@@ -34,23 +34,33 @@
                     command.Parameters.AddWithValue("@id", cmd.Id);
                     command.Parameters.AddWithValue("@name", cmd.Name);
                     command.Parameters.AddWithValue("@birthdate", cmd.BirthDate);
-
-                    using (var rd = await command.ExecuteReaderAsync())
+                    try
                     {
-                        var lz = new Lazy<int[]>(() => rd.GetIndexes("Id", "Name", "BirthDate"), LazyThreadSafetyMode.None);
-                        if (await rd.ReadAsync())
+                        using (var rd = await command.ExecuteReaderAsync())
                         {
-                            var ix = lz.Value;
-                            var result = new UserEntity();
-                            if (!(await rd.IsDBNullAsync(ix[0])))
-                                result.Id = rd.GetInt32(ix[0]);
-                            if (!(await rd.IsDBNullAsync(ix[1])))
-                                result.Name = rd.GetString(ix[1]);
-                            if (!(await rd.IsDBNullAsync(ix[2])))
-                                result.BirthDate = rd.GetDateTime(ix[2]);
-                            return result;
+                            var lz = new Lazy<int[]>(() => rd.GetIndexes("Id", "Name", "BirthDate"),
+                                LazyThreadSafetyMode.None);
+                            if (await rd.ReadAsync())
+                            {
+                                var ix = lz.Value;
+                                var result = new UserEntity();
+                                if (!(await rd.IsDBNullAsync(ix[0])))
+                                    result.Id = rd.GetInt32(ix[0]);
+                                if (!(await rd.IsDBNullAsync(ix[1])))
+                                    result.Name = rd.GetString(ix[1]);
+                                if (!(await rd.IsDBNullAsync(ix[2])))
+                                    result.BirthDate = rd.GetDateTime(ix[2]);
+                                return result;
+                            }
+
+                            return null;
                         }
-                        return null;
+                    }
+                    catch (SqlException ex)
+                    {
+                        if (ex.Number >= 50000 && ex.Number <= 51000)
+                            throw new RequestException((ErrorCodeReason) (ex.Number - 50000), ex.Message, ex.State,ex);
+                        throw;
                     }
                 }
             }

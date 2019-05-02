@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <SpecFlowObsoleteCodeBehindFiles Remove="Features\SqlConfigurationInterface - Copy.feature.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Dapper" Version="1.60.6" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.2.0" />
@@ -58,10 +62,13 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>PrimitiveInvocations.feature</DependentUpon>
     </Compile>
-    <Compile Update="Features\SqlConfigurationInterface.feature.cs">
+    <Compile Update="Features\ErrorHandling.feature.cs">
+      <DependentUpon>ErrorHandling.feature</DependentUpon>
+    </Compile>
+    <Compile Update="Features\ErrorHandling.feature.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>SqlConfigurationInterface.feature</DependentUpon>
+      <DependentUpon>ErrorHandling.feature</DependentUpon>
     </Compile>
   </ItemGroup>
 
@@ -79,6 +86,12 @@
     <SpecFlowFeatureFiles Update="Features\PrimitiveInvocations.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>PrimitiveInvocations.feature.cs</LastGenOutput>
+    </SpecFlowFeatureFiles>
+    <SpecFlowFeatureFiles Update="Features\ErrorHandling.feature">
+      <Visible>$(UsingMicrosoftNETSdk)</Visible>
+      <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+      <LastGenOutput>ErrorHandling.feature.cs</LastGenOutput>
+      <Generator>SpecFlowSingleFileGenerator</Generator>
     </SpecFlowFeatureFiles>
     <SpecFlowFeatureFiles Update="Features\SqlConfigurationInterface.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>

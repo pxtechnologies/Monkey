@@ -24,6 +24,7 @@ using Monkey.Sql.WebApiHost.Configuration;
 using Monkey.Sql.WebApiHost.Services;
 using Monkey.WebApi;
 using Monkey.WebApi.Feature;
+using Monkey.WebApi.Filters;
 using Monkey.WebApi.SimpleInjector;
 using SimpleInjector;
 using SimpleInjector.Advanced;
@@ -51,12 +52,13 @@ namespace Monkey.Sql.WebApiHost
             CreateContainer();
             IntegrateSimpleInjector(services);
 
-            services.AddMvc()
+            services.AddMvc(config => config.Filters.Add<ExceptionFilter>())
                 .ConfigureApplicationPartManager(m =>
                 {
                     var dynamicApiFeatureProvider = new DynamicApiFeatureProvider(_container, () => _isReady);
                     m.FeatureProviders.Add(dynamicApiFeatureProvider);
                 })
+                
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSingleton<IActionDescriptorChangeProvider>(DynamicChangeProvider.Instance);

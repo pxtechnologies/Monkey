@@ -57,6 +57,8 @@ namespace Monkey.DocBuilder
             StringBuilder sb =  new StringBuilder();
             sb.AppendLine($"# {feature.Name.Humanize()}");
             sb.AppendLine();
+            if(feature.Description != null)
+                sb.AppendLine(feature.Description);
 
             if (feature.Children.OfType<Background>().Any())
                 sb.AppendLine("## Background: ");
