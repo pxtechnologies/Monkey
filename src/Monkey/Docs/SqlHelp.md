@@ -1,4 +1,4 @@
-#SQL Help
+# SQL Help
 
 Information about sql procdures is available in database itself. Just invoke:
 ```sql
