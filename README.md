@@ -50,7 +50,7 @@ dotnet Monkey.Sql.WebApiHost
 		- Invoke **Install** action on **Database** controller with appropriate payload.
 	2. Though curl: 
 	```cmd
-	curl -X POST "http://localhost:8080/api/Install?connectionStringName=**Name_Of_Your_Connection**" -H "accept: application/json"
+	curl -X POST "http://localhost:8080/api/Install?connectionStringName=<Name_Of_Your_Connection>" -H "accept: application/json"
 	```
 #### Note
 Installing SQL API stored procedures, creates synonyms, few stored procedures and functions. It does not create any tables, except for script migrations. All metadata is stored in 'Monkey' database.
