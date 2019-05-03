@@ -5,9 +5,16 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Scripts\Monkey\201905030832_Help.sql" />
+      <None Remove="Scripts\Monkey\201905030833_Help.sql" />
+    </ItemGroup>
+
+    <ItemGroup>
       <EmbeddedResource Include="Scripts\Monkey\201904231949_BindStoredProc.sql" />
       <EmbeddedResource Include="Scripts\Monkey\201904292116_ResultInfo.sql" />
       <EmbeddedResource Include="Scripts\Monkey\201904300741_ChangeParamBindingName.sql" />
+      <EmbeddedResource Include="Scripts\Monkey\201905030833_Help.sql" />
+      <EmbeddedResource Include="Scripts\Monkey\201905030832_Help.sql" />
       <EmbeddedResource Include="Scripts\Monkey\201904300741_ChangeResultColBindingName.sql" />
       <EmbeddedResource Include="Scripts\Monkey\201904292127_ProcInfo.sql" />
       <EmbeddedResource Include="Scripts\Monkey\201904292116_RequestInfo.sql" />

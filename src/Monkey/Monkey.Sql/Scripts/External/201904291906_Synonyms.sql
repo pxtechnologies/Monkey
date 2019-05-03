@@ -8,3 +8,4 @@ CREATE SYNONYM webapi_ResultInfo for [Monkey].dbo.ResultInfo;
 CREATE SYNONYM webapi_ProcInfo for [Monkey].dbo.ProcInfo;
 CREATE SYNONYM webapi_ChangeParamBindingName for [Monkey].dbo.ChangeParamBindingName;
 CREATE SYNONYM webapi_ChangeResultColBindingName for [Monkey].dbo.ChangeResultColBindingName;
+CREATE SYNONYM webapi_Help for [Monkey].dbo.Help;

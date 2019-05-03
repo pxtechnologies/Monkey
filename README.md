@@ -61,6 +61,9 @@ Installing SQL API stored procedures, creates synonyms, few stored procedures an
 [Stored Procedure Primitive Type Bindings Scenarios](https://github.com/pxtechnologies/Monkey/blob/master/src/Monkey/Docs/PrimitiveInvocations.md)<br/>
 [Error handling](https://github.com/pxtechnologies/Monkey/blob/master/src/Monkey/Docs/ErrorHandling.md)<br/>
 
+## Documentation in SQL Database
+[Retriving help information](https://github.com/pxtechnologies/Monkey/blob/master/src/Monkey/Docs/SqlHelp.md)
+
 ## Project TODOs:
 * Documentation
 * XML support in stored procedures
