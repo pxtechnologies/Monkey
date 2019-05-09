@@ -104,6 +104,61 @@ Scenario: I want to pass nulls and retrive nulls
 	And I invoke WebApi with 'POST' request on 'api/Product' with data '{}'
 	Then I expect a response from url 'api/Product' with data '{"name":"Tv","company":null}'
 
+Scenario: I want to execute procedure that has no parameters
+Given I executed a script against 'Test' database:
+	| Sql                             |
+	| CREATE OR ALTER PROC AddProduct |
+	| AS                              |
+	| BEGIN                           |
+	| select 1 as Id;                 |
+	| END                             |
+
+	And I expose the procedure with sql statement on 'Test' database:
+	| Sql                                         |
+	| EXEC webapi_BindStoredProc 'AddProduct','Test'; |
+
+	When I publish WebApi on 'Test' database with sql statement:
+	| Sql              |
+	| EXEC webapi_Publish; |
+
+	And I invoke WebApi with 'POST' request on 'api/Product' with data ''
+	Then I expect a response from url 'api/Product' with data '{"id":1}'
+
+Scenario: I want to execute procedure that returns nothing
+Given I executed a script against 'Test' database:
+	| Sql                                                 |
+	| CREATE OR ALTER PROC AddProduct @name nvarchar(255) |
+	| AS                                                  |
+	| BEGIN                                               |
+	| print @name;                                        |
+	| END                                                 |
+
+	And I expose the procedure with sql statement on 'Test' database:
+	| Sql                                         |
+	| EXEC webapi_BindStoredProc 'AddProduct','Test'; |
+
+	When I publish WebApi on 'Test' database with sql statement:
+	| Sql              |
+	| EXEC webapi_Publish; |
+
+	And I invoke WebApi with 'POST' request on 'api/Product' with data '{"name":"iPhone"}'
+	Then I expect a response from url 'api/Product' with data ''
+
+Scenario: I dont want to bind procedure that has no arguments nor return anything
+	Given I executed a script against 'Test' database:
+	| Sql                             |
+	| CREATE OR ALTER PROC AddProduct |
+	| AS                              |
+	| BEGIN                           |
+	| print 'Hello';                  |
+	| END                             |
+
+	When I try to expose the procedure with sql statement on 'Test' database:
+	| Sql                                         |
+	| EXEC webapi_BindStoredProc 'AddProduct','Test'; |
+
+	Then I expect a SQL Error: 'You have forgotten to fill temporary tables: #params or #resultSet with ([Order],[Name],[Type])' in return
+
 Scenario: I want to retrive many records from procedure execution
 Given I executed a script against 'Test' database:
 	| Sql                                              |

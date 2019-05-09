@@ -100,6 +100,58 @@ EXEC webapi_Publish;
 ```
 **_And_** I invoke WebApi with 'POST' request on 'api/Product' with data '{}'<br />
 **_Then_** I expect a response from url 'api/Product' with data '{"name":"Tv","company":null}'<br />
+## I want to execute procedure that has no parameters
+**_Given_** I executed a script against 'Test' database:<br />
+```Sql
+CREATE OR ALTER PROC AddProduct
+AS
+BEGIN
+select 1 as Id;
+END
+```
+**_And_** I expose the procedure with sql statement on 'Test' database:<br />
+```Sql
+EXEC webapi_BindStoredProc 'AddProduct','Test';
+```
+**_When_** I publish WebApi on 'Test' database with sql statement:<br />
+```Sql
+EXEC webapi_Publish;
+```
+**_And_** I invoke WebApi with 'POST' request on 'api/Product' with data ''<br />
+**_Then_** I expect a response from url 'api/Product' with data '{"id":1}'<br />
+## I want to execute procedure that returns nothing
+**_Given_** I executed a script against 'Test' database:<br />
+```Sql
+CREATE OR ALTER PROC AddProduct @name nvarchar(255)
+AS
+BEGIN
+print @name;
+END
+```
+**_And_** I expose the procedure with sql statement on 'Test' database:<br />
+```Sql
+EXEC webapi_BindStoredProc 'AddProduct','Test';
+```
+**_When_** I publish WebApi on 'Test' database with sql statement:<br />
+```Sql
+EXEC webapi_Publish;
+```
+**_And_** I invoke WebApi with 'POST' request on 'api/Product' with data '{"name":"iPhone"}'<br />
+**_Then_** I expect a response from url 'api/Product' with data ''<br />
+## I dont want to bind procedure that has no arguments nor return anything
+**_Given_** I executed a script against 'Test' database:<br />
+```Sql
+CREATE OR ALTER PROC AddProduct
+AS
+BEGIN
+print 'Hello';
+END
+```
+**_When_** I try to expose the procedure with sql statement on 'Test' database:<br />
+```Sql
+EXEC webapi_BindStoredProc 'AddProduct','Test';
+```
+**_Then_** I expect a SQL Error: 'You have forgotten to fill temporary tables: #params or #resultSet with ([Order],[Name],[Type])' in return<br />
 ## I want to retrive many records from procedure execution
 **_Given_** I executed a script against 'Test' database:<br />
 ```Sql

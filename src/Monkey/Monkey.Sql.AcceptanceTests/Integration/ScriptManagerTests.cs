@@ -57,7 +57,7 @@ namespace Monkey.Sql.AcceptanceTests.Integration
 
             var migrations = await Sut.GetMigrations();
 
-            migrations.Should().HaveCount(14);
+            migrations.Should().HaveCount(16);
         }
     }
 }

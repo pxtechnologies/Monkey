@@ -256,10 +256,10 @@ this.FeatureBackground();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("I want to retrive many records from procedure execution")]
-        public virtual void IWantToRetriveManyRecordsFromProcedureExecution()
+        [NUnit.Framework.DescriptionAttribute("I want to execute procedure that has no parameters")]
+        public virtual void IWantToExecuteProcedureThatHasNoParameters()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to retrive many records from procedure execution", null, ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to execute procedure that has no parameters", null, ((string[])(null)));
 #line 107
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
@@ -269,15 +269,13 @@ this.FeatureBackground();
             TechTalk.SpecFlow.Table table22 = new TechTalk.SpecFlow.Table(new string[] {
                         "Sql"});
             table22.AddRow(new string[] {
-                        "CREATE OR ALTER PROC GetProducts @name nvarchar(255)"});
+                        "CREATE OR ALTER PROC AddProduct"});
             table22.AddRow(new string[] {
                         "AS"});
             table22.AddRow(new string[] {
                         "BEGIN"});
             table22.AddRow(new string[] {
-                        "SELECT @name as Name"});
-            table22.AddRow(new string[] {
-                        "UNION ALL SELECT \'Two\'"});
+                        "select 1 as Id;"});
             table22.AddRow(new string[] {
                         "END"});
 #line 108
@@ -286,19 +284,155 @@ testRunner.Given("I executed a script against \'Test\' database:", ((string)(nul
             TechTalk.SpecFlow.Table table23 = new TechTalk.SpecFlow.Table(new string[] {
                         "Sql"});
             table23.AddRow(new string[] {
-                        "EXEC webapi_BindStoredProc \'GetProducts\',\'Test\';"});
-#line 117
+                        "EXEC webapi_BindStoredProc \'AddProduct\',\'Test\';"});
+#line 116
  testRunner.And("I expose the procedure with sql statement on \'Test\' database:", ((string)(null)), table23, "And ");
 #line hidden
             TechTalk.SpecFlow.Table table24 = new TechTalk.SpecFlow.Table(new string[] {
                         "Sql"});
             table24.AddRow(new string[] {
-                        "EXEC Publish;"});
-#line 121
- testRunner.When("I publish WebApi on \'Monkey\' database with sql statement:", ((string)(null)), table24, "When ");
+                        "EXEC webapi_Publish;"});
+#line 120
+ testRunner.When("I publish WebApi on \'Test\' database with sql statement:", ((string)(null)), table24, "When ");
+#line 124
+ testRunner.And("I invoke WebApi with \'POST\' request on \'api/Product\' with data \'\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 125
+ testRunner.Then("I expect a response from url \'api/Product\' with data \'{\"id\":1}\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("I want to execute procedure that returns nothing")]
+        public virtual void IWantToExecuteProcedureThatReturnsNothing()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to execute procedure that returns nothing", null, ((string[])(null)));
+#line 127
+this.ScenarioInitialize(scenarioInfo);
+            this.ScenarioStart();
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table25 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Sql"});
+            table25.AddRow(new string[] {
+                        "CREATE OR ALTER PROC AddProduct @name nvarchar(255)"});
+            table25.AddRow(new string[] {
+                        "AS"});
+            table25.AddRow(new string[] {
+                        "BEGIN"});
+            table25.AddRow(new string[] {
+                        "print @name;"});
+            table25.AddRow(new string[] {
+                        "END"});
+#line 128
+testRunner.Given("I executed a script against \'Test\' database:", ((string)(null)), table25, "Given ");
+#line hidden
+            TechTalk.SpecFlow.Table table26 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Sql"});
+            table26.AddRow(new string[] {
+                        "EXEC webapi_BindStoredProc \'AddProduct\',\'Test\';"});
+#line 136
+ testRunner.And("I expose the procedure with sql statement on \'Test\' database:", ((string)(null)), table26, "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table27 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Sql"});
+            table27.AddRow(new string[] {
+                        "EXEC webapi_Publish;"});
+#line 140
+ testRunner.When("I publish WebApi on \'Test\' database with sql statement:", ((string)(null)), table27, "When ");
+#line 144
+ testRunner.And("I invoke WebApi with \'POST\' request on \'api/Product\' with data \'{\"name\":\"iPhone\"}" +
+                    "\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 145
+ testRunner.Then("I expect a response from url \'api/Product\' with data \'\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("I dont want to bind procedure that has no arguments nor return anything")]
+        public virtual void IDontWantToBindProcedureThatHasNoArgumentsNorReturnAnything()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I dont want to bind procedure that has no arguments nor return anything", null, ((string[])(null)));
+#line 147
+this.ScenarioInitialize(scenarioInfo);
+            this.ScenarioStart();
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table28 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Sql"});
+            table28.AddRow(new string[] {
+                        "CREATE OR ALTER PROC AddProduct"});
+            table28.AddRow(new string[] {
+                        "AS"});
+            table28.AddRow(new string[] {
+                        "BEGIN"});
+            table28.AddRow(new string[] {
+                        "print \'Hello\';"});
+            table28.AddRow(new string[] {
+                        "END"});
+#line 148
+ testRunner.Given("I executed a script against \'Test\' database:", ((string)(null)), table28, "Given ");
+#line hidden
+            TechTalk.SpecFlow.Table table29 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Sql"});
+            table29.AddRow(new string[] {
+                        "EXEC webapi_BindStoredProc \'AddProduct\',\'Test\';"});
+#line 156
+ testRunner.When("I try to expose the procedure with sql statement on \'Test\' database:", ((string)(null)), table29, "When ");
+#line 160
+ testRunner.Then("I expect a SQL Error: \'You have forgotten to fill temporary tables: #params or #r" +
+                    "esultSet with ([Order],[Name],[Type])\' in return", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("I want to retrive many records from procedure execution")]
+        public virtual void IWantToRetriveManyRecordsFromProcedureExecution()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to retrive many records from procedure execution", null, ((string[])(null)));
+#line 162
+this.ScenarioInitialize(scenarioInfo);
+            this.ScenarioStart();
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table30 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Sql"});
+            table30.AddRow(new string[] {
+                        "CREATE OR ALTER PROC GetProducts @name nvarchar(255)"});
+            table30.AddRow(new string[] {
+                        "AS"});
+            table30.AddRow(new string[] {
+                        "BEGIN"});
+            table30.AddRow(new string[] {
+                        "SELECT @name as Name"});
+            table30.AddRow(new string[] {
+                        "UNION ALL SELECT \'Two\'"});
+            table30.AddRow(new string[] {
+                        "END"});
+#line 163
+testRunner.Given("I executed a script against \'Test\' database:", ((string)(null)), table30, "Given ");
+#line hidden
+            TechTalk.SpecFlow.Table table31 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Sql"});
+            table31.AddRow(new string[] {
+                        "EXEC webapi_BindStoredProc \'GetProducts\',\'Test\';"});
+#line 172
+ testRunner.And("I expose the procedure with sql statement on \'Test\' database:", ((string)(null)), table31, "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table32 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Sql"});
+            table32.AddRow(new string[] {
+                        "EXEC Publish;"});
+#line 176
+ testRunner.When("I publish WebApi on \'Monkey\' database with sql statement:", ((string)(null)), table32, "When ");
+#line 180
  testRunner.And("I invoke WebApi with \'GET\' request on \'api/Product?name=tv\' without data", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 126
+#line 181
  testRunner.Then("I expect a response from url \'api/Product\' with data \'[{\"name\":\"tv\"},{\"name\":\"Two" +
                     "\"}]\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
