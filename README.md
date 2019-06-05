@@ -2,7 +2,7 @@
 The purpose of the project is to automate API Development based on Handler Design Pattern. You might think of Handler Design Pattern as a general purpose function that accept some parameters and returns some objects/records. Thus if:
 * You are developing **CQRS** Handlers and want to automatically expose them by conventions with REST API 
 * You are developing **T-SQL stored procedures** in database and you want to automatically expose procedures by conventions with REST API <br/>
-Then you are at right place :)
+Then you are at right place :) :)
 
 ## SQL-Dev Quick glance:
 * You have your sql procedure named **"AddProduct"**
