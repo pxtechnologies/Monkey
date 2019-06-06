@@ -2,6 +2,7 @@
 using System.Reflection;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Monkey.SimpleInjector;
 using Monkey.WebApi.SimpleInjector;
 using SimpleInjector;
@@ -33,7 +34,17 @@ namespace Monkey.WebApi.AcceptanceTests.Configuration
         [BeforeScenario()]
         public void InitContainer()
         {
+            ConfigurationBuilder builder = new ConfigurationBuilder();
+            builder.AddJsonFile("appsettings.json")
+                .AddEnvironmentVariables()
+                .AddCommandLine(Environment.GetCommandLineArgs());
+
+            var config = builder.Build();
+
+            var applicationUrls = config.GetApplicationUrls();
+
             _webHost = WebHost.CreateDefaultBuilder()
+                .UseUrls(applicationUrls)
                 .UseStartup<Startup>()
                 .Build();
 
