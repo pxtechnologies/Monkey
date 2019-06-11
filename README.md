@@ -4,6 +4,9 @@ The purpose of the project is to automate API Development based on Handler Desig
 * You are developing **T-SQL stored procedures** in database and you want to automatically expose procedures by conventions with REST API <br/>
 Then you are at right place :) :) :)
 
+## Q&A
+If you have any questions don't hesitate to write me an e-mail: r.maciag /at/ platformx.ai
+
 ## SQL-Dev Quick glance:
 * You have your sql procedure named **"AddProduct"**
 * You execute:
